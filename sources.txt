@@ -1,0 +1,14 @@
+LIBsvm internet page
+https://www.csie.ntu.edu.tw/~cjlin/libsvm/
+
+QT Creator manual
+https://doc.qt.io/qtcreator/
+
+Book Machine learning for absolute beginners
+https://www.amazon.com/Machine-Learning-Absolute-Beginners-Introduction/dp/1549617214?SubscriptionId=AKIAILSHYYTFIVPWUY6Q&tag=duckduckgo-d-20&linkCode=xm2&camp=2025&creative=165953&creativeASIN=1549617214
+
+Machine learning YouTube tutorial
+https://www.youtube.com/playlist?list=PLLssT5z_DsK-h9vYZkQkYNWcItqhlRJLN
+
+SVM book
+"An introduction to support vector machines : and other kernel-based learning methods" / Nello Cristianini and John Shawe-Taylor.
