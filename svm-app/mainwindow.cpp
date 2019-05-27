@@ -39,10 +39,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->shrinking_checkBox->setChecked(svm->getParams().shrinking);
     ui->prob_checkBox->setChecked(svm->getParams().probability);
 
-    svm_set_print_string_function(printToQString); // print to Output::out
+    filterSVMTypeParams(ui->svmType_comboBox->currentIndex());
+    filterKernelParams(ui->kernel_comboBox->currentIndex());
 
-    //TODO: output textedit always bottom
-//    ui->output_textEdit->
+    svm_set_print_string_function(printToQString); // print to Output::out
 }
 
 MainWindow::~MainWindow()
@@ -116,4 +116,79 @@ void MainWindow::on_test_pushButton_clicked()
     //output always down
     ui->output_textEdit->verticalScrollBar()->setValue(
                 ui->output_textEdit->verticalScrollBar()->maximum());
+}
+
+void MainWindow::filterSVMTypeParams(int svm_type){
+    QDoubleSpinBox *C = ui->C_doubleSpinBox;
+    QDoubleSpinBox *nu = ui->nu_doubleSpinBox;
+    QDoubleSpinBox *p = ui->P_doubleSpinBox;
+    switch(svm_type){
+        case 0: // C-SVC
+            C->setEnabled(true);
+            nu->setEnabled(false);
+            p->setEnabled(false);
+        break;
+        case 1: // nu-SVC
+            C->setEnabled(false);
+            nu->setEnabled(true);
+            p->setEnabled(false);
+        break;
+        case 2: // one class SVM
+            C->setEnabled(false);
+            nu->setEnabled(true);
+            p->setEnabled(false);
+        break;
+        case 3: // epsilon-SVR
+            C->setEnabled(true);
+            nu->setEnabled(false);
+            p->setEnabled(true);
+        break;
+        case 4: // nu-SVR
+            C->setEnabled(true);
+            nu->setEnabled(true);
+            p->setEnabled(false);
+        break;
+    }
+}
+
+void MainWindow::filterKernelParams(int kernel){
+    QSpinBox *degree = ui->degree_spinBox;
+    QDoubleSpinBox *gamma = ui->gamma_doubleSpinBox;
+    QDoubleSpinBox *coef0 = ui->coef_doubleSpinBox;
+    switch(kernel){
+        case 0: // Linear
+            degree->setEnabled(true);
+            gamma->setEnabled(false);
+            coef0->setEnabled(false);
+        break;
+        case 1: // poly
+            degree->setEnabled(false);
+            gamma->setEnabled(true);
+            coef0->setEnabled(true);
+        break;
+        case 2: // RBF
+            degree->setEnabled(false);
+            gamma->setEnabled(true);
+            coef0->setEnabled(false);
+        break;
+        case 3: // Sigmoid
+            degree->setEnabled(false);
+            gamma->setEnabled(true);
+            coef0->setEnabled(true);
+        break;
+        case 4: // Precomputed
+            degree->setEnabled(false);
+            gamma->setEnabled(false);
+            coef0->setEnabled(false);
+        break;
+    }
+
+}
+
+void MainWindow::on_svmType_comboBox_currentIndexChanged(int index){
+   filterSVMTypeParams(index);
+}
+
+void MainWindow::on_kernel_comboBox_currentIndexChanged(int index){
+    filterKernelParams(index);
 }

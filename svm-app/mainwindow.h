@@ -33,7 +33,14 @@ private slots:
     void on_test_pushButton_clicked();
 
 
+    void on_svmType_comboBox_currentIndexChanged(int index);
+
+    void on_kernel_comboBox_currentIndexChanged(int index);
+
 private:
+    void filterSVMTypeParams(int);
+    void filterKernelParams(int);
+
     Ui::MainWindow *ui;
     SVMController *svm;
 
