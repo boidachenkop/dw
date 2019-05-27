@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QString>
+#include <QScrollBar>
 #include "svmcontroller.h"
 
 
@@ -27,7 +28,7 @@ private slots:
 
     void on_train_pushButton_clicked();
 
-    void on_tstFile_toolButton_clicked();
+    void on_choose_tstFile_toolButton_clicked();
 
     void on_test_pushButton_clicked();
 

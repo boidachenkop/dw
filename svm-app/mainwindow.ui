@@ -83,7 +83,7 @@
         <item>
          <layout class="QHBoxLayout" name="tstFile_horizontalLayout" stretch="0,1">
           <item>
-           <widget class="QToolButton" name="tstFile_toolButton">
+           <widget class="QToolButton" name="choose_tstFile_toolButton">
             <property name="enabled">
              <bool>true</bool>
             </property>

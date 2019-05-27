@@ -57,7 +57,7 @@ void MainWindow::on_chooseDataset_toolButton_clicked()
     ui->train_pushButton->setEnabled(true);
 }
 
-void MainWindow::on_tstFile_toolButton_clicked()
+void MainWindow::on_choose_tstFile_toolButton_clicked()
 {
     test_file_path = QFileDialog::getOpenFileName(this, "Choose dataset", "/home/pavlo/Desktop/pr/dw/datasets");
     ui->tstFile_path_label->setText(test_file_path);
@@ -95,6 +95,10 @@ void MainWindow::on_train_pushButton_clicked()
     }
     //model path:
     ui->modelFile_path_label->setText(QString::fromStdString(svm->getModelFileName()));
+
+    //output always down
+    ui->output_textEdit->verticalScrollBar()->setValue(
+                ui->output_textEdit->verticalScrollBar()->maximum());
 }
 
 void MainWindow::on_test_pushButton_clicked()
@@ -108,4 +112,8 @@ void MainWindow::on_test_pushButton_clicked()
     sprintf(accuracy_str, "Accuracy = %g%% (%d/%d) (classification)\n", (double)correct/total*100,correct,total);
     printToQString(accuracy_str);
     ui->output_textEdit->setText(Output::out);
+
+    //output always down
+    ui->output_textEdit->verticalScrollBar()->setValue(
+                ui->output_textEdit->verticalScrollBar()->maximum());
 }
