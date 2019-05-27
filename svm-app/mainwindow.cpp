@@ -4,11 +4,6 @@
 #include <iostream>
 #include <cstdio>
 
-QString Output::out = ""; // global output variable
-
-void printToQString(const char* v){
-    Output::out += QString::fromUtf8(v);
-}
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -39,15 +34,31 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->shrinking_checkBox->setChecked(svm->getParams().shrinking);
     ui->prob_checkBox->setChecked(svm->getParams().probability);
 
+    //filter params
     filterSVMTypeParams(ui->svmType_comboBox->currentIndex());
     filterKernelParams(ui->kernel_comboBox->currentIndex());
 
-    svm_set_print_string_function(printToQString); // print to Output::out
+    std_old = stdout;
+    stdout = fopen(stdout_redirect_path, "w");
 }
 
 MainWindow::~MainWindow()
 {
+    if(fclose(stdout) != 0){
+       std::cerr<<"Can't close stdout redirect file"<<std::endl;
+    }
+    stdout = std_old;
     delete ui;
+}
+
+void MainWindow::updateOutput(){
+    // read redirected stdout and write to QTextEdit
+    fflush(stdout);
+    std::ifstream in_from_file(stdout_redirect_path);
+    std::string output((std::istreambuf_iterator<char>(in_from_file)),
+                       (std::istreambuf_iterator<char>()));
+    ui->output_textEdit->setText(QString::fromStdString(output));
+    in_from_file.close();
 }
 
 void MainWindow::on_chooseDataset_toolButton_clicked()
@@ -69,7 +80,6 @@ void MainWindow::on_train_pushButton_clicked()
     bool ok=false;
 
     svm->openTrainFile(train_file_path.toStdString());
-    svm_set_print_string_function(printToQString); // print to Output::out
 
     svm->setSVMType(ui->svmType_comboBox->currentIndex());
     svm->setKernel(ui->kernel_comboBox->currentIndex());
@@ -89,7 +99,7 @@ void MainWindow::on_train_pushButton_clicked()
     if(ok){
         svm->readProblem();
         svm->trainModel();
-        ui->output_textEdit->setText(Output::out);
+        updateOutput();
     }else{
         ui->eps_lineEdit->setStyleSheet("border-style: outset; border-width: 1px; border-color: red;");
     }
@@ -106,12 +116,8 @@ void MainWindow::on_test_pushButton_clicked()
     svm->openPredictInputFile(test_file_path.toStdString());
     svm->openPredictOutputFile(svm->getPredictOutputFileName());
     svm->predict();
-    int correct = svm->correctPrediction();
-    int total = svm->totalPrediction();
-    char accuracy_str[50];
-    sprintf(accuracy_str, "Accuracy = %g%% (%d/%d) (classification)\n", (double)correct/total*100,correct,total);
-    printToQString(accuracy_str);
-    ui->output_textEdit->setText(Output::out);
+
+    updateOutput();
 
     //output always down
     ui->output_textEdit->verticalScrollBar()->setValue(

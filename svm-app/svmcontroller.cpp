@@ -29,9 +29,6 @@ struct svm_parameter& SVMController::getParams(){
     return param;
 }
 
-//for suppresing predict output
-int no_print(const char* format, ...){ return 0; }
-
 void SVMController::setDefaultParams(){
     param.svm_type = C_SVC;
     param.kernel_type = RBF;
@@ -53,7 +50,7 @@ void SVMController::setDefaultParams(){
 
     //predict
     x = (struct svm_node *) malloc(max_nr_attr*sizeof(struct svm_node));
-    info = &no_print;
+    info = &printf;
 }
 
 void SVMController::setPredictPrintFunction(int (*f)(const char* s, ...)){

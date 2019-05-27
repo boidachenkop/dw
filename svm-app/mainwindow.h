@@ -3,7 +3,15 @@
 
 #include <QMainWindow>
 #include <QString>
+#include <QFile>
 #include <QScrollBar>
+#include <QTextStream>
+
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <fstream>
+
 #include "svmcontroller.h"
 
 
@@ -41,11 +49,16 @@ private:
     void filterSVMTypeParams(int);
     void filterKernelParams(int);
 
+    void updateOutput();
+
     Ui::MainWindow *ui;
     SVMController *svm;
 
     QString train_file_path;
     QString test_file_path;
+
+    char* stdout_redirect_path{"/tmp/svm-app-out"};
+    FILE* std_old;
 };
 
 #endif // MAINWINDOW_H
