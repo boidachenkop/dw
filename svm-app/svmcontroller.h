@@ -29,6 +29,7 @@ public:
 
     void predict();
 
+    //setters
     SVMController& setDegree(int degree){param.degree=degree; return *this;}
     SVMController& setGamma(double gamma){param.gamma=gamma; return *this;}
     SVMController& setCoef0(double coef0){param.coef0=coef0; return *this;}
@@ -38,24 +39,24 @@ public:
     SVMController& setEps(double eps){param.eps=eps; return *this;}
     SVMController& setP(double p){param.p=p; return *this;}
     SVMController& setShrinking(bool shrink){param.shrinking=shrink; return *this;}
-    SVMController& setProbability(bool probability)
-        {param.probability=probability; return *this;}
-    SVMController& setCrossvalidation(bool cv, int f){cross_validation=cv; nr_fold=f; return *this;}
+    SVMController& setProbability(bool probability){param.probability=probability; return *this;}
+    SVMController& setCrossvalidation(bool cv, int f){cross_validation=cv; n_fold=f; return *this;}
     SVMController& setWeight(int weight_label, double weight);
     void setModelFilePath(std::string fp){model_file_path = fp;}
-
-    struct svm_parameter& getParams();
-    std::string getModelFileName(){ return model_file_path; }
-    std::string getPredictInputFileName(){ return predict_input_file_path; }
-    std::string getPredictOutputFileName(){ return predict_out_file_path; }
-    std::string getTrainFileName(){ return train_file_path; }
-
-    int correctPrediction(){ return correct; }
-    int totalPrediction(){ return total; }
-
     void setPredictProbability(bool pp){predict_probability=pp;}
-
     void setPredictPrintFunction(int (*f)(const char* s, ...));
+
+    //getters
+    bool isCrossvalidation(){return cross_validation;}
+    int getNFold(){return n_fold;}
+    struct svm_parameter& getParams();
+    std::string getModelFileName(){return model_file_path;}
+    std::string getPredictInputFileName(){return predict_input_file_path;}
+    std::string getPredictOutputFileName(){return predict_out_file_path;}
+    std::string getTrainFileName(){return train_file_path;}
+    int getCorrectPredicted(){return correct;}
+    int getTotalPredicted(){return total;}
+
 private:
     void setDefaultParams();
     void doCrossValidation();
@@ -85,7 +86,7 @@ private:
     struct svm_model *model{nullptr};
     struct svm_node *x_space{nullptr};
     int cross_validation{0};
-    int nr_fold{0};
+    int n_fold{0};
 
     char *line{nullptr};
     int max_line_len{1024};

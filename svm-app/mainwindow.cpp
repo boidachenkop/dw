@@ -34,6 +34,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->shrinking_checkBox->setChecked(svm->getParams().shrinking);
     ui->prob_checkBox->setChecked(svm->getParams().probability);
 
+    ui->crossValidation_checkBox->setChecked(svm->isCrossvalidation());
+    on_crossValidation_checkBox_toggled(svm->isCrossvalidation());
+
     //filter params
     filterSVMTypeParams(ui->svmType_comboBox->currentIndex());
     filterKernelParams(ui->kernel_comboBox->currentIndex());
@@ -64,16 +67,20 @@ void MainWindow::updateOutput(){
 
 void MainWindow::on_chooseDataset_toolButton_clicked()
 {
-    train_file_path = QFileDialog::getOpenFileName(this, "Choose dataset", "/home/pavlo/Desktop/pr/dw/datasets");
-    ui->chooseDataset_label->setText(train_file_path);
-    ui->train_pushButton->setEnabled(true);
+    train_file_path = QFileDialog::getOpenFileName(this, "Choose train dataset", "/home/pavlo/Desktop/pr/dw/datasets");
+    if(!train_file_path.isEmpty()){
+        ui->chooseDataset_label->setText(train_file_path);
+        ui->train_pushButton->setEnabled(true);
+    }
 }
 
 void MainWindow::on_choose_tstFile_toolButton_clicked()
 {
-    test_file_path = QFileDialog::getOpenFileName(this, "Choose dataset", "/home/pavlo/Desktop/pr/dw/datasets");
-    ui->tstFile_path_label->setText(test_file_path);
-    ui->test_pushButton->setEnabled(true);
+    test_file_path = QFileDialog::getOpenFileName(this, "Choose test dataset", "/home/pavlo/Desktop/pr/dw/datasets");
+    if(!test_file_path.isEmpty()){
+        ui->tstFile_path_label->setText(test_file_path);
+        ui->test_pushButton->setEnabled(true);
+    }
 }
 
 void MainWindow::on_train_pushButton_clicked()
@@ -96,7 +103,8 @@ void MainWindow::on_train_pushButton_clicked()
             .setNu(ui->nu_doubleSpinBox->value())
             .setP(ui->P_doubleSpinBox->value())
             .setShrinking(ui->shrinking_checkBox->isChecked())
-            .setProbability(ui->prob_checkBox->isChecked());
+            .setProbability(ui->prob_checkBox->isChecked())
+            .setCrossvalidation(ui->crossValidation_checkBox->isChecked(), ui->nFold_spinBox->value());
     if(ok){
         svm->readProblem();
         svm->trainModel();

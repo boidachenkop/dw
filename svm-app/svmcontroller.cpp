@@ -184,7 +184,7 @@ void SVMController::doCrossValidation(){
     double sumv = 0, sumy = 0, sumvv = 0, sumyy = 0, sumvy = 0;
     double *target = Malloc(double,prob.l);
 
-    svm_cross_validation(&prob,&param,nr_fold,target);
+    svm_cross_validation(&prob,&param,n_fold,target);
     if(param.svm_type == EPSILON_SVR ||
        param.svm_type == NU_SVR)
     {
