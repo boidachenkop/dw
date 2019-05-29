@@ -199,3 +199,9 @@ void MainWindow::on_svmType_comboBox_currentIndexChanged(int index){
 void MainWindow::on_kernel_comboBox_currentIndexChanged(int index){
     filterKernelParams(index);
 }
+
+void MainWindow::on_crossValidation_checkBox_toggled(bool checked)
+{
+    ui->nFold_label->setEnabled(checked);
+    ui->nFold_spinBox->setEnabled(checked);
+}

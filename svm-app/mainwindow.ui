@@ -6,31 +6,38 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>728</width>
-    <height>373</height>
+    <width>751</width>
+    <height>409</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QVBoxLayout" name="verticalLayout_2">
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <property name="sizeConstraint">
+     <enum>QLayout::SetMaximumSize</enum>
+    </property>
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="0,0,0">
-      <item>
-       <widget class="QTextEdit" name="output_textEdit"/>
-      </item>
-      <item>
-       <widget class="Line" name="line_6">
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0,0,0,0,0,0,0,0,0">
+     <widget class="QSplitter" name="splitter">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <property name="handleWidth">
+       <number>9</number>
+      </property>
+      <widget class="QTextEdit" name="output_textEdit">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
+      <widget class="QWidget" name="">
+       <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0,0,0,0,0,0,0,0,0,0,0">
         <property name="sizeConstraint">
-         <enum>QLayout::SetFixedSize</enum>
+         <enum>QLayout::SetMinimumSize</enum>
         </property>
         <item>
          <layout class="QHBoxLayout" name="chooseDataset_horizontalLayout" stretch="0,1">
@@ -38,7 +45,7 @@
            <number>6</number>
           </property>
           <property name="sizeConstraint">
-           <enum>QLayout::SetMinimumSize</enum>
+           <enum>QLayout::SetFixedSize</enum>
           </property>
           <property name="rightMargin">
            <number>0</number>
@@ -82,6 +89,9 @@
         </item>
         <item>
          <layout class="QHBoxLayout" name="tstFile_horizontalLayout" stretch="0,1">
+          <property name="sizeConstraint">
+           <enum>QLayout::SetFixedSize</enum>
+          </property>
           <item>
            <widget class="QToolButton" name="choose_tstFile_toolButton">
             <property name="enabled">
@@ -100,6 +110,12 @@
           </item>
           <item>
            <widget class="QLabel" name="tstFile_path_label">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="text">
              <string>...</string>
             </property>
@@ -109,6 +125,9 @@
         </item>
         <item>
          <layout class="QHBoxLayout" name="modelFile_horizontalLayout" stretch="0,1">
+          <property name="sizeConstraint">
+           <enum>QLayout::SetFixedSize</enum>
+          </property>
           <item>
            <widget class="QToolButton" name="modelFile_toolButton">
             <property name="sizePolicy">
@@ -124,8 +143,63 @@
           </item>
           <item>
            <widget class="QLabel" name="modelFile_path_label">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="text">
              <string>...</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="crossValidation_horizontalLayout">
+          <property name="sizeConstraint">
+           <enum>QLayout::SetFixedSize</enum>
+          </property>
+          <property name="rightMargin">
+           <number>10</number>
+          </property>
+          <item>
+           <widget class="QCheckBox" name="crossValidation_checkBox">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Cross-validation</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="nFold_label">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>n-Fold:</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QSpinBox" name="nFold_spinBox">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
             </property>
            </widget>
           </item>
@@ -141,10 +215,16 @@
         <item>
          <layout class="QHBoxLayout" name="svmType_horizontalLayout" stretch="1,2">
           <property name="sizeConstraint">
-           <enum>QLayout::SetMinimumSize</enum>
+           <enum>QLayout::SetFixedSize</enum>
           </property>
           <item>
            <widget class="QLabel" name="svmType_label">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="text">
              <string>SVM Type</string>
             </property>
@@ -193,10 +273,16 @@
         <item>
          <layout class="QHBoxLayout" name="kernel_horizontalLayout" stretch="1,2">
           <property name="sizeConstraint">
-           <enum>QLayout::SetMinimumSize</enum>
+           <enum>QLayout::SetFixedSize</enum>
           </property>
           <item>
            <widget class="QLabel" name="kernel_label">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="text">
              <string>Kernel</string>
             </property>
@@ -246,12 +332,12 @@
         <item>
          <layout class="QHBoxLayout" name="params_horizontalLayout">
           <property name="sizeConstraint">
-           <enum>QLayout::SetMinimumSize</enum>
+           <enum>QLayout::SetFixedSize</enum>
           </property>
           <item>
            <layout class="QVBoxLayout" name="kernelOpt_verticalLayout">
             <property name="sizeConstraint">
-             <enum>QLayout::SetMaximumSize</enum>
+             <enum>QLayout::SetFixedSize</enum>
             </property>
             <item>
              <layout class="QHBoxLayout" name="degree_horizontalLayout">
@@ -330,7 +416,7 @@
           <item>
            <layout class="QVBoxLayout" name="svmTypeOpt_verticalLayout">
             <property name="sizeConstraint">
-             <enum>QLayout::SetMaximumSize</enum>
+             <enum>QLayout::SetFixedSize</enum>
             </property>
             <item>
              <layout class="QHBoxLayout" name="C_horizontalLayout">
@@ -425,7 +511,7 @@
           <item>
            <layout class="QVBoxLayout" name="generalOpt_verticalLayout">
             <property name="sizeConstraint">
-             <enum>QLayout::SetMaximumSize</enum>
+             <enum>QLayout::SetFixedSize</enum>
             </property>
             <item>
              <layout class="QHBoxLayout" name="P_horizontalLayout">
@@ -495,9 +581,25 @@
           </property>
          </widget>
         </item>
+        <item>
+         <spacer name="verticalSpacer">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Expanding</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
        </layout>
-      </item>
-     </layout>
+      </widget>
+     </widget>
     </item>
    </layout>
   </widget>
@@ -506,7 +608,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>728</width>
+     <width>751</width>
      <height>20</height>
     </rect>
    </property>

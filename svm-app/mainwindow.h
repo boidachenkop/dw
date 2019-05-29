@@ -45,6 +45,8 @@ private slots:
 
     void on_kernel_comboBox_currentIndexChanged(int index);
 
+    void on_crossValidation_checkBox_toggled(bool checked);
+
 private:
     void filterSVMTypeParams(int);
     void filterKernelParams(int);
