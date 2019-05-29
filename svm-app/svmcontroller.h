@@ -30,8 +30,8 @@ public:
     void predict();
 
     SVMController& setDegree(int degree){param.degree=degree; return *this;}
-    SVMController& setGamma(int gamma){param.gamma=gamma; return *this;}
-    SVMController& setCoef0(int coef0){param.coef0=coef0; return *this;}
+    SVMController& setGamma(double gamma){param.gamma=gamma; return *this;}
+    SVMController& setCoef0(double coef0){param.coef0=coef0; return *this;}
     SVMController& setNu(double nu){param.nu=nu; return *this;}
     SVMController& setCasheSize(double cs){param.cache_size=cs; return *this;}
     SVMController& setC(double C){param.C=C; return *this;}

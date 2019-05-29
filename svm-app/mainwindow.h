@@ -57,7 +57,7 @@ private:
     QString train_file_path;
     QString test_file_path;
 
-    char* stdout_redirect_path{"/tmp/svm-app-out"};
+    std::string stdout_redirect_path;
     FILE* std_old;
 };
 

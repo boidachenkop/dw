@@ -38,8 +38,9 @@ MainWindow::MainWindow(QWidget *parent) :
     filterSVMTypeParams(ui->svmType_comboBox->currentIndex());
     filterKernelParams(ui->kernel_comboBox->currentIndex());
 
+    stdout_redirect_path = "/tmp/svm-app-out";
     std_old = stdout;
-    stdout = fopen(stdout_redirect_path, "w");
+    stdout = fopen(stdout_redirect_path.c_str(), "w");
 }
 
 MainWindow::~MainWindow()
