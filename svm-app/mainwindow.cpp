@@ -67,19 +67,47 @@ void MainWindow::updateOutput(){
 
 void MainWindow::on_chooseDataset_toolButton_clicked()
 {
-    train_file_path = QFileDialog::getOpenFileName(this, "Choose train dataset", "/home/pavlo/Desktop/pr/dw/datasets");
-    if(!train_file_path.isEmpty()){
+    QString path = QFileDialog::getOpenFileName(this, "Choose train dataset", "/home/pavlo/Desktop/pr/dw/datasets");
+    if(!path.isEmpty()){
+        train_file_path = path;
         ui->chooseDataset_label->setText(train_file_path);
         ui->train_pushButton->setEnabled(true);
+        //update model file path
+        svm->setModelFilePath(train_file_path.toStdString()+".model");
+        ui->modelFile_path_label->setText(train_file_path+QString::fromUtf8(".model"));
+    }else if(!train_file_path.isEmpty()){
+        ui->train_pushButton->setEnabled(true);
+        //update model file path
+        svm->setModelFilePath(train_file_path.toStdString()+".model");
+        ui->modelFile_path_label->setText(train_file_path+QString::fromUtf8(".model"));
+    }else{
+        ui->train_pushButton->setEnabled(false);
     }
 }
 
 void MainWindow::on_choose_tstFile_toolButton_clicked()
 {
-    test_file_path = QFileDialog::getOpenFileName(this, "Choose test dataset", "/home/pavlo/Desktop/pr/dw/datasets");
-    if(!test_file_path.isEmpty()){
+    QString path = QFileDialog::getOpenFileName(this, "Choose test dataset", "/home/pavlo/Desktop/pr/dw/datasets");
+    if(!path.isEmpty()){
+        test_file_path = path;
         ui->tstFile_path_label->setText(test_file_path);
         ui->test_pushButton->setEnabled(true);
+    }else if(!test_file_path.isEmpty()){
+        ui->tstFile_path_label->setText(test_file_path);
+        ui->test_pushButton->setEnabled(true);
+    }else{
+        ui->test_pushButton->setEnabled(false);
+    }
+}
+
+void MainWindow::on_modelFile_toolButton_clicked()
+{
+    QString path = QFileDialog::getSaveFileName(this, "Save model", "/home/pavlo/Desktop/pr/dw/datasets");
+    if(!path.isEmpty()){
+        svm->setModelFilePath(path.toStdString());
+        ui->modelFile_path_label->setText(QString::fromStdString(svm->getModelFilePath()));
+    }else if(!svm->getModelFilePath().empty()){
+        ui->modelFile_path_label->setText(QString::fromStdString(svm->getModelFilePath()));
     }
 }
 
@@ -113,7 +141,7 @@ void MainWindow::on_train_pushButton_clicked()
         ui->eps_lineEdit->setStyleSheet("border-style: outset; border-width: 1px; border-color: red;");
     }
     //model path:
-    ui->modelFile_path_label->setText(QString::fromStdString(svm->getModelFileName()));
+    ui->modelFile_path_label->setText(QString::fromStdString(svm->getModelFilePath()));
 
     //output always down
     ui->output_textEdit->verticalScrollBar()->setValue(
@@ -123,7 +151,7 @@ void MainWindow::on_train_pushButton_clicked()
 void MainWindow::on_test_pushButton_clicked()
 {
     svm->openPredictInputFile(test_file_path.toStdString());
-    svm->openPredictOutputFile(svm->getPredictOutputFileName());
+    svm->openPredictOutputFile(svm->getPredictOutputFilePath());
     svm->predict();
 
     updateOutput();

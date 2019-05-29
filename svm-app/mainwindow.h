@@ -47,6 +47,8 @@ private slots:
 
     void on_crossValidation_checkBox_toggled(bool checked);
 
+    void on_modelFile_toolButton_clicked();
+
 private:
     void filterSVMTypeParams(int);
     void filterKernelParams(int);

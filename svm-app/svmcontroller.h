@@ -14,8 +14,7 @@ public:
 
     ~SVMController();
 
-
-    void openTrainFile(std::string train_file_name);
+    void openTrainFile(std::string);
     void openModelFile(std::string);
     void openPredictInputFile(std::string);
     void openPredictOutputFile(std::string);
@@ -24,6 +23,7 @@ public:
     void setSVMType(int type);
     void setKernel(int kernel);
 
+    //core functions
     void readProblem();
     void trainModel();
 
@@ -50,10 +50,10 @@ public:
     bool isCrossvalidation(){return cross_validation;}
     int getNFold(){return n_fold;}
     struct svm_parameter& getParams();
-    std::string getModelFileName(){return model_file_path;}
-    std::string getPredictInputFileName(){return predict_input_file_path;}
-    std::string getPredictOutputFileName(){return predict_out_file_path;}
-    std::string getTrainFileName(){return train_file_path;}
+    std::string getModelFilePath(){return model_file_path;}
+    std::string getPredictInputFilePath(){return predict_input_file_path;}
+    std::string getPredictOutputFilePath(){return predict_out_file_path;}
+    std::string getTrainFilePath(){return train_file_path;}
     int getCorrectPredicted(){return correct;}
     int getTotalPredicted(){return total;}
 
@@ -75,12 +75,17 @@ private:
     };
 
 private:
+    //files
     std::string train_file_path;
     std::string predict_input_file_path;
     std::string predict_out_file_path{"./predict_out.txt"};
     std::string model_file_path{"./model"};
-
+    FILE* input_train{nullptr};
+    FILE* input_predict{nullptr};
+    FILE* output_predict{nullptr};
     bool input_file_name_set{false};
+
+    //params
     struct svm_parameter param;
     struct svm_problem prob;
     struct svm_model *model{nullptr};
@@ -90,10 +95,6 @@ private:
 
     char *line{nullptr};
     int max_line_len{1024};
-    FILE* input_train{nullptr};
-    FILE* input_predict{nullptr};
-    FILE* output_predict{nullptr};
-
     bool model_read{false};
 
     //predict
@@ -102,8 +103,7 @@ private:
     int predict_probability{0};
     int max_nr_attr{64};
     struct svm_node *x;
-
-    int (*info)(const char *fmt, ...); //print function
+    int (*info)(const char *fmt, ...); //predict print function(printf default)
 };
 
 

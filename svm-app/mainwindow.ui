@@ -35,7 +35,7 @@
        </property>
       </widget>
       <widget class="QWidget" name="">
-       <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0,0,0,0,0,0,0,0,0,0,0">
+       <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0,0,0,0,0,0,0,0,0,0,0,0">
         <property name="sizeConstraint">
          <enum>QLayout::SetMinimumSize</enum>
         </property>
@@ -62,7 +62,7 @@
              </sizepolicy>
             </property>
             <property name="text">
-             <string>Tr File</string>
+             <string>Train File</string>
             </property>
            </widget>
           </item>
@@ -104,7 +104,7 @@
              </sizepolicy>
             </property>
             <property name="text">
-             <string>Tst File</string>
+             <string>Test File</string>
             </property>
            </widget>
           </item>
@@ -137,7 +137,7 @@
              </sizepolicy>
             </property>
             <property name="text">
-             <string>Model File</string>
+             <string>Model File Save As</string>
             </property>
            </widget>
           </item>
@@ -155,6 +155,13 @@
            </widget>
           </item>
          </layout>
+        </item>
+        <item>
+         <widget class="Line" name="line_6">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
         </item>
         <item>
          <layout class="QHBoxLayout" name="crossValidation_horizontalLayout">
