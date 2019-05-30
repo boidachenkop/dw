@@ -137,6 +137,7 @@ void MainWindow::on_train_pushButton_clicked()
         svm->readProblem();
         svm->trainModel();
         updateOutput();
+        ui->eps_lineEdit->setStyleSheet("");
     }else{
         ui->eps_lineEdit->setStyleSheet("border-style: outset; border-width: 1px; border-color: red;");
     }
