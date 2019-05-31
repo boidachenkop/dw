@@ -37,6 +37,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->crossValidation_checkBox->setChecked(svm->isCrossvalidation());
     on_crossValidation_checkBox_toggled(svm->isCrossvalidation());
 
+    on_y_scale_checkBox_toggled(false);
+
     //filter params
     filterSVMTypeParams(ui->svmType_comboBox->currentIndex());
     filterKernelParams(ui->kernel_comboBox->currentIndex());
@@ -241,4 +243,17 @@ void MainWindow::on_crossValidation_checkBox_toggled(bool checked)
 {
     ui->nFold_label->setEnabled(checked);
     ui->nFold_spinBox->setEnabled(checked);
+}
+
+void MainWindow::on_scale_toolButton_clicked()
+{
+
+}
+
+void MainWindow::on_y_scale_checkBox_toggled(bool checked)
+{
+   ui->y_lowerLimit_doubleSpinBox->setEnabled(checked);
+   ui->y_upperLimit_doubleSpinBox->setEnabled(checked);
+   ui->y_lowerLimit_label->setEnabled(checked);
+   ui->y_upperLimit_label->setEnabled(checked);
 }

@@ -26,11 +26,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += main.cpp\
         mainwindow.cpp \
     svmcontroller.cpp \
-    svm.cpp
+    svm.cpp \
+    svmscale.cpp
 
 HEADERS  += mainwindow.h \
     svmcontroller.h \
-    svm.h
+    svm.h \
+    svmscale.h
 
 FORMS    += mainwindow.ui
 
