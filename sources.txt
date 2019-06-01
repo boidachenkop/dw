@@ -12,3 +12,6 @@ https://www.youtube.com/playlist?list=PLLssT5z_DsK-h9vYZkQkYNWcItqhlRJLN
 
 SVM book
 "An introduction to support vector machines : and other kernel-based learning methods" / Nello Cristianini and John Shawe-Taylor.
+
+gnuplot
+"http://www.gnuplot.info/"

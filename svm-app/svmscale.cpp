@@ -34,9 +34,14 @@ bool svmscale::check()
     return true;
 }
 
-void svmscale::setRestoreFilename(char* resfn)
+void svmscale::setSaveFilename(char *range_filepath)
 {
-    restore_filename = resfn;
+   save_filename = range_filepath;
+}
+
+void svmscale::setRestoreFilename(char *range_filepath)
+{
+    restore_filename = range_filepath;
 }
 
 void svmscale::scale()
@@ -286,12 +291,6 @@ void svmscale::setYLowerUpper(double lower, double upper)
    y_lower = lower;
    y_upper = upper;
 }
-
-void svmscale::setSaveFilename(char *range_filepath)
-{
-   save_filename = range_filepath;
-}
-
 
 char* svmscale::readline(FILE *input)
 {

@@ -247,11 +247,17 @@ void MainWindow::on_crossValidation_checkBox_toggled(bool checked)
 
 void MainWindow::on_scale_toolButton_clicked()
 {
+    char *range_filepath = "/tmp/svm-app-scale-range";
+
     svmscale scale_train(train_file_path.toStdString(),
                    train_file_path.toStdString()+".scale");
     scale_train.setLowerUpper(ui->lowerLimit_doubleSpinBox->value(),
                         ui->upperLimit_doubleSpinBox->value());
-    scale_train.setSaveFilename("/tmp/svm-app-scale-range");
+    if(ui->y_scale_checkBox->isChecked()){ // y scaling
+        scale_train.setYLowerUpper(ui->y_lowerLimit_doubleSpinBox->value(),
+                                   ui->y_upperLimit_doubleSpinBox->value());
+    }
+    scale_train.setSaveFilename(range_filepath);
     if(scale_train.check()){
         scale_train.scale();
         //update filepathes and ui
@@ -264,7 +270,11 @@ void MainWindow::on_scale_toolButton_clicked()
                             test_file_path.toStdString()+".scale");
         scale_test.setLowerUpper(ui->lowerLimit_doubleSpinBox->value(),
                                  ui->upperLimit_doubleSpinBox->value());
-        scale_test.setRestoreFilename("/tmp/svm-app-scale-range");
+        scale_test.setRestoreFilename(range_filepath);
+        if(ui->y_scale_checkBox->isChecked()){ // y scaling
+            scale_train.setYLowerUpper(ui->y_lowerLimit_doubleSpinBox->value(),
+                                       ui->y_upperLimit_doubleSpinBox->value());
+        }
         if(scale_test.check()){
             scale_test.scale();
             //update filepathes and ui

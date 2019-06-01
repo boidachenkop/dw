@@ -50,8 +50,8 @@ private:
 
     FILE *fp, *fp_restore{nullptr};
     FILE *fp_output;
-    char *save_filename{nullptr};
-    char *restore_filename{nullptr};
+    const char *save_filename{nullptr};
+    const char *restore_filename{nullptr};
     std::string input_filepath;
     std::string output_filepath;
 
