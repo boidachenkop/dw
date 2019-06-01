@@ -15,6 +15,7 @@ MainWindow::MainWindow(QWidget *parent) :
     // train button unabled from begining
     ui->train_pushButton->setEnabled(false);
     ui->test_pushButton->setEnabled(false);
+    ui->scale_toolButton->setEnabled(false);
     // output textEdit read only
     ui->output_textEdit->setReadOnly(true);
 
@@ -65,6 +66,10 @@ void MainWindow::updateOutput(){
                        (std::istreambuf_iterator<char>()));
     ui->output_textEdit->setText(QString::fromStdString(output));
     in_from_file.close();
+
+    //output always down
+    ui->output_textEdit->verticalScrollBar()->setValue(
+                ui->output_textEdit->verticalScrollBar()->maximum());
 }
 
 void MainWindow::on_chooseDataset_toolButton_clicked()
@@ -74,16 +79,19 @@ void MainWindow::on_chooseDataset_toolButton_clicked()
         train_file_path = path;
         ui->chooseDataset_label->setText(train_file_path);
         ui->train_pushButton->setEnabled(true);
+        ui->scale_toolButton->setEnabled(true);
         //update model file path
         svm->setModelFilePath(train_file_path.toStdString()+".model");
         ui->modelFile_path_label->setText(train_file_path+QString::fromUtf8(".model"));
     }else if(!train_file_path.isEmpty()){
         ui->train_pushButton->setEnabled(true);
+        ui->scale_toolButton->setEnabled(true);
         //update model file path
         svm->setModelFilePath(train_file_path.toStdString()+".model");
         ui->modelFile_path_label->setText(train_file_path+QString::fromUtf8(".model"));
     }else{
         ui->train_pushButton->setEnabled(false);
+        ui->scale_toolButton->setEnabled(false);
     }
 }
 
@@ -145,10 +153,6 @@ void MainWindow::on_train_pushButton_clicked()
     }
     //model path:
     ui->modelFile_path_label->setText(QString::fromStdString(svm->getModelFilePath()));
-
-    //output always down
-    ui->output_textEdit->verticalScrollBar()->setValue(
-                ui->output_textEdit->verticalScrollBar()->maximum());
 }
 
 void MainWindow::on_test_pushButton_clicked()
@@ -158,10 +162,6 @@ void MainWindow::on_test_pushButton_clicked()
     svm->predict();
 
     updateOutput();
-
-    //output always down
-    ui->output_textEdit->verticalScrollBar()->setValue(
-                ui->output_textEdit->verticalScrollBar()->maximum());
 }
 
 void MainWindow::filterSVMTypeParams(int svm_type){
@@ -247,7 +247,32 @@ void MainWindow::on_crossValidation_checkBox_toggled(bool checked)
 
 void MainWindow::on_scale_toolButton_clicked()
 {
-
+    svmscale scale_train(train_file_path.toStdString(),
+                   train_file_path.toStdString()+".scale");
+    scale_train.setLowerUpper(ui->lowerLimit_doubleSpinBox->value(),
+                        ui->upperLimit_doubleSpinBox->value());
+    scale_train.setSaveFilename("/tmp/svm-app-scale-range");
+    if(scale_train.check()){
+        scale_train.scale();
+        //update filepathes and ui
+        train_file_path = QString::fromStdString(train_file_path.toStdString()+".scale");
+        ui->chooseDataset_label->setText(train_file_path);
+    }
+    updateOutput();
+    if(!test_file_path.isEmpty()){
+        svmscale scale_test(test_file_path.toStdString(),
+                            test_file_path.toStdString()+".scale");
+        scale_test.setLowerUpper(ui->lowerLimit_doubleSpinBox->value(),
+                                 ui->upperLimit_doubleSpinBox->value());
+        scale_test.setRestoreFilename("/tmp/svm-app-scale-range");
+        if(scale_test.check()){
+            scale_test.scale();
+            //update filepathes and ui
+            test_file_path = QString::fromStdString(test_file_path.toStdString()+".scale");
+            ui->tstFile_path_label->setText(test_file_path);
+        }
+        updateOutput();
+    }
 }
 
 void MainWindow::on_y_scale_checkBox_toggled(bool checked)

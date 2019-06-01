@@ -13,6 +13,7 @@
 #include <fstream>
 
 #include "svmcontroller.h"
+#include "svmscale.h"
 
 
 namespace Ui {

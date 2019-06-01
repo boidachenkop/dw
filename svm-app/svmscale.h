@@ -21,14 +21,16 @@
 class svmscale
 {
 public:
-    svmscale(std::string filepath);
+    svmscale(std::string in, std::string out);
     bool check();
     void scale();
 
     //setters
     void setLowerUpper(double lower, double upper);
     void setYLowerUpper(double lower, double upper);
-    void setRestoreFilepath(char* range_filepath);
+    void setSaveFilename(char* range_filepath);
+    void setRestoreFilename(char* range_filepath);
+    void setOutputFilePath(std::string ofpath);
 
 private:
     double lower{-1.0};
@@ -47,9 +49,11 @@ private:
     long int new_num_nonzeros{0};
 
     FILE *fp, *fp_restore{nullptr};
+    FILE *fp_output;
     char *save_filename{nullptr};
     char *restore_filename{nullptr};
     std::string input_filepath;
+    std::string output_filepath;
 
     char *line{nullptr};
     int max_line_len{1024};

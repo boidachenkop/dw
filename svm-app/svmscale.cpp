@@ -1,13 +1,17 @@
 #include "svmscale.h"
 
-svmscale::svmscale(std::string ifp)
+svmscale::svmscale(std::string input_fp, std::string out_fp):
+    input_filepath{input_fp}, output_filepath{out_fp}
 {
-    input_filepath = ifp;
     fp = fopen(input_filepath.c_str(), "r");
     if(fp==NULL)
     {
         printf("can't open file %s\n", input_filepath.c_str());
-        exit(1);
+    }
+    fp_output = fopen(output_filepath.c_str(), "w");
+    if(fp_output==NULL)
+    {
+        printf("can't open file %s\n", output_filepath.c_str());
     }
     line = (char *) malloc(max_line_len*sizeof(char));
     feature_max = (double *)malloc((max_index+1)* sizeof(double));
@@ -30,7 +34,7 @@ bool svmscale::check()
     return true;
 }
 
-void svmscale::setRestoreFilepath(char* resfn)
+void svmscale::setRestoreFilename(char* resfn)
 {
     restore_filename = resfn;
 }
@@ -46,8 +50,8 @@ void svmscale::scale()
         fp_restore = fopen(restore_filename,"r");
         if(fp_restore==NULL)
         {
-            fprintf(stderr,"can't open file %s\n", restore_filename);
-            exit(1);
+            printf("can't open file %s\n", restore_filename);
+            return;
         }
 
         c = fgetc(fp_restore);
@@ -81,8 +85,7 @@ void svmscale::scale()
     }
 
     if(min_index < 1)
-        fprintf(stderr,
-            "WARNING: minimal feature index is %d, but indices should start from 1\n", min_index);
+        printf("WARNING: minimal feature index is %d, but indices should start from 1\n", min_index);
 
     rewind(fp);
 
@@ -91,8 +94,8 @@ void svmscale::scale()
 
     if(feature_max == NULL || feature_min == NULL)
     {
-        fprintf(stderr,"can't allocate enough memory\n");
-        exit(1);
+        printf("can't allocate enough memory\n");
+        return;
     }
 
     for(int i=0;i<=max_index;i++)
@@ -203,8 +206,8 @@ void svmscale::scale()
         FILE *fp_save = fopen(save_filename,"w");
         if(fp_save==NULL)
         {
-            fprintf(stderr,"can't open file %s\n", save_filename);
-            exit(1);
+            printf("can't open file %s\n", save_filename);
+            return;
         }
         if(y_scaling)
         {
@@ -221,8 +224,7 @@ void svmscale::scale()
         }
 
         if(min_index < 1)
-            fprintf(stderr,
-                "WARNING: scaling factors with indices smaller than 1 are not stored to the file %s.\n", save_filename);
+            printf("WARNING: scaling factors with indices smaller than 1 are not stored to the file %s.\n", save_filename);
 
         fclose(fp_save);
     }
@@ -257,12 +259,11 @@ void svmscale::scale()
         for(int i=next_index;i<=max_index;i++)
             output(i,0);
 
-        printf("\n");
+        fprintf(fp_output, "\n");
     }
 
     if (new_num_nonzeros > num_nonzeros)
-        fprintf(stderr,
-            "WARNING: original #nonzeros %ld\n"
+        printf("WARNING: original #nonzeros %ld\n"
             "       > new      #nonzeros %ld\n"
             "If feature values are non-negative and sparse, use -l 0 rather than the default -l -1\n",
             num_nonzeros, new_num_nonzeros);
@@ -270,6 +271,7 @@ void svmscale::scale()
     free(feature_max);
     free(feature_min);
     fclose(fp);
+    fclose(fp_output);
 }
 
 void svmscale::setLowerUpper(double lower, double upper)
@@ -283,6 +285,11 @@ void svmscale::setYLowerUpper(double lower, double upper)
    y_scaling = true;
    y_lower = lower;
    y_upper = upper;
+}
+
+void svmscale::setSaveFilename(char *range_filepath)
+{
+   save_filename = range_filepath;
 }
 
 
@@ -315,7 +322,7 @@ void svmscale::output_target(double value)
         else value = y_lower + (y_upper-y_lower) *
                  (value - y_min)/(y_max-y_min);
     }
-    printf("%.17g ",value);
+    fprintf(fp_output, "%.17g ",value);
 }
 
 void svmscale::output(int index, double value)
@@ -335,14 +342,14 @@ void svmscale::output(int index, double value)
 
     if(value != 0)
     {
-        printf("%d:%g ",index, value);
+        fprintf(fp_output,"%d:%g ",index, value);
         new_num_nonzeros++;
     }
 }
 
 int svmscale::clean_up(FILE *fp_restore, FILE *fp, const char* msg)
 {
-    fprintf(stderr,	"%s", msg);
+    printf("%s", msg);
     free(line);
     free(feature_max);
     free(feature_min);
