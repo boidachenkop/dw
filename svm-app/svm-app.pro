@@ -27,13 +27,15 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     svmcontroller.cpp \
     svm.cpp \
-    svmscale.cpp
+    svmscale.cpp \
+    svmvisualizer.cpp
 
 HEADERS  += mainwindow.h \
     svmcontroller.h \
     svm.h \
     svmscale.h \
-    gnuplot_i.hpp
+	gnuplot_i.hpp \
+	svmvisualizer.h
 
 FORMS    += mainwindow.ui
 

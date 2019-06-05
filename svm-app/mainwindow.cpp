@@ -1,8 +1,5 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include <QFileDialog>
-#include <iostream>
-#include <cstdio>
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -292,3 +289,21 @@ void MainWindow::on_y_scale_checkBox_toggled(bool checked)
    ui->y_lowerLimit_label->setEnabled(checked);
    ui->y_upperLimit_label->setEnabled(checked);
 }
+
+void MainWindow::on_visualize_pushButton_clicked()
+{
+    //prepare unlabled file
+    std::string prepare_data_cmd = R"( awk '{if($3 == ""){$3="0.0"} if($2 == ""){$2="0.0"} gsub("[0-9]+:", "", $2); gsub("[0-9]+:", "", $3); print $2, $3}' )";
+    prepare_data_cmd+=train_file_path.toStdString()+" > "+train_file_path.toStdString()+".tmp";
+    system(prepare_data_cmd.c_str());
+
+    //plot with gnuplot
+    std::string plot_cmd = "gnuplot -e \"set term pngcairo; plot '";
+    plot_cmd+=train_file_path.toStdString()+".tmp'\" > ~/Desktop/pr/dw/output.png";
+    system(plot_cmd.c_str());
+}
+
+
+
+
+

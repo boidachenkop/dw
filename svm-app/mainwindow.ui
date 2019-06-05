@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>787</width>
-    <height>501</height>
+    <height>508</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -169,7 +169,7 @@
            </sizepolicy>
           </property>
           <property name="currentIndex">
-           <number>0</number>
+           <number>2</number>
           </property>
           <widget class="QWidget" name="crossValidation_tab">
            <attribute name="title">
@@ -440,6 +440,20 @@
                </widget>
               </item>
              </layout>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="visualisation_tab">
+           <attribute name="title">
+            <string>Visualisation</string>
+           </attribute>
+           <layout class="QHBoxLayout" name="horizontalLayout_4">
+            <item>
+             <widget class="QPushButton" name="visualize_pushButton">
+              <property name="text">
+               <string>Visualize</string>
+              </property>
+             </widget>
             </item>
            </layout>
           </widget>

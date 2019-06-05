@@ -6,14 +6,18 @@
 #include <QFile>
 #include <QScrollBar>
 #include <QTextStream>
+#include <QFileDialog>
 
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
 #include <fstream>
+#include <iostream>
+#include <cstdio>
 
 #include "svmcontroller.h"
 #include "svmscale.h"
+#include "svmvisualizer.h"
 
 
 namespace Ui {
@@ -53,6 +57,8 @@ private slots:
     void on_scale_toolButton_clicked();
 
     void on_y_scale_checkBox_toggled(bool checked);
+
+    void on_visualize_pushButton_clicked();
 
 private:
     void filterSVMTypeParams(int);
