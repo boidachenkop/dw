@@ -625,7 +625,7 @@
               <item>
                <widget class="QDoubleSpinBox" name="gamma_doubleSpinBox">
                 <property name="decimals">
-                 <number>3</number>
+                 <number>4</number>
                 </property>
                 <property name="maximum">
                  <double>9999.998999999999796</double>
@@ -649,7 +649,7 @@
               <item>
                <widget class="QDoubleSpinBox" name="coef_doubleSpinBox">
                 <property name="decimals">
-                 <number>3</number>
+                 <number>4</number>
                 </property>
                 <property name="maximum">
                  <double>9999.989999999999782</double>
@@ -687,7 +687,7 @@
               <item>
                <widget class="QDoubleSpinBox" name="C_doubleSpinBox">
                 <property name="decimals">
-                 <number>3</number>
+                 <number>4</number>
                 </property>
                 <property name="maximum">
                  <double>9999.998999999999796</double>
@@ -744,7 +744,7 @@
               <item>
                <widget class="QDoubleSpinBox" name="nu_doubleSpinBox">
                 <property name="decimals">
-                 <number>3</number>
+                 <number>4</number>
                 </property>
                 <property name="maximum">
                  <double>9999.989999999999782</double>
@@ -780,7 +780,11 @@
                </widget>
               </item>
               <item>
-               <widget class="QDoubleSpinBox" name="P_doubleSpinBox"/>
+               <widget class="QDoubleSpinBox" name="P_doubleSpinBox">
+                <property name="decimals">
+                 <number>4</number>
+                </property>
+               </widget>
               </item>
              </layout>
             </item>

@@ -17,8 +17,8 @@
 
 #include "svmcontroller.h"
 #include "svmscale.h"
-#include "svmvisualizer.h"
 
+int getNFeatures(std::string);
 
 namespace Ui {
 class MainWindow;

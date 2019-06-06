@@ -47,9 +47,9 @@ public:
     void setPredictPrintFunction(int (*f)(const char* s, ...));
 
     //getters
+    struct svm_parameter& getParams();
     bool isCrossvalidation(){return cross_validation;}
     int getNFold(){return n_fold;}
-    struct svm_parameter& getParams();
     std::string getModelFilePath(){return model_file_path;}
     std::string getPredictInputFilePath(){return predict_input_file_path;}
     std::string getPredictOutputFilePath(){return predict_out_file_path;}

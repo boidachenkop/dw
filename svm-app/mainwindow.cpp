@@ -9,10 +9,11 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    // train button unabled from begining
+    // buttons unabled on start
     ui->train_pushButton->setEnabled(false);
     ui->test_pushButton->setEnabled(false);
     ui->scale_toolButton->setEnabled(false);
+    ui->visualize_pushButton->setEnabled(false);
     // output textEdit read only
     ui->output_textEdit->setReadOnly(true);
 
@@ -77,18 +78,29 @@ void MainWindow::on_chooseDataset_toolButton_clicked()
         ui->chooseDataset_label->setText(train_file_path);
         ui->train_pushButton->setEnabled(true);
         ui->scale_toolButton->setEnabled(true);
+        if(getNFeatures(train_file_path.toStdString()) <= 3){
+            ui->visualize_pushButton->setEnabled(true);
+        }else{
+            ui->visualize_pushButton->setEnabled(false);
+        }
         //update model file path
         svm->setModelFilePath(train_file_path.toStdString()+".model");
         ui->modelFile_path_label->setText(train_file_path+QString::fromUtf8(".model"));
     }else if(!train_file_path.isEmpty()){
         ui->train_pushButton->setEnabled(true);
         ui->scale_toolButton->setEnabled(true);
+        if(getNFeatures(train_file_path.toStdString()) <= 3){
+            ui->visualize_pushButton->setEnabled(true);
+        }else{
+            ui->visualize_pushButton->setEnabled(false);
+        }
         //update model file path
         svm->setModelFilePath(train_file_path.toStdString()+".model");
         ui->modelFile_path_label->setText(train_file_path+QString::fromUtf8(".model"));
     }else{
         ui->train_pushButton->setEnabled(false);
         ui->scale_toolButton->setEnabled(false);
+        ui->visualize_pushButton->setEnabled(false);
     }
 }
 
@@ -292,18 +304,56 @@ void MainWindow::on_y_scale_checkBox_toggled(bool checked)
 
 void MainWindow::on_visualize_pushButton_clicked()
 {
+    int n_features = getNFeatures(train_file_path.toStdString());
     //prepare unlabled file
-    std::string prepare_data_cmd = R"( awk '{if($3 == ""){$3="0.0"} if($2 == ""){$2="0.0"} gsub("[0-9]+:", "", $2); gsub("[0-9]+:", "", $3); print $2, $3}' )";
-    prepare_data_cmd+=train_file_path.toStdString()+" > "+train_file_path.toStdString()+".tmp";
-    system(prepare_data_cmd.c_str());
-
+    std::string prepare_data_cmd;
+    if(n_features == 1){
+        prepare_data_cmd = R"( awk '{if($2 == ""){$2="0.0"} gsub("[0-9]+:", "", $2); print $2, $1}' )";
+        prepare_data_cmd+=train_file_path.toStdString()+" > "+train_file_path.toStdString()+".tmp";
+        system(prepare_data_cmd.c_str());
+    }else if(n_features == 2){
+        prepare_data_cmd = R"( awk '{if($3 == ""){$3="0.0"} if($2 == ""){$2="0.0"} gsub("[0-9]+:", "", $2); gsub("[0-9]+:", "", $3); print $2, $3, $1}' )";
+        prepare_data_cmd+=train_file_path.toStdString()+" > "+train_file_path.toStdString()+".tmp";
+        system(prepare_data_cmd.c_str());
+    }else if(n_features == 3){
+        prepare_data_cmd = R"( awk '{if($2 == ""){$2="0.0"} if($3 == ""){$3="0.0"} if($4 == ""){$4="0.0"} gsub("[0-9]+:", "", $2); gsub("[0-9]+:", "", $3); gsub("[0-9]+:", "", $4); print $2, $3, $4, $1}' )";
+        prepare_data_cmd+=train_file_path.toStdString()+" > "+train_file_path.toStdString()+".tmp";
+        system(prepare_data_cmd.c_str());
+    }
     //plot with gnuplot
-    std::string plot_cmd = "gnuplot -e \"set term pngcairo; plot '";
-    plot_cmd+=train_file_path.toStdString()+".tmp'\" > ~/Desktop/pr/dw/output.png";
+
+    std::string plot_cmd;
+    if(n_features == 3){
+        plot_cmd = "gnuplot -e \"splot '";
+    }else{
+        plot_cmd = "gnuplot -e \"plot '";
+    }
+    plot_cmd+=train_file_path.toStdString()+".tmp' with points palette; pause 5; reread\"";
     system(plot_cmd.c_str());
+
+    //remove .tmp
+    std::string rm_cmd = "rm "+train_file_path.toStdString()+".tmp";
+//    system(rm_cmd.c_str());
 }
 
-
-
-
-
+int getNFeatures(std::string data_filepath){
+    //read 1st line from file and parse number of features
+    std::fstream data;
+    data.open(data_filepath, std::fstream::in);
+    std::string ndim_str;
+    std::string line;
+    std::getline(data, line);
+    data.close();
+    for(auto c = line.end(); c != line.begin(); c--){
+        if(*c == ':'){
+            c--;
+            while(*c != ' '){
+                ndim_str+=*c;
+                c--;
+            }
+            break;
+        }
+    }
+    reverse(ndim_str.begin(), ndim_str.end());
+    return stoi(ndim_str);
+}
