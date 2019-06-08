@@ -32,7 +32,8 @@ SOURCES += main.cpp\
 HEADERS  += mainwindow.h \
     svmcontroller.h \
     svm.h \
-    svmscale.h
+    svmscale.h \
+	gnuplot_i.hpp
 
 FORMS    += mainwindow.ui
 

@@ -302,6 +302,7 @@ void MainWindow::on_y_scale_checkBox_toggled(bool checked)
    ui->y_upperLimit_label->setEnabled(checked);
 }
 
+#include "gnuplot_i.hpp"
 void MainWindow::on_visualize_pushButton_clicked()
 {
     int n_features = getNFeatures(train_file_path.toStdString());
@@ -309,27 +310,24 @@ void MainWindow::on_visualize_pushButton_clicked()
     std::string prepare_data_cmd;
     if(n_features == 1){
         prepare_data_cmd = R"( awk '{if($2 == ""){$2="0.0"} gsub("[0-9]+:", "", $2); print $2, $1}' )";
-        prepare_data_cmd+=train_file_path.toStdString()+" > "+train_file_path.toStdString()+".tmp";
-        system(prepare_data_cmd.c_str());
     }else if(n_features == 2){
         prepare_data_cmd = R"( awk '{if($3 == ""){$3="0.0"} if($2 == ""){$2="0.0"} gsub("[0-9]+:", "", $2); gsub("[0-9]+:", "", $3); print $2, $3, $1}' )";
-        prepare_data_cmd+=train_file_path.toStdString()+" > "+train_file_path.toStdString()+".tmp";
-        system(prepare_data_cmd.c_str());
     }else if(n_features == 3){
         prepare_data_cmd = R"( awk '{if($2 == ""){$2="0.0"} if($3 == ""){$3="0.0"} if($4 == ""){$4="0.0"} gsub("[0-9]+:", "", $2); gsub("[0-9]+:", "", $3); gsub("[0-9]+:", "", $4); print $2, $3, $4, $1}' )";
-        prepare_data_cmd+=train_file_path.toStdString()+" > "+train_file_path.toStdString()+".tmp";
-        system(prepare_data_cmd.c_str());
     }
+    prepare_data_cmd+=train_file_path.toStdString()+" > "+train_file_path.toStdString()+".tmp";
+    system(prepare_data_cmd.c_str());
+    Gnuplot gp;
+    gp.plotfile_xy(train_file_path.toStdString()+".tmp")<<"pause mouse close";
     //plot with gnuplot
-
-    std::string plot_cmd;
-    if(n_features == 3){
-        plot_cmd = "gnuplot -e \"splot '";
-    }else{
-        plot_cmd = "gnuplot -e \"plot '";
-    }
-    plot_cmd+=train_file_path.toStdString()+".tmp' with points palette; pause 5; reread\"";
-    system(plot_cmd.c_str());
+//    std::string plot_cmd;
+//    if(n_features == 3){
+//        plot_cmd = "gnuplot -e \"splot '";
+//    }else{
+//        plot_cmd = "gnuplot -e \"plot '";
+//    }
+//    plot_cmd+=train_file_path.toStdString()+".tmp' with points palette; pause 5; reread\"";
+//    system(plot_cmd.c_str());
 
     //remove .tmp
     std::string rm_cmd = "rm "+train_file_path.toStdString()+".tmp";
