@@ -53,6 +53,9 @@ MainWindow::~MainWindow()
        std::cerr<<"Can't close stdout redirect file"<<std::endl;
     }
     stdout = std_old;
+
+    //remove .tmp plot files
+    system(rm_tmp_plot_cmd.c_str());
     delete ui;
 }
 
@@ -317,21 +320,19 @@ void MainWindow::on_visualize_pushButton_clicked()
     }
     prepare_data_cmd+=train_file_path.toStdString()+" > "+train_file_path.toStdString()+".tmp";
     system(prepare_data_cmd.c_str());
-    Gnuplot gp;
-    gp.plotfile_xy(train_file_path.toStdString()+".tmp")<<"pause mouse close";
-    //plot with gnuplot
-//    std::string plot_cmd;
-//    if(n_features == 3){
-//        plot_cmd = "gnuplot -e \"splot '";
-//    }else{
-//        plot_cmd = "gnuplot -e \"plot '";
-//    }
-//    plot_cmd+=train_file_path.toStdString()+".tmp' with points palette; pause 5; reread\"";
-//    system(plot_cmd.c_str());
 
-    //remove .tmp
-    std::string rm_cmd = "rm "+train_file_path.toStdString()+".tmp";
-//    system(rm_cmd.c_str());
+    //plot with gnuplot
+    Gnuplot gp;
+    std::string plot_cmd;
+    if(n_features == 3){
+        plot_cmd = "splot '";
+    }else{
+        plot_cmd = "plot '";
+    }
+    plot_cmd+=train_file_path.toStdString()+".tmp' with points palette; pause mouse close";
+    gp<<plot_cmd;
+
+    rm_tmp_plot_cmd += train_file_path.toStdString()+".tmp ";//remove file in d-tor
 }
 
 int getNFeatures(std::string data_filepath){
