@@ -78,7 +78,7 @@ private:
     std::string stdout_redirect_path;
     FILE* std_old;
 
-    std::string rm_tmp_plot_cmd{"rm "}; //command for remove tmp files using for plotting
+    std::string rm_tmp_plot_cmd{"rm -f "}; //command for remove tmp files using for plotting
 };
 
 #endif // MAINWINDOW_H

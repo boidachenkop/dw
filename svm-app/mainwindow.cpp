@@ -56,6 +56,7 @@ MainWindow::~MainWindow()
     stdout = std_old;
 
     //remove .tmp plot files
+    std::cout<<rm_tmp_plot_cmd<<std::endl;
     system(rm_tmp_plot_cmd.c_str());
     delete ui;
 }
@@ -77,24 +78,32 @@ void MainWindow::updateOutput(){
 void MainWindow::on_chooseDataset_toolButton_clicked()
 {
     QString path = QFileDialog::getOpenFileName(this, "Choose train dataset", "/home/pavlo/Desktop/pr/dw/datasets");
-    QStringList arguments{path};
-    QProcess p;
-    p.setStandardOutputFile("/tmp/PYTHON_OUT.txt");
-    p.start("echo checkdata.py", arguments);
-    p.waitForFinished();
     if(!path.isEmpty()){
-        train_file_path = path;
-        ui->chooseDataset_label->setText(train_file_path);
-        ui->train_pushButton->setEnabled(true);
-        ui->scale_toolButton->setEnabled(true);
-        if(getNFeatures(train_file_path.toStdString()) <= 3){
-            ui->visualize_pushButton->setEnabled(true);
+        QStringList arguments{"./checkdata.py", path};
+        QProcess py_script;
+        py_script.start("python", arguments);
+        py_script.waitForFinished();
+        QString py_script_out(py_script.readAllStandardOutput());
+        if(py_script_out != "No error.\n"){
+            ui->chooseDataset_label->setStyleSheet("QLabel{color : red;}");
+            printf("%s\n", py_script_out.toLatin1().data());
+            updateOutput();
         }else{
-            ui->visualize_pushButton->setEnabled(false);
+            ui->chooseDataset_label->setStyleSheet("QLabel{color : black;}");
+            train_file_path = path;
+            ui->chooseDataset_label->setText(train_file_path);
+            ui->train_pushButton->setEnabled(true);
+            ui->scale_toolButton->setEnabled(true);
+            if(getNFeatures(train_file_path.toStdString()) <= 3){
+                ui->visualize_pushButton->setEnabled(true);
+            }else{
+                ui->visualize_pushButton->setEnabled(false);
+            }
+            //update model file path
+            svm->setModelFilePath(train_file_path.toStdString()+".model");
+            ui->modelFile_path_label->setText(train_file_path+QString::fromUtf8(".model"));
         }
-        //update model file path
-        svm->setModelFilePath(train_file_path.toStdString()+".model");
-        ui->modelFile_path_label->setText(train_file_path+QString::fromUtf8(".model"));
+
     }else if(!train_file_path.isEmpty()){
         ui->train_pushButton->setEnabled(true);
         ui->scale_toolButton->setEnabled(true);
