@@ -78,7 +78,7 @@ private:
     //files
     std::string train_file_path;
     std::string predict_input_file_path;
-    std::string predict_out_file_path{"./predict_out.txt"};
+    std::string predict_out_file_path{"/tmp/predict_out.txt"};
     std::string model_file_path{"./model"};
     FILE* input_train{nullptr};
     FILE* input_predict{nullptr};

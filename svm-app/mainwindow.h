@@ -7,6 +7,9 @@
 #include <QScrollBar>
 #include <QTextStream>
 #include <QFileDialog>
+#include <QStringList>
+#include <QProcess>
+#include <QByteArray>
 
 #include <sys/types.h>
 #include <sys/stat.h>

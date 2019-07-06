@@ -45,6 +45,7 @@ MainWindow::MainWindow(QWidget *parent) :
     stdout_redirect_path = "/tmp/svm-app-out";
     std_old = stdout;
     stdout = fopen(stdout_redirect_path.c_str(), "w");
+
 }
 
 MainWindow::~MainWindow()
@@ -76,6 +77,11 @@ void MainWindow::updateOutput(){
 void MainWindow::on_chooseDataset_toolButton_clicked()
 {
     QString path = QFileDialog::getOpenFileName(this, "Choose train dataset", "/home/pavlo/Desktop/pr/dw/datasets");
+    QStringList arguments{path};
+    QProcess p;
+    p.setStandardOutputFile("/tmp/PYTHON_OUT.txt");
+    p.start("echo checkdata.py", arguments);
+    p.waitForFinished();
     if(!path.isEmpty()){
         train_file_path = path;
         ui->chooseDataset_label->setText(train_file_path);
@@ -124,7 +130,7 @@ void MainWindow::on_choose_tstFile_toolButton_clicked()
 
 void MainWindow::on_modelFile_toolButton_clicked()
 {
-    QString path = QFileDialog::getSaveFileName(this, "Save model", "/home/pavlo/Desktop/pr/dw/datasets");
+    QString path = QFileDialog::getSaveFileName(this, "Save model", "/Users/pavlo/Desktop/pr/dw/datasets");
     if(!path.isEmpty()){
         svm->setModelFilePath(path.toStdString());
         ui->modelFile_path_label->setText(QString::fromStdString(svm->getModelFilePath()));
@@ -323,6 +329,7 @@ void MainWindow::on_visualize_pushButton_clicked()
 
     //plot with gnuplot
     Gnuplot gp;
+//    gp<<"set terminal";
     std::string plot_cmd;
     if(n_features == 3){
         plot_cmd = "splot '";
@@ -336,23 +343,28 @@ void MainWindow::on_visualize_pushButton_clicked()
 }
 
 int getNFeatures(std::string data_filepath){
-    //read 1st line from file and parse number of features
+    //read file and parse number of features
     std::fstream data;
     data.open(data_filepath, std::fstream::in);
     std::string ndim_str;
     std::string line;
-    std::getline(data, line);
-    data.close();
-    for(auto c = line.end(); c != line.begin(); c--){
-        if(*c == ':'){
-            c--;
-            while(*c != ' '){
-                ndim_str+=*c;
+    int max_dim=0;
+    while(std::getline(data, line)){
+        for(auto c = line.end(); c != line.begin(); c--){
+            if(*c == ':'){
                 c--;
+                while(*c != ' '){
+                    ndim_str+=*c;
+                    c--;
+                }
+                break;
             }
-            break;
         }
+        reverse(ndim_str.begin(), ndim_str.end());
+        int cur_dim = stoi(ndim_str);
+        max_dim = max_dim < cur_dim ? cur_dim : max_dim;
+        ndim_str = "";
     }
-    reverse(ndim_str.begin(), ndim_str.end());
-    return stoi(ndim_str);
+    data.close();
+    return max_dim;
 }

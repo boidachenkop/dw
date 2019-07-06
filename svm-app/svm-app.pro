@@ -39,3 +39,11 @@ FORMS    += mainwindow.ui
 
 RESOURCES += \
     res.qrc
+
+OTHER_FILES += \
+	checkdata.py \
+	fselect.py
+
+DISTFILES += \
+    checkdata.py \
+    fselect.py

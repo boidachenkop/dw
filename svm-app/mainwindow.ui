@@ -169,11 +169,11 @@
            </sizepolicy>
           </property>
           <property name="currentIndex">
-           <number>2</number>
+           <number>3</number>
           </property>
           <widget class="QWidget" name="crossValidation_tab">
            <attribute name="title">
-            <string>Cross-validation</string>
+            <string>CV</string>
            </attribute>
            <layout class="QHBoxLayout" name="horizontalLayout">
             <item>
@@ -456,6 +456,11 @@
              </widget>
             </item>
            </layout>
+          </widget>
+          <widget class="QWidget" name="feature_selection_tab">
+           <attribute name="title">
+            <string>Feature Selection</string>
+           </attribute>
           </widget>
          </widget>
         </item>
