@@ -41,9 +41,8 @@ RESOURCES += \
     res.qrc
 
 OTHER_FILES += \
-	checkdata.py \
-	fselect.py
+	checkdata.py
 
 DISTFILES += \
     checkdata.py \
-    fselect.py
+    f_select.py

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 4.2.0, 2019-07-06T14:49:48. -->
+<!-- Written by QtCreator 4.2.0, 2019-07-07T14:51:16. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -154,7 +154,7 @@
      </valuemap>
      <valuemap type="QVariantMap" key="ProjectExplorer.BuildStepList.Step.2">
       <value type="bool" key="ProjectExplorer.BuildStep.Enabled">true</value>
-      <value type="QString" key="ProjectExplorer.ProcessStep.Arguments">%{CurrentProject:Path}/checkdata.py %{CurrentProject:Path}/fselect.py %{buildDir}</value>
+      <value type="QString" key="ProjectExplorer.ProcessStep.Arguments">%{CurrentProject:Path}/checkdata.py %{CurrentProject:Path}/f_select.py %{buildDir}</value>
       <value type="QString" key="ProjectExplorer.ProcessStep.Command">cp</value>
       <value type="QString" key="ProjectExplorer.ProcessStep.WorkingDirectory">%{buildDir}</value>
       <value type="QString" key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName">Custom Process Step</value>
