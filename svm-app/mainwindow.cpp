@@ -12,8 +12,9 @@ MainWindow::MainWindow(QWidget *parent) :
     // buttons unabled on start
     ui->train_pushButton->setEnabled(false);
     ui->test_pushButton->setEnabled(false);
-    ui->scale_toolButton->setEnabled(false);
-    ui->visualize_pushButton->setEnabled(false);
+    ui->scaling_tab->setEnabled(false);
+    ui->visualisation_tab->setEnabled(false);
+    ui->feature_selection_tab->setEnabled(false);
     // output textEdit read only
     ui->output_textEdit->setReadOnly(true);
 
@@ -81,7 +82,7 @@ void MainWindow::on_chooseDataset_toolButton_clicked()
     if(!path.isEmpty()){
         QStringList arguments{"./checkdata.py", path};
         QProcess py_script;
-        py_script.start("python", arguments);
+        py_script.start("python3", arguments);
         py_script.waitForFinished();
         QString py_script_out(py_script.readAllStandardOutput());
         if(py_script_out != "No error.\n"){
@@ -93,11 +94,14 @@ void MainWindow::on_chooseDataset_toolButton_clicked()
             train_file_path = path;
             ui->chooseDataset_label->setText(train_file_path);
             ui->train_pushButton->setEnabled(true);
-            ui->scale_toolButton->setEnabled(true);
-            if(getNFeatures(train_file_path.toStdString()) <= 3){
-                ui->visualize_pushButton->setEnabled(true);
+            ui->scaling_tab->setEnabled(true);
+            ui->feature_selection_tab->setEnabled(true);
+            svm->setNFeatures(getNFeatures(train_file_path.toStdString()));
+            ui->pattern_lineEdit->setText("1-"+QString::number(svm->getNFeatures()));
+            if(svm->getNFeatures() <= 3){
+                ui->visualisation_tab->setEnabled(true);
             }else{
-                ui->visualize_pushButton->setEnabled(false);
+                ui->visualisation_tab->setEnabled(false);
             }
             //update model file path
             svm->setModelFilePath(train_file_path.toStdString()+".model");
@@ -106,19 +110,19 @@ void MainWindow::on_chooseDataset_toolButton_clicked()
 
     }else if(!train_file_path.isEmpty()){
         ui->train_pushButton->setEnabled(true);
-        ui->scale_toolButton->setEnabled(true);
+        ui->scaling_tab->setEnabled(true);
         if(getNFeatures(train_file_path.toStdString()) <= 3){
-            ui->visualize_pushButton->setEnabled(true);
+            ui->visualisation_tab->setEnabled(true);
         }else{
-            ui->visualize_pushButton->setEnabled(false);
+            ui->visualisation_tab->setEnabled(false);
         }
         //update model file path
         svm->setModelFilePath(train_file_path.toStdString()+".model");
         ui->modelFile_path_label->setText(train_file_path+QString::fromUtf8(".model"));
     }else{
         ui->train_pushButton->setEnabled(false);
-        ui->scale_toolButton->setEnabled(false);
-        ui->visualize_pushButton->setEnabled(false);
+        ui->scaling_tab->setEnabled(false);
+        ui->visualisation_tab->setEnabled(false);
     }
 }
 
@@ -355,6 +359,10 @@ int getNFeatures(std::string data_filepath){
     //read file and parse number of features
     std::fstream data;
     data.open(data_filepath, std::fstream::in);
+    if(!data.is_open()){
+       printf("Can't open file %s", data_filepath.c_str());
+       return -1;
+    }
     std::string ndim_str;
     std::string line;
     int max_dim=0;
@@ -376,4 +384,34 @@ int getNFeatures(std::string data_filepath){
     }
     data.close();
     return max_dim;
+}
+
+void MainWindow::on_select_pushButton_clicked()
+{
+    std::cout<<"nFeatures: "<<svm->getNFeatures()<<std::endl;
+    QStringList arguments{"./f_select.py", train_file_path,
+                QString::number(svm->getNFeatures()), ui->pattern_lineEdit->text()};
+    QProcess py_script;
+    py_script.start("python3", arguments);
+    py_script.waitForFinished();
+    QString py_script_out(py_script.readAllStandardOutput());
+    printf("%s\n", py_script_out.toLatin1().data());
+    updateOutput();
+    train_file_path = QString::fromStdString(train_file_path.toStdString() + ".fselected");
+    ui->chooseDataset_label->setText(train_file_path);
+    if(!test_file_path.isEmpty()){
+        QStringList arguments{"./f_select.py", test_file_path,
+                    QString::number(svm->getNFeatures()), ui->pattern_lineEdit->text()};
+        QProcess py_script;
+        py_script.start("python3", arguments);
+        py_script.waitForFinished();
+        QString py_script_out(py_script.readAllStandardOutput());
+        printf("%s\n", py_script_out.toLatin1().data());
+        updateOutput();
+        test_file_path = QString::fromStdString(test_file_path.toStdString() + ".fselected");
+        ui->tstFile_path_label->setText(test_file_path);
+    }
+    svm->setNFeatures(getNFeatures(train_file_path.toStdString()));
+    std::cout<<"nFeatures: "<<svm->getNFeatures()<<std::endl;
+    ui->pattern_lineEdit->setText("1-"+QString::number(svm->getNFeatures()));
 }

@@ -63,6 +63,8 @@ private slots:
 
     void on_visualize_pushButton_clicked();
 
+    void on_select_pushButton_clicked();
+
 private:
     void filterSVMTypeParams(int);
     void filterKernelParams(int);

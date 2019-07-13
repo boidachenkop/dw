@@ -42,11 +42,12 @@ def select(file_path, n_feature, f_to_select):
     input_file = open(file_path, 'r')
     records = []
     with open(file_path, 'r') as input_file:
+        linenum=1
         for line in input_file:
             line = line.split() 
             record = [None]*(n_feature+1)
             record[0] = line[0]
-            for i in range(1, n_feature+1):
+            for i in range(1, len(line)):
                 feature = line[i].split(':') 
                 record[int(feature[0])] = feature[1]
             records.append(record)
