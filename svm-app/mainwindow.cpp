@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <iostream>
+#include <utility>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -8,6 +9,9 @@ MainWindow::MainWindow(QWidget *parent) :
     svm(new SVMController())
 {
     ui->setupUi(this);
+
+    availability_handler = new AvailabilityHandler(ui->params_horizontalLayout);
+
     // buttons unabled on start
     ui->train_pushButton->setEnabled(false);
     ui->test_pushButton->setEnabled(false);
@@ -18,35 +22,16 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->output_textEdit->setReadOnly(true);
 
     //set default params
-    ui->svmType_comboBox->setCurrentIndex(svm->getParams().svm_type);
-    ui->kernel_comboBox->setCurrentIndex(svm->getParams().kernel_type);
-
-    ui->degree_spinBox->setValue(svm->getParams().degree);
-    ui->gamma_doubleSpinBox->setValue(svm->getParams().gamma);
-    ui->coef_doubleSpinBox->setValue(svm->getParams().coef0);
-
-    ui->C_doubleSpinBox->setValue(svm->getParams().C);
-    ui->eps_lineEdit->setText(QString::number(svm->getParams().eps));
-    ui->nu_doubleSpinBox->setValue(svm->getParams().nu);
-
-    ui->P_doubleSpinBox->setValue(svm->getParams().p);
-    ui->shrinking_checkBox->setChecked(svm->getParams().shrinking);
-    ui->prob_checkBox->setChecked(svm->getParams().probability);
-
-    ui->crossValidation_checkBox->setChecked(svm->isCrossvalidation());
-    on_crossValidation_checkBox_toggled(svm->isCrossvalidation());
-
-    on_y_scale_checkBox_toggled(false);
+    setDefaultSVMParams();
 
     //filter params
-//    filterSVMTypeParams(ui->svmType_comboBox->currentIndex());
-//    filterKernelParams(ui->kernel_comboBox->currentIndex());
+    availability_handler->filterSVMTypeParams(ui->svmType_comboBox->currentIndex());
+    availability_handler->filterKernelParams(ui->kernel_comboBox->currentIndex());
 
     stdout_redirect_path = "/tmp/svm-app-out";
     std_old = stdout;
     stdout = fopen(stdout_redirect_path.c_str(), "w");
 
-//    AvailabilityHandler ah(ui->params_horizontalLayout->findChildren<QHBoxLayout*>());
 }
 
 MainWindow::~MainWindow()
@@ -74,6 +59,27 @@ void MainWindow::updateOutput(){
     //output always down
     ui->output_textEdit->verticalScrollBar()->setValue(
                 ui->output_textEdit->verticalScrollBar()->maximum());
+}
+
+void MainWindow::setDefaultSVMParams(){
+    ui->svmType_comboBox->setCurrentIndex(svm->getParams().svm_type);
+    ui->kernel_comboBox->setCurrentIndex(svm->getParams().kernel_type);
+
+    ui->degree_spinBox->setValue(svm->getParams().degree);
+    ui->gamma_doubleSpinBox->setValue(svm->getParams().gamma);
+    ui->coef_doubleSpinBox->setValue(svm->getParams().coef0);
+
+    ui->C_doubleSpinBox->setValue(svm->getParams().C);
+    ui->eps_lineEdit->setText(QString::number(svm->getParams().eps));
+    ui->nu_doubleSpinBox->setValue(svm->getParams().nu);
+
+    ui->P_doubleSpinBox->setValue(svm->getParams().p);
+    ui->shrinking_checkBox->setChecked(svm->getParams().shrinking);
+    ui->prob_checkBox->setChecked(svm->getParams().probability);
+
+    ui->crossValidation_checkBox->setChecked(svm->isCrossvalidation());
+    on_crossValidation_checkBox_toggled(svm->isCrossvalidation());
+    on_y_scale_checkBox_toggled(false);
 }
 
 void MainWindow::on_chooseDataset_toolButton_clicked()
@@ -191,83 +197,15 @@ void MainWindow::on_test_pushButton_clicked()
     svm->openPredictInputFile(test_file_path.toStdString());
     svm->openPredictOutputFile(svm->getPredictOutputFilePath());
     svm->predict();
-
     updateOutput();
 }
 
-void MainWindow::filterSVMTypeParams(int svm_type){
-    QDoubleSpinBox *C = ui->C_doubleSpinBox;
-    QDoubleSpinBox *nu = ui->nu_doubleSpinBox;
-    QDoubleSpinBox *p = ui->P_doubleSpinBox;
-    switch(svm_type){
-        case 0: // C-SVC
-            C->setEnabled(true);
-            nu->setEnabled(false);
-            p->setEnabled(false);
-        break;
-        case 1: // nu-SVC
-            C->setEnabled(false);
-            nu->setEnabled(true);
-            p->setEnabled(false);
-        break;
-        case 2: // one class SVM
-            C->setEnabled(false);
-            nu->setEnabled(true);
-            p->setEnabled(false);
-        break;
-        case 3: // epsilon-SVR
-            C->setEnabled(true);
-            nu->setEnabled(false);
-            p->setEnabled(true);
-        break;
-        case 4: // nu-SVR
-            C->setEnabled(true);
-            nu->setEnabled(true);
-            p->setEnabled(false);
-        break;
-    }
-}
-
-void MainWindow::filterKernelParams(int kernel){
-    QSpinBox *degree = ui->degree_spinBox;
-    QDoubleSpinBox *gamma = ui->gamma_doubleSpinBox;
-    QDoubleSpinBox *coef0 = ui->coef_doubleSpinBox;
-    switch(kernel){
-        case 0: // Linear
-            degree->setEnabled(true);
-            gamma->setEnabled(false);
-            coef0->setEnabled(false);
-        break;
-        case 1: // poly
-            degree->setEnabled(false);
-            gamma->setEnabled(true);
-            coef0->setEnabled(true);
-        break;
-        case 2: // RBF
-            degree->setEnabled(false);
-            gamma->setEnabled(true);
-            coef0->setEnabled(false);
-        break;
-        case 3: // Sigmoid
-            degree->setEnabled(false);
-            gamma->setEnabled(true);
-            coef0->setEnabled(true);
-        break;
-        case 4: // Precomputed
-            degree->setEnabled(false);
-            gamma->setEnabled(false);
-            coef0->setEnabled(false);
-        break;
-    }
-
-}
-
 void MainWindow::on_svmType_comboBox_currentIndexChanged(int index){
-   filterSVMTypeParams(index);
+    availability_handler->filterSVMTypeParams(index);
 }
 
 void MainWindow::on_kernel_comboBox_currentIndexChanged(int index){
-    filterKernelParams(index);
+    availability_handler->filterKernelParams(index);
 }
 
 void MainWindow::on_crossValidation_checkBox_toggled(bool checked)

@@ -6,12 +6,21 @@
 #include <QDoubleSpinBox>
 #include <iostream>
 
+
 class AvailabilityHandler
 {
 public:
-    AvailabilityHandler(QList<QHBoxLayout*> kernelParams);
+    AvailabilityHandler(QHBoxLayout* params);
+    void filterSVMTypeParams(int svm_type);
+    void filterKernelParams(int kernel);
 private:
-    QList<QHBoxLayout*> _kernelParams;
+    //parameters
+    QHBoxLayout* degree;
+    QHBoxLayout* gamma;
+    QHBoxLayout* coef0;
+    QHBoxLayout* C;
+    QHBoxLayout* nu;
+    QHBoxLayout* p;
 };
 
 #endif // AVAILABILITYHANDLER_H

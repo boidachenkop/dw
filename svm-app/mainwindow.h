@@ -67,19 +67,20 @@ private slots:
     void on_select_pushButton_clicked();
 
 private:
-    void filterSVMTypeParams(int);
-    void filterKernelParams(int);
-
     void updateOutput();
+
+    void setDefaultSVMParams();
 
     Ui::MainWindow *ui;
     SVMController *svm;
+
+    AvailabilityHandler *availability_handler;
 
     QString train_file_path;
     QString test_file_path;
 
     std::string stdout_redirect_path;
-    FILE* std_old;
+    FILE *std_old;
 
     std::string rm_tmp_plot_cmd{"rm -f "}; //command for remove tmp files using for plotting
 };
