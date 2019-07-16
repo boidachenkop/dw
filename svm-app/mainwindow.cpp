@@ -10,14 +10,16 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    availability_handler = new AvailabilityHandler(ui->params_horizontalLayout);
+    availability_handler = new AvailabilityHandler(ui->params_horizontalLayout, ui->tabWidget,
+                                                   ui->train_pushButton, ui->test_pushButton);
 
+    availability_handler->filterTabs(0);
     // buttons unabled on start
-    ui->train_pushButton->setEnabled(false);
-    ui->test_pushButton->setEnabled(false);
-    ui->scaling_tab->setEnabled(false);
-    ui->visualisation_tab->setEnabled(false);
-    ui->feature_selection_tab->setEnabled(false);
+//    ui->train_pushButton->setEnabled(false);
+//    ui->test_pushButton->setEnabled(false);
+//    ui->scaling_tab->setEnabled(false);
+//    ui->visualization_tab->setEnabled(false);
+//    ui->feature_selection_tab->setEnabled(false);
     // output textEdit read only
     ui->output_textEdit->setReadOnly(true);
 
@@ -105,9 +107,9 @@ void MainWindow::on_chooseDataset_toolButton_clicked()
             svm->setNFeatures(getNFeatures(train_file_path.toStdString()));
             ui->pattern_lineEdit->setText("1-"+QString::number(svm->getNFeatures()));
             if(svm->getNFeatures() <= 3){
-                ui->visualisation_tab->setEnabled(true);
+                ui->visualization_tab->setEnabled(true);
             }else{
-                ui->visualisation_tab->setEnabled(false);
+                ui->visualization_tab->setEnabled(false);
             }
             //update model file path
             svm->setModelFilePath(train_file_path.toStdString()+".model");
@@ -118,9 +120,9 @@ void MainWindow::on_chooseDataset_toolButton_clicked()
         ui->train_pushButton->setEnabled(true);
         ui->scaling_tab->setEnabled(true);
         if(getNFeatures(train_file_path.toStdString()) <= 3){
-            ui->visualisation_tab->setEnabled(true);
+            ui->visualization_tab->setEnabled(true);
         }else{
-            ui->visualisation_tab->setEnabled(false);
+            ui->visualization_tab->setEnabled(false);
         }
         //update model file path
         svm->setModelFilePath(train_file_path.toStdString()+".model");
@@ -128,7 +130,7 @@ void MainWindow::on_chooseDataset_toolButton_clicked()
     }else{
         ui->train_pushButton->setEnabled(false);
         ui->scaling_tab->setEnabled(false);
-        ui->visualisation_tab->setEnabled(false);
+        ui->visualization_tab->setEnabled(false);
     }
 }
 
