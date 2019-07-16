@@ -46,7 +46,7 @@ MainWindow::MainWindow(QWidget *parent) :
     std_old = stdout;
     stdout = fopen(stdout_redirect_path.c_str(), "w");
 
-//    AvailabilityHandler ah(ui->params_horizontalLayout->findChildren<QHBoxLayout*>());
+    AvailabilityHandler ah(ui->params_horizontalLayout->findChildren<QHBoxLayout*>());
 }
 
 MainWindow::~MainWindow()

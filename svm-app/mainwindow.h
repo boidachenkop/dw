@@ -20,6 +20,7 @@
 
 #include "svmcontroller.h"
 #include "svmscale.h"
+#include "availabilityhandler.h"
 
 int getNFeatures(std::string);
 
