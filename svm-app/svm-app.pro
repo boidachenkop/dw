@@ -25,13 +25,17 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += main.cpp\
     availabilityhandler.cpp \
+    filemanager.cpp \
         mainwindow.cpp \
+    scriptqtmanager.cpp \
     svmcontroller.cpp \
     svm.cpp \
     svmscale.cpp
 
 HEADERS  += mainwindow.h \
     availabilityhandler.h \
+    filemanager.h \
+    scriptqtmanager.h \
     svmcontroller.h \
     svm.h \
     svmscale.h \

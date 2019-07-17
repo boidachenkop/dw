@@ -1,0 +1,62 @@
+#include "scriptqtmanager.h"
+
+ScriptQtManager::ScriptQtManager()
+{
+
+}
+
+int ScriptQtManager::runCheckData(QString filepath)
+{
+    QStringList arguments{"./checkdata.py", filepath};
+    QProcess py_script;
+    py_script.start(python, arguments);
+    py_script.waitForFinished();
+    QString py_script_out(py_script.readAllStandardOutput());
+    if(py_script_out == "No error.\n"){
+        return 0;
+    }else{
+        printf("%s", py_script_out.toLatin1().data());
+        return -1;
+    }
+}
+
+void ScriptQtManager::runFeatureSelection(QString filepath, int n_features, QString pattern)
+{
+    QStringList arguments{"./f_select.py", filepath,
+                QString::number(n_features), pattern};
+    QProcess py_script;
+    py_script.start("python3", arguments);
+    py_script.waitForFinished();
+    QString py_script_out(py_script.readAllStandardOutput());
+    printf("%s", py_script_out.toLatin1().data());
+}
+
+#include "gnuplot_i.hpp"
+std::string ScriptQtManager::runPlot(QString filepath, int n_features)
+{
+    //prepare unlabled file
+    std::string prepare_data_cmd;
+    if(n_features == 1){
+        prepare_data_cmd = R"( awk '{if($2 == ""){$2="0.0"} gsub("[0-9]+:", "", $2); print $2, $1}' )";
+    }else if(n_features == 2){
+        prepare_data_cmd = R"( awk '{if($3 == ""){$3="0.0"} if($2 == ""){$2="0.0"} gsub("[0-9]+:", "", $2); gsub("[0-9]+:", "", $3); print $2, $3, $1}' )";
+    }else if(n_features == 3){
+        prepare_data_cmd = R"( awk '{if($2 == ""){$2="0.0"} if($3 == ""){$3="0.0"} if($4 == ""){$4="0.0"} gsub("[0-9]+:", "", $2); gsub("[0-9]+:", "", $3); gsub("[0-9]+:", "", $4); print $2, $3, $4, $1}' )";
+    }
+    prepare_data_cmd+=filepath.toStdString()+" > "+filepath.toStdString()+".tmp";
+    system(prepare_data_cmd.c_str());
+
+    //plot with gnuplot
+    Gnuplot gp;
+    std::string plot_cmd;
+    if(n_features == 3){
+        plot_cmd = "splot '";
+    }else{
+        plot_cmd = "plot '";
+    }
+    plot_cmd+=filepath.toStdString()+".tmp' with points palette; pause mouse close";
+    gp<<plot_cmd;
+
+    return filepath.toStdString()+".tmp ";//remove file in d-tor
+//    system(rm_tmp_plot_cmd.c_str());
+}

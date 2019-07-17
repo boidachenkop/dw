@@ -1,7 +1,5 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include <iostream>
-#include <utility>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -44,9 +42,8 @@ MainWindow::~MainWindow()
     }
     stdout = std_old;
 
-    //remove .tmp plot files
-    std::cout<<rm_tmp_plot_cmd<<std::endl;
-    system(rm_tmp_plot_cmd.c_str());
+    system(rm_tmp_plot_cmd.c_str()); // remove tmp file for plot
+
     delete ui;
 }
 
@@ -269,35 +266,10 @@ void MainWindow::on_y_scale_checkBox_toggled(bool checked)
    ui->y_upperLimit_label->setEnabled(checked);
 }
 
-#include "gnuplot_i.hpp"
 void MainWindow::on_visualize_pushButton_clicked()
 {
-    int n_features = getNFeatures(train_file_path.toStdString());
-    //prepare unlabled file
-    std::string prepare_data_cmd;
-    if(n_features == 1){
-        prepare_data_cmd = R"( awk '{if($2 == ""){$2="0.0"} gsub("[0-9]+:", "", $2); print $2, $1}' )";
-    }else if(n_features == 2){
-        prepare_data_cmd = R"( awk '{if($3 == ""){$3="0.0"} if($2 == ""){$2="0.0"} gsub("[0-9]+:", "", $2); gsub("[0-9]+:", "", $3); print $2, $3, $1}' )";
-    }else if(n_features == 3){
-        prepare_data_cmd = R"( awk '{if($2 == ""){$2="0.0"} if($3 == ""){$3="0.0"} if($4 == ""){$4="0.0"} gsub("[0-9]+:", "", $2); gsub("[0-9]+:", "", $3); gsub("[0-9]+:", "", $4); print $2, $3, $4, $1}' )";
-    }
-    prepare_data_cmd+=train_file_path.toStdString()+" > "+train_file_path.toStdString()+".tmp";
-    system(prepare_data_cmd.c_str());
-
-    //plot with gnuplot
-    Gnuplot gp;
-//    gp<<"set terminal";
-    std::string plot_cmd;
-    if(n_features == 3){
-        plot_cmd = "splot '";
-    }else{
-        plot_cmd = "plot '";
-    }
-    plot_cmd+=train_file_path.toStdString()+".tmp' with points palette; pause mouse close";
-    gp<<plot_cmd;
-
-    rm_tmp_plot_cmd += train_file_path.toStdString()+".tmp ";//remove file in d-tor
+    ScriptQtManager sqm_plot;
+    rm_tmp_plot_cmd += sqm_plot.runPlot(train_file_path, svm->getNFeatures());
 }
 
 int getNFeatures(std::string data_filepath){
@@ -311,9 +283,12 @@ int getNFeatures(std::string data_filepath){
     std::string ndim_str;
     std::string line;
     int max_dim=0;
+    int i=0;
     while(std::getline(data, line)){
+        bool colon_met = false;
         for(auto c = line.end(); c != line.begin(); c--){
             if(*c == ':'){
+                colon_met = true;
                 c--;
                 while(*c != ' '){
                     ndim_str+=*c;
@@ -322,6 +297,10 @@ int getNFeatures(std::string data_filepath){
                 break;
             }
         }
+        if(!colon_met){
+            ndim_str+='0';
+        }
+        i++;
         reverse(ndim_str.begin(), ndim_str.end());
         int cur_dim = stoi(ndim_str);
         max_dim = max_dim < cur_dim ? cur_dim : max_dim;
@@ -333,30 +312,21 @@ int getNFeatures(std::string data_filepath){
 
 void MainWindow::on_select_pushButton_clicked()
 {
-    std::cout<<"nFeatures: "<<svm->getNFeatures()<<std::endl;
-    QStringList arguments{"./f_select.py", train_file_path,
-                QString::number(svm->getNFeatures()), ui->pattern_lineEdit->text()};
-    QProcess py_script;
-    py_script.start("python3", arguments);
-    py_script.waitForFinished();
-    QString py_script_out(py_script.readAllStandardOutput());
-    printf("%s\n", py_script_out.toLatin1().data());
+    ScriptQtManager sqm_train;
+    sqm_train.runFeatureSelection(train_file_path, svm->getNFeatures(), ui->pattern_lineEdit->text());
     updateOutput();
+
     train_file_path = QString::fromStdString(train_file_path.toStdString() + ".fselected");
     ui->chooseDataset_label->setText(train_file_path);
+
     if(!test_file_path.isEmpty()){
-        QStringList arguments{"./f_select.py", test_file_path,
-                    QString::number(svm->getNFeatures()), ui->pattern_lineEdit->text()};
-        QProcess py_script;
-        py_script.start("python3", arguments);
-        py_script.waitForFinished();
-        QString py_script_out(py_script.readAllStandardOutput());
-        printf("%s\n", py_script_out.toLatin1().data());
+        ScriptQtManager sqm_train;
+        sqm_train.runFeatureSelection(test_file_path, svm->getNFeatures(), ui->pattern_lineEdit->text());
         updateOutput();
+
         test_file_path = QString::fromStdString(test_file_path.toStdString() + ".fselected");
         ui->tstFile_path_label->setText(test_file_path);
     }
     svm->setNFeatures(getNFeatures(train_file_path.toStdString()));
-    std::cout<<"nFeatures: "<<svm->getNFeatures()<<std::endl;
     ui->pattern_lineEdit->setText("1-"+QString::number(svm->getNFeatures()));
 }
