@@ -1,15 +1,10 @@
 #include "scriptqtmanager.h"
 
-ScriptQtManager::ScriptQtManager()
-{
-
-}
-
 int ScriptQtManager::runCheckData(QString filepath)
 {
     QStringList arguments{"./checkdata.py", filepath};
     QProcess py_script;
-    py_script.start(python, arguments);
+    py_script.start("python3 ", arguments);
     py_script.waitForFinished();
     QString py_script_out(py_script.readAllStandardOutput());
     if(py_script_out == "No error.\n"){
@@ -58,5 +53,4 @@ std::string ScriptQtManager::runPlot(QString filepath, int n_features)
     gp<<plot_cmd;
 
     return filepath.toStdString()+".tmp ";//remove file in d-tor
-//    system(rm_tmp_plot_cmd.c_str());
 }

@@ -268,8 +268,7 @@ void MainWindow::on_y_scale_checkBox_toggled(bool checked)
 
 void MainWindow::on_visualize_pushButton_clicked()
 {
-    ScriptQtManager sqm_plot;
-    rm_tmp_plot_cmd += sqm_plot.runPlot(train_file_path, svm->getNFeatures());
+    ScriptQtManager::runPlot(train_file_path, svm->getNFeatures());
 }
 
 int getNFeatures(std::string data_filepath){
@@ -312,16 +311,14 @@ int getNFeatures(std::string data_filepath){
 
 void MainWindow::on_select_pushButton_clicked()
 {
-    ScriptQtManager sqm_train;
-    sqm_train.runFeatureSelection(train_file_path, svm->getNFeatures(), ui->pattern_lineEdit->text());
+    ScriptQtManager::runFeatureSelection(train_file_path, svm->getNFeatures(), ui->pattern_lineEdit->text());
     updateOutput();
 
     train_file_path = QString::fromStdString(train_file_path.toStdString() + ".fselected");
     ui->chooseDataset_label->setText(train_file_path);
 
     if(!test_file_path.isEmpty()){
-        ScriptQtManager sqm_train;
-        sqm_train.runFeatureSelection(test_file_path, svm->getNFeatures(), ui->pattern_lineEdit->text());
+        ScriptQtManager::runFeatureSelection(test_file_path, svm->getNFeatures(), ui->pattern_lineEdit->text());
         updateOutput();
 
         test_file_path = QString::fromStdString(test_file_path.toStdString() + ".fselected");

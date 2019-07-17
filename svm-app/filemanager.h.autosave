@@ -2,6 +2,7 @@
 #define FILEMANAGER_H
 #include <QString>
 #include <QLabel>
+#include <fstream>
 
 #include "scriptqtmanager.h"
 
@@ -13,7 +14,7 @@ public:
     int setTestFilepath(QString);
     int setModelFilepath(QString);
 private:
-    int getNFeatures();
+    int getNFeatures(QString);
 
     QString _train_input_filepath{};
     QString _test_input_filepath{};

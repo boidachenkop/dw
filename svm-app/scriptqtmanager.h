@@ -10,12 +10,9 @@
 class ScriptQtManager
 {
 public:
-    ScriptQtManager();
-    int runCheckData(QString filepath);
-    void runFeatureSelection(QString filepath, int n_features, QString pattern);
-    std::string runPlot(QString filepath, int n_features);
-private:
-    QString python{"python3 "};
+    static int runCheckData(QString filepath);
+    static void runFeatureSelection(QString filepath, int n_features, QString pattern);
+    static std::string runPlot(QString filepath, int n_features);
 };
 
 #endif // SCRIPTQTMANAGER_H
