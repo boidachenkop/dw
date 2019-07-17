@@ -13,13 +13,14 @@ MainWindow::MainWindow(QWidget *parent) :
     availability_handler = new AvailabilityHandler(ui->params_horizontalLayout, ui->tabWidget,
                                                    ui->train_pushButton, ui->test_pushButton);
 
-    availability_handler->filterTabs(0);
-    // buttons unabled on start
-//    ui->train_pushButton->setEnabled(false);
-//    ui->test_pushButton->setEnabled(false);
-//    ui->scaling_tab->setEnabled(false);
-//    ui->visualization_tab->setEnabled(false);
-//    ui->feature_selection_tab->setEnabled(false);
+    //tabs and buttons unabled on start
+    availability_handler->cvTabEnabled(false)
+            .scalingTabEnabled(false)
+            .visualizationTabEnabled(false)
+            .featureSelectionTabEnabled(false)
+            .trainButtonEnabled(false)
+            .testButtonEnabled(false);
+
     // output textEdit read only
     ui->output_textEdit->setReadOnly(true);
 
@@ -101,15 +102,16 @@ void MainWindow::on_chooseDataset_toolButton_clicked()
             ui->chooseDataset_label->setStyleSheet("QLabel{color : black;}");
             train_file_path = path;
             ui->chooseDataset_label->setText(train_file_path);
-            ui->train_pushButton->setEnabled(true);
-            ui->scaling_tab->setEnabled(true);
-            ui->feature_selection_tab->setEnabled(true);
+            availability_handler->
+                    trainButtonEnabled(true)
+                    .scalingTabEnabled(true)
+                    .featureSelectionTabEnabled(true);
             svm->setNFeatures(getNFeatures(train_file_path.toStdString()));
             ui->pattern_lineEdit->setText("1-"+QString::number(svm->getNFeatures()));
             if(svm->getNFeatures() <= 3){
-                ui->visualization_tab->setEnabled(true);
+                availability_handler->visualizationTabEnabled(true);
             }else{
-                ui->visualization_tab->setEnabled(false);
+                availability_handler->visualizationTabEnabled(false);
             }
             //update model file path
             svm->setModelFilePath(train_file_path.toStdString()+".model");
@@ -117,20 +119,23 @@ void MainWindow::on_chooseDataset_toolButton_clicked()
         }
 
     }else if(!train_file_path.isEmpty()){
-        ui->train_pushButton->setEnabled(true);
-        ui->scaling_tab->setEnabled(true);
+        availability_handler->
+                trainButtonEnabled(true)
+                .scalingTabEnabled(true);
         if(getNFeatures(train_file_path.toStdString()) <= 3){
-            ui->visualization_tab->setEnabled(true);
+            availability_handler->visualizationTabEnabled(true);
         }else{
-            ui->visualization_tab->setEnabled(false);
+            availability_handler->visualizationTabEnabled(false);
         }
         //update model file path
         svm->setModelFilePath(train_file_path.toStdString()+".model");
         ui->modelFile_path_label->setText(train_file_path+QString::fromUtf8(".model"));
     }else{
-        ui->train_pushButton->setEnabled(false);
-        ui->scaling_tab->setEnabled(false);
-        ui->visualization_tab->setEnabled(false);
+        availability_handler->
+                trainButtonEnabled(false)
+                .scalingTabEnabled(false)
+                .visualizationTabEnabled(false)
+                .featureSelectionTabEnabled(false);
     }
 }
 
@@ -140,12 +145,12 @@ void MainWindow::on_choose_tstFile_toolButton_clicked()
     if(!path.isEmpty()){
         test_file_path = path;
         ui->tstFile_path_label->setText(test_file_path);
-        ui->test_pushButton->setEnabled(true);
+        availability_handler->testButtonEnabled(true);
     }else if(!test_file_path.isEmpty()){
         ui->tstFile_path_label->setText(test_file_path);
-        ui->test_pushButton->setEnabled(true);
+        availability_handler->testButtonEnabled(true);
     }else{
-        ui->test_pushButton->setEnabled(false);
+        availability_handler->testButtonEnabled(false);
     }
 }
 
