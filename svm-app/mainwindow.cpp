@@ -115,16 +115,12 @@ void MainWindow::on_chooseDataset_toolButton_clicked()
 void MainWindow::on_choose_tstFile_toolButton_clicked()
 {
     QString path = QFileDialog::getOpenFileName(this, "Choose test dataset", "/home/pavlo/Desktop/pr/dw/datasets");
-    if(!path.isEmpty()){
-        test_file_path = path;
-        ui->tstFile_path_label->setText(test_file_path);
-        availability_handler->testButtonEnabled(true);
-    }else if(!test_file_path.isEmpty()){
-        ui->tstFile_path_label->setText(test_file_path);
+    if(file_manager->setTestFilepath(path) == 0){
         availability_handler->testButtonEnabled(true);
     }else{
         availability_handler->testButtonEnabled(false);
     }
+    updateOutput();
 }
 
 void MainWindow::on_modelFile_toolButton_clicked()
@@ -173,7 +169,7 @@ void MainWindow::on_train_pushButton_clicked()
 
 void MainWindow::on_test_pushButton_clicked()
 {
-    svm->openPredictInputFile(test_file_path.toStdString());
+    svm->openPredictInputFile(file_manager->getTestFilepath().toStdString());
     svm->openPredictOutputFile(svm->getPredictOutputFilePath());
     svm->predict();
     updateOutput();
@@ -197,8 +193,8 @@ void MainWindow::on_scale_toolButton_clicked()
 {
     char *range_filepath = "/tmp/svm-app-scale-range";
 
-    svmscale scale_train(train_file_path.toStdString(),
-                   train_file_path.toStdString()+".scale");
+    svmscale scale_train(file_manager->getTrainFilepath().toStdString(),
+                   file_manager->getTrainFilepath().toStdString()+".scale");
     scale_train.setLowerUpper(ui->lowerLimit_doubleSpinBox->value(),
                         ui->upperLimit_doubleSpinBox->value());
     if(ui->y_scale_checkBox->isChecked()){ // y scaling
@@ -209,13 +205,12 @@ void MainWindow::on_scale_toolButton_clicked()
     if(scale_train.check()){
         scale_train.scale();
         //update filepathes and ui
-        train_file_path = QString::fromStdString(train_file_path.toStdString()+".scale");
-        ui->chooseDataset_label->setText(train_file_path);
+        file_manager->setTrainFilepath(file_manager->getTrainFilepath()+".scale") ;
     }
     updateOutput();
-    if(!test_file_path.isEmpty()){
-        svmscale scale_test(test_file_path.toStdString(),
-                            test_file_path.toStdString()+".scale");
+    if(!file_manager->getTestFilepath().isEmpty()){
+        svmscale scale_test(file_manager->getTestFilepath().toStdString(),
+                            file_manager->getTestFilepath().toStdString()+".scale");
         scale_test.setLowerUpper(ui->lowerLimit_doubleSpinBox->value(),
                                  ui->upperLimit_doubleSpinBox->value());
         scale_test.setRestoreFilename(range_filepath);
@@ -226,8 +221,7 @@ void MainWindow::on_scale_toolButton_clicked()
         if(scale_test.check()){
             scale_test.scale();
             //update filepathes and ui
-            test_file_path = QString::fromStdString(test_file_path.toStdString()+".scale");
-            ui->tstFile_path_label->setText(test_file_path);
+            file_manager->setTestFilepath(file_manager->getTestFilepath()+".scale");
         }
         updateOutput();
     }

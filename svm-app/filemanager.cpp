@@ -37,6 +37,28 @@ int FileManager::setTrainFilepath(QString filepath)
 
 int FileManager::setTestFilepath(QString filepath)
 {
+    if(!filepath.isEmpty()){
+        if(ScriptQtManager::runCheckData(filepath) == 0){
+            _test_input_filepath = filepath;
+            _test_filepath_label->setStyleSheet("QLabel{color : black;}");
+            _test_filepath_label->setText(filepath);
+            _test_n_features = getNFeatures(filepath);
+            if((_n_features != -1) && (_n_features != _test_n_features)){
+                _test_filepath_label->setStyleSheet("QLabel{color : red;}");
+                _test_filepath_label->repaint();
+                return -1;
+            }
+            return 0;
+        }else{
+            _test_filepath_label->setStyleSheet("QLabel{color : red;}");
+            _test_filepath_label->setText(filepath);
+           return -1;
+        }
+    }else if(!_test_input_filepath.isEmpty()){
+        return 0;
+    }else{
+        return -1;
+    }
     return 0;
 }
 
@@ -52,7 +74,7 @@ QString FileManager::getTrainFilepath()
 
 QString FileManager::getTestFilepath()
 {
-
+    return _test_input_filepath;
 }
 
 QString FileManager::getModelFilepath()

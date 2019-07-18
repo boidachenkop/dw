@@ -35,8 +35,8 @@ private:
 
     QLineEdit _fs_lineEdit;
 
-    int _n_features;
-    int _test_n_features;
+    int _n_features{-1};
+    int _test_n_features{-1};
 };
 
 #endif // FILEMANAGER_H
