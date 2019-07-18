@@ -1,25 +1,27 @@
 #include "filemanager.h"
 
 FileManager::FileManager(QLabel* train_label, QLabel* test_label,
-                         QLabel* model_label):
+                         QLabel* model_label, QLineEdit* fs_lineEdit):
     _train_filepath_label(train_label),
     _test_filepath_label(test_label),
-    _model_filepath_label(model_label)
+    _model_filepath_label(model_label),
+    _fs_lineEdit(fs_lineEdit)
 {
-
 }
 
 int FileManager::setTrainFilepath(QString filepath)
 {
     //return 0 if file can be used othervise -1
-    //1111111111111111111111111111111111111111111111
-    //TODO: check if it's work
-    //1111111111111111111111111111111111111111111111
     if(!filepath.isEmpty()){
         if(ScriptQtManager::runCheckData(filepath) == 0){
+            _train_input_filepath = filepath;
+            _model_filepath = filepath + ".model";
             _train_filepath_label->setStyleSheet("QLabel{color : black;}");
             _n_features = getNFeatures(filepath);
+
             _train_filepath_label->setText(filepath);
+            _fs_lineEdit.setText("1-"+QString::number(_n_features));
+            _model_filepath_label->setText(filepath + ".model");
             return 0;
         }else{
             _train_filepath_label->setStyleSheet("QLabel{color : red;}");
@@ -41,6 +43,26 @@ int FileManager::setTestFilepath(QString filepath)
 int FileManager::setModelFilepath(QString filepath)
 {
     return 0;
+}
+
+QString FileManager::getTrainFilepath()
+{
+    return _train_input_filepath;
+}
+
+QString FileManager::getTestFilepath()
+{
+
+}
+
+QString FileManager::getModelFilepath()
+{
+    return _model_filepath;
+}
+
+int FileManager::getNFeatures()
+{
+   return _n_features;
 }
 
 

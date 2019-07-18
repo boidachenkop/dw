@@ -2,25 +2,26 @@
 
 int ScriptQtManager::runCheckData(QString filepath)
 {
-    QStringList arguments{"./checkdata.py", filepath};
     QProcess py_script;
-    py_script.start("python3 ", arguments);
+    QStringList args;
+    args<<"./checkdata.py"<<filepath;
+    py_script.start("python3", args);
     py_script.waitForFinished();
     QString py_script_out(py_script.readAllStandardOutput());
     if(py_script_out == "No error.\n"){
         return 0;
     }else{
-        printf("%s", py_script_out.toLatin1().data());
+        printf("%s\n", py_script_out.toLatin1().data());
         return -1;
     }
 }
 
 void ScriptQtManager::runFeatureSelection(QString filepath, int n_features, QString pattern)
 {
-    QStringList arguments{"./f_select.py", filepath,
-                QString::number(n_features), pattern};
+    QStringList args;
+    args<<"./f_select.py"<<filepath<<QString::number(n_features)<<pattern;
     QProcess py_script;
-    py_script.start("python3", arguments);
+    py_script.start("python3", args);
     py_script.waitForFinished();
     QString py_script_out(py_script.readAllStandardOutput());
     printf("%s", py_script_out.toLatin1().data());

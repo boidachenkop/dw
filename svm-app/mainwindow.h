@@ -22,6 +22,7 @@
 #include "svmscale.h"
 #include "availabilityhandler.h"
 #include "scriptqtmanager.h"
+#include "filemanager.h"
 
 int getNFeatures(std::string);
 
@@ -76,6 +77,8 @@ private:
     SVMController *svm;
 
     AvailabilityHandler *availability_handler;
+    FileManager *file_manager;
+
 
     QString train_file_path;
     QString test_file_path;

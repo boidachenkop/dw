@@ -10,6 +10,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     availability_handler = new AvailabilityHandler(ui->params_horizontalLayout, ui->tabWidget,
                                                    ui->train_pushButton, ui->test_pushButton);
+    file_manager = new FileManager(ui->chooseDataset_label, ui->tstFile_path_label,
+                                   ui->modelFile_path_label, ui->pattern_lineEdit);
 
     //tabs and buttons unabled on start
     availability_handler->cvTabEnabled(false)
@@ -85,55 +87,29 @@ void MainWindow::setDefaultSVMParams(){
 void MainWindow::on_chooseDataset_toolButton_clicked()
 {
     QString path = QFileDialog::getOpenFileName(this, "Choose train dataset", "/home/pavlo/Desktop/pr/dw/datasets");
-    if(!path.isEmpty()){
-        QStringList arguments{"./checkdata.py", path};
-        QProcess py_script;
-        py_script.start("python3", arguments);
-        py_script.waitForFinished();
-        QString py_script_out(py_script.readAllStandardOutput());
-        if(py_script_out != "No error.\n"){
-            ui->chooseDataset_label->setStyleSheet("QLabel{color : red;}");
-            printf("%s\n", py_script_out.toLatin1().data());
-            updateOutput();
-        }else{
-            ui->chooseDataset_label->setStyleSheet("QLabel{color : black;}");
-            train_file_path = path;
-            ui->chooseDataset_label->setText(train_file_path);
-            availability_handler->
-                    trainButtonEnabled(true)
-                    .scalingTabEnabled(true)
-                    .featureSelectionTabEnabled(true);
-            svm->setNFeatures(getNFeatures(train_file_path.toStdString()));
-            ui->pattern_lineEdit->setText("1-"+QString::number(svm->getNFeatures()));
-            if(svm->getNFeatures() <= 3){
-                availability_handler->visualizationTabEnabled(true);
-            }else{
-                availability_handler->visualizationTabEnabled(false);
-            }
-            //update model file path
-            svm->setModelFilePath(train_file_path.toStdString()+".model");
-            ui->modelFile_path_label->setText(train_file_path+QString::fromUtf8(".model"));
-        }
-
-    }else if(!train_file_path.isEmpty()){
+    if(file_manager->setTrainFilepath(path) == 0){
         availability_handler->
                 trainButtonEnabled(true)
-                .scalingTabEnabled(true);
-        if(getNFeatures(train_file_path.toStdString()) <= 3){
+                .scalingTabEnabled(true)
+                .featureSelectionTabEnabled(true)
+                .cvTabEnabled(true);
+        if(file_manager->getNFeatures() <= 3){
             availability_handler->visualizationTabEnabled(true);
         }else{
             availability_handler->visualizationTabEnabled(false);
         }
-        //update model file path
-        svm->setModelFilePath(train_file_path.toStdString()+".model");
-        ui->modelFile_path_label->setText(train_file_path+QString::fromUtf8(".model"));
+        svm->setNFeatures(file_manager->getNFeatures());
+        svm->setModelFilePath(file_manager->getModelFilepath().toStdString());
     }else{
         availability_handler->
-                trainButtonEnabled(false)
-                .scalingTabEnabled(false)
-                .visualizationTabEnabled(false)
-                .featureSelectionTabEnabled(false);
+            trainButtonEnabled(false)
+            .scalingTabEnabled(false)
+            .visualizationTabEnabled(false)
+            .featureSelectionTabEnabled(false)
+            .cvTabEnabled(false);
+
     }
+    updateOutput();
 }
 
 void MainWindow::on_choose_tstFile_toolButton_clicked()
@@ -166,8 +142,7 @@ void MainWindow::on_train_pushButton_clicked()
 {
     bool ok=false;
 
-    svm->openTrainFile(train_file_path.toStdString());
-
+    svm->openTrainFile(file_manager->getTrainFilepath().toStdString());
     svm->setSVMType(ui->svmType_comboBox->currentIndex());
     svm->setKernel(ui->kernel_comboBox->currentIndex());
 

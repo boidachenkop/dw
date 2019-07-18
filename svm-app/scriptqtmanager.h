@@ -5,7 +5,7 @@
 #include <QProcess>
 
 #include <stdlib.h>
-
+#include <iostream>
 
 class ScriptQtManager
 {
