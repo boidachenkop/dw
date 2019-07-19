@@ -12,7 +12,6 @@ MainWindow::MainWindow(QWidget *parent) :
                                                    ui->train_pushButton, ui->test_pushButton);
     file_manager = new FileManager(ui->chooseDataset_label, ui->tstFile_path_label,
                                    ui->modelFile_path_label, ui->pattern_lineEdit);
-
     //tabs and buttons unabled on start
     availability_handler->cvTabEnabled(false)
             .scalingTabEnabled(false)
@@ -63,19 +62,74 @@ void MainWindow::updateOutput(){
                 ui->output_textEdit->verticalScrollBar()->maximum());
 }
 
+int MainWindow::parseParameters()
+{
+    bool gamma_ok=false;
+    bool coef0_ok=false;
+
+    bool C_ok=false;
+    bool eps_ok=false;
+    bool nu_ok=false;
+
+    bool P_ok=false;
+
+    svm->openTrainFile(file_manager->getTrainFilepath().toStdString());
+    svm->setSVMType(ui->svmType_comboBox->currentIndex());
+    svm->setKernel(ui->kernel_comboBox->currentIndex());
+
+    QString epsString = ui->eps_lineEdit->text();
+    //kernel params
+    svm->setDegree(ui->degree_spinBox->value())
+            .setGamma(QString(ui->gamma_lineEdit->text()).toDouble(&gamma_ok))
+            .setCoef0(QString(ui->coef0_lineEdit->text()).toDouble(&coef0_ok));
+    //svm type params
+    svm->setC(QString(ui->C_lineEdit->text()).toDouble(&C_ok))
+            .setEps(QString(ui->eps_lineEdit->text()).toDouble(&eps_ok))
+            .setNu(QString(ui->nu_lineEdit->text()).toDouble(&nu_ok))
+            .setP(QString(ui->P_lineEdit->text()).toDouble(&P_ok))
+            .setShrinking(ui->shrinking_checkBox->isChecked())
+            .setProbability(ui->prob_checkBox->isChecked())
+            .setCrossvalidation(ui->crossValidation_checkBox->isChecked(), ui->nFold_spinBox->value());
+    if(gamma_ok && coef0_ok && C_ok && eps_ok && nu_ok && P_ok){
+        ui->gamma_lineEdit->setStyleSheet("");
+        ui->coef0_lineEdit->setStyleSheet("");
+        ui->C_lineEdit->setStyleSheet("");
+        ui->eps_lineEdit->setStyleSheet("");
+        ui->nu_lineEdit->setStyleSheet("");
+        ui->P_lineEdit->setStyleSheet("");
+        return 0;
+    }else{
+        if(!gamma_ok)
+            ui->gamma_lineEdit->setStyleSheet("border-style: outset; border-width: 1px; border-color: red;");
+        if(!coef0_ok)
+            ui->coef0_lineEdit->setStyleSheet("border-style: outset; border-width: 1px; border-color: red;");
+        if(!C_ok)
+            ui->C_lineEdit->setStyleSheet("border-style: outset; border-width: 1px; border-color: red;");
+        if(!eps_ok)
+            ui->eps_lineEdit->setStyleSheet("border-style: outset; border-width: 1px; border-color: red;");
+        if(!nu_ok)
+            ui->nu_lineEdit->setStyleSheet("border-style: outset; border-width: 1px; border-color: red;");
+        if(!P_ok)
+            ui->P_lineEdit->setStyleSheet("border-style: outset; border-width: 1px; border-color: red;");
+        return -1;
+    }
+    //model path:
+    ui->modelFile_path_label->setText(QString::fromStdString(svm->getModelFilePath()));
+}
+
 void MainWindow::setDefaultSVMParams(){
     ui->svmType_comboBox->setCurrentIndex(svm->getParams().svm_type);
     ui->kernel_comboBox->setCurrentIndex(svm->getParams().kernel_type);
 
     ui->degree_spinBox->setValue(svm->getParams().degree);
-    ui->gamma_doubleSpinBox->setValue(svm->getParams().gamma);
-    ui->coef_doubleSpinBox->setValue(svm->getParams().coef0);
+    ui->gamma_lineEdit->setText(QString::number(svm->getParams().gamma));
+    ui->coef0_lineEdit->setText(QString::number(svm->getParams().coef0));
 
-    ui->C_doubleSpinBox->setValue(svm->getParams().C);
+    ui->C_lineEdit->setText(QString::number(svm->getParams().C));
     ui->eps_lineEdit->setText(QString::number(svm->getParams().eps));
-    ui->nu_doubleSpinBox->setValue(svm->getParams().nu);
+    ui->nu_lineEdit->setText(QString::number(svm->getParams().nu));
 
-    ui->P_doubleSpinBox->setValue(svm->getParams().p);
+    ui->P_lineEdit->setText(QString::number(svm->getParams().p));
     ui->shrinking_checkBox->setChecked(svm->getParams().shrinking);
     ui->prob_checkBox->setChecked(svm->getParams().probability);
 
@@ -136,35 +190,11 @@ void MainWindow::on_modelFile_toolButton_clicked()
 
 void MainWindow::on_train_pushButton_clicked()
 {
-    bool ok=false;
-
-    svm->openTrainFile(file_manager->getTrainFilepath().toStdString());
-    svm->setSVMType(ui->svmType_comboBox->currentIndex());
-    svm->setKernel(ui->kernel_comboBox->currentIndex());
-
-    QString epsString = ui->eps_lineEdit->text();
-    //kernel params
-    svm->setDegree(ui->degree_spinBox->value())
-            .setGamma(ui->gamma_doubleSpinBox->value())
-            .setCoef0(ui->coef_doubleSpinBox->value());
-    //svm type params
-    svm->setC(ui->C_doubleSpinBox->value())
-            .setEps(QString(ui->eps_lineEdit->text()).toDouble(&ok))
-            .setNu(ui->nu_doubleSpinBox->value())
-            .setP(ui->P_doubleSpinBox->value())
-            .setShrinking(ui->shrinking_checkBox->isChecked())
-            .setProbability(ui->prob_checkBox->isChecked())
-            .setCrossvalidation(ui->crossValidation_checkBox->isChecked(), ui->nFold_spinBox->value());
-    if(ok){
+   if(parseParameters() == 0){
         svm->readProblem();
         svm->trainModel();
         updateOutput();
-        ui->eps_lineEdit->setStyleSheet("");
-    }else{
-        ui->eps_lineEdit->setStyleSheet("border-style: outset; border-width: 1px; border-color: red;");
-    }
-    //model path:
-    ui->modelFile_path_label->setText(QString::fromStdString(svm->getModelFilePath()));
+   }
 }
 
 void MainWindow::on_test_pushButton_clicked()

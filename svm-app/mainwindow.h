@@ -70,7 +70,7 @@ private slots:
 
 private:
     void updateOutput();
-
+    int parseParameters();
     void setDefaultSVMParams();
 
     Ui::MainWindow *ui;

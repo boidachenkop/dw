@@ -11,6 +11,9 @@ AvailabilityHandler::AvailabilityHandler(QHBoxLayout* params, QTabWidget* tabs,
     _C = params->findChild<QHBoxLayout*>("C_horizontalLayout");
     _nu = params->findChild<QHBoxLayout*>("nu_horizontalLayout");
     _P = params->findChild<QHBoxLayout*>("P_horizontalLayout");
+    if(!_degree){
+        std::cout<<"nullptr"<<std::endl;
+    }
 
     //initialize tabs by name
     for(int i=0; i<tabs->count(); i++){
@@ -47,29 +50,29 @@ AvailabilityHandler& AvailabilityHandler::featureSelectionTabEnabled(bool enable
 void AvailabilityHandler::filterSVMTypeParams(int svm_type){
     switch(svm_type){
         case 0: // C-SVC
-            _C->itemAt(1)->widget()->setEnabled(true);
-            _nu->itemAt(1)->widget()->setEnabled(false);
-            _P->itemAt(1)->widget()->setEnabled(false);
+            _C->itemAt(0)->widget()->setEnabled(true);
+            _nu->itemAt(0)->widget()->setEnabled(false);
+            _P->itemAt(0)->widget()->setEnabled(false);
         break;
         case 1: // nu-SVC
-            _C->itemAt(1)->widget()->setEnabled(false);
-            _nu->itemAt(1)->widget()->setEnabled(true);
-            _P->itemAt(1)->widget()->setEnabled(false);
+            _C->itemAt(0)->widget()->setEnabled(false);
+            _nu->itemAt(0)->widget()->setEnabled(true);
+            _P->itemAt(0)->widget()->setEnabled(false);
         break;
         case 2: // one class SVM
-            _C->itemAt(1)->widget()->setEnabled(false);
-            _nu->itemAt(1)->widget()->setEnabled(true);
-            _P->itemAt(1)->widget()->setEnabled(false);
+            _C->itemAt(0)->widget()->setEnabled(false);
+            _nu->itemAt(0)->widget()->setEnabled(true);
+            _P->itemAt(0)->widget()->setEnabled(false);
         break;
         case 3: // epsilon-SVR
-            _C->itemAt(1)->widget()->setEnabled(true);
-            _nu->itemAt(1)->widget()->setEnabled(false);
-            _P->itemAt(1)->widget()->setEnabled(true);
+            _C->itemAt(0)->widget()->setEnabled(true);
+            _nu->itemAt(0)->widget()->setEnabled(false);
+            _P->itemAt(0)->widget()->setEnabled(true);
         break;
         case 4: // nu-SVR
-            _C->itemAt(1)->widget()->setEnabled(true);
-            _nu->itemAt(1)->widget()->setEnabled(true);
-            _P->itemAt(1)->widget()->setEnabled(false);
+            _C->itemAt(0)->widget()->setEnabled(true);
+            _nu->itemAt(0)->widget()->setEnabled(true);
+            _P->itemAt(0)->widget()->setEnabled(false);
         break;
     }
 }
@@ -77,29 +80,29 @@ void AvailabilityHandler::filterSVMTypeParams(int svm_type){
 void AvailabilityHandler::filterKernelParams(int kernel){
     switch(kernel){
         case 0: // Linear
-            _degree->itemAt(1)->widget()->setEnabled(true);
-            _gamma->itemAt(1)->widget()->setEnabled(false);
-            _coef0->itemAt(1)->widget()->setEnabled(false);
+            _degree->itemAt(0)->widget()->setEnabled(true);
+            _gamma->itemAt(0)->widget()->setEnabled(false);
+            _coef0->itemAt(0)->widget()->setEnabled(false);
         break;
         case 1: // poly
-            _degree->itemAt(1)->widget()->setEnabled(false);
-            _gamma->itemAt(1)->widget()->setEnabled(true);
-            _coef0->itemAt(1)->widget()->setEnabled(true);
+            _degree->itemAt(0)->widget()->setEnabled(false);
+            _gamma->itemAt(0)->widget()->setEnabled(true);
+            _coef0->itemAt(0)->widget()->setEnabled(true);
         break;
         case 2: // RBF
-            _degree->itemAt(1)->widget()->setEnabled(false);
-            _gamma->itemAt(1)->widget()->setEnabled(true);
-            _coef0->itemAt(1)->widget()->setEnabled(false);
+            _degree->itemAt(0)->widget()->setEnabled(false);
+            _gamma->itemAt(0)->widget()->setEnabled(true);
+            _coef0->itemAt(0)->widget()->setEnabled(false);
         break;
         case 3: // Sigmoid
-            _degree->itemAt(1)->widget()->setEnabled(false);
-            _gamma->itemAt(1)->widget()->setEnabled(true);
-            _coef0->itemAt(1)->widget()->setEnabled(true);
+            _degree->itemAt(0)->widget()->setEnabled(false);
+            _gamma->itemAt(0)->widget()->setEnabled(true);
+            _coef0->itemAt(0)->widget()->setEnabled(true);
         break;
         case 4: // Precomputed
-            _degree->itemAt(1)->widget()->setEnabled(false);
-            _gamma->itemAt(1)->widget()->setEnabled(false);
-            _coef0->itemAt(1)->widget()->setEnabled(false);
+            _degree->itemAt(0)->widget()->setEnabled(false);
+            _gamma->itemAt(0)->widget()->setEnabled(false);
+            _coef0->itemAt(0)->widget()->setEnabled(false);
         break;
     }
 }

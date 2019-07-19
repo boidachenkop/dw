@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>787</width>
+    <width>762</width>
     <height>529</height>
    </rect>
   </property>
@@ -169,7 +169,7 @@
            </sizepolicy>
           </property>
           <property name="currentIndex">
-           <number>3</number>
+           <number>1</number>
           </property>
           <widget class="QWidget" name="crossValidation_tab">
            <attribute name="title">
@@ -467,7 +467,7 @@
               <item>
                <widget class="QLabel" name="pattern_label">
                 <property name="text">
-                 <string>Pattern:</string>
+                 <string>Select those:</string>
                 </property>
                </widget>
               </item>
@@ -630,12 +630,9 @@
            <enum>QLayout::SetFixedSize</enum>
           </property>
           <item>
-           <layout class="QVBoxLayout" name="kernelOpt_verticalLayout">
-            <property name="sizeConstraint">
-             <enum>QLayout::SetFixedSize</enum>
-            </property>
+           <layout class="QHBoxLayout" name="kernelParam_horizontalLayout">
             <item>
-             <layout class="QHBoxLayout" name="degree_horizontalLayout">
+             <layout class="QVBoxLayout" name="kernelLabel_verticalLayout">
               <item>
                <widget class="QLabel" name="degree_label">
                 <property name="text">
@@ -647,55 +644,43 @@
                </widget>
               </item>
               <item>
-               <widget class="QSpinBox" name="degree_spinBox"/>
-              </item>
-             </layout>
-            </item>
-            <item>
-             <layout class="QHBoxLayout" name="gamma_horizontalLayout">
-              <item>
                <widget class="QLabel" name="gamma_label">
                 <property name="text">
                  <string>gamma</string>
                 </property>
-                <property name="buddy">
-                 <cstring>gamma_doubleSpinBox</cstring>
-                </property>
                </widget>
               </item>
-              <item>
-               <widget class="QDoubleSpinBox" name="gamma_doubleSpinBox">
-                <property name="decimals">
-                 <number>4</number>
-                </property>
-                <property name="maximum">
-                 <double>9999.998999999999796</double>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </item>
-            <item>
-             <layout class="QHBoxLayout" name="coef0_horizontalLayout">
               <item>
                <widget class="QLabel" name="coef_label">
                 <property name="text">
                  <string>coef0</string>
                 </property>
-                <property name="buddy">
-                 <cstring>coef_doubleSpinBox</cstring>
-                </property>
                </widget>
               </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QVBoxLayout" name="verticalLayout_5">
               <item>
-               <widget class="QDoubleSpinBox" name="coef_doubleSpinBox">
-                <property name="decimals">
-                 <number>4</number>
-                </property>
-                <property name="maximum">
-                 <double>9999.989999999999782</double>
-                </property>
-               </widget>
+               <layout class="QHBoxLayout" name="degree_horizontalLayout">
+                <item>
+                 <widget class="QSpinBox" name="degree_spinBox"/>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="gamma_horizontalLayout">
+                <item>
+                 <widget class="QLineEdit" name="gamma_lineEdit"/>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="coef0_horizontalLayout">
+                <item>
+                 <widget class="QLineEdit" name="coef0_lineEdit"/>
+                </item>
+               </layout>
               </item>
              </layout>
             </item>
@@ -709,36 +694,16 @@
            </widget>
           </item>
           <item>
-           <layout class="QVBoxLayout" name="svmTypeOpt_verticalLayout">
-            <property name="sizeConstraint">
-             <enum>QLayout::SetFixedSize</enum>
-            </property>
+           <layout class="QHBoxLayout" name="svmType_horizontalLayout_2">
             <item>
-             <layout class="QHBoxLayout" name="C_horizontalLayout">
+             <layout class="QVBoxLayout" name="svmTypeLabel_verticalLayout">
               <item>
                <widget class="QLabel" name="C_label">
                 <property name="text">
                  <string>C</string>
                 </property>
-                <property name="buddy">
-                 <cstring>C_doubleSpinBox</cstring>
-                </property>
                </widget>
               </item>
-              <item>
-               <widget class="QDoubleSpinBox" name="C_doubleSpinBox">
-                <property name="decimals">
-                 <number>4</number>
-                </property>
-                <property name="maximum">
-                 <double>9999.998999999999796</double>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </item>
-            <item>
-             <layout class="QHBoxLayout" name="eps_horizontalLayout">
               <item>
                <widget class="QLabel" name="eps_label">
                 <property name="text">
@@ -750,47 +715,52 @@
                </widget>
               </item>
               <item>
-               <widget class="QLineEdit" name="eps_lineEdit">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="inputMethodHints">
-                 <set>Qt::ImhDigitsOnly</set>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                </property>
-                <property name="readOnly">
-                 <bool>false</bool>
+               <widget class="QLabel" name="nu_label">
+                <property name="text">
+                 <string>Nu</string>
                 </property>
                </widget>
               </item>
              </layout>
             </item>
             <item>
-             <layout class="QHBoxLayout" name="nu_horizontalLayout">
+             <layout class="QVBoxLayout" name="verticalLayout_6">
               <item>
-               <widget class="QLabel" name="nu_label">
-                <property name="text">
-                 <string>Nu</string>
-                </property>
-                <property name="buddy">
-                 <cstring>nu_doubleSpinBox</cstring>
-                </property>
-               </widget>
+               <layout class="QHBoxLayout" name="C_horizontalLayout">
+                <item>
+                 <widget class="QLineEdit" name="C_lineEdit"/>
+                </item>
+               </layout>
               </item>
               <item>
-               <widget class="QDoubleSpinBox" name="nu_doubleSpinBox">
-                <property name="decimals">
-                 <number>4</number>
-                </property>
-                <property name="maximum">
-                 <double>9999.989999999999782</double>
-                </property>
-               </widget>
+               <layout class="QHBoxLayout" name="eps_horizontalLayout">
+                <item>
+                 <widget class="QLineEdit" name="eps_lineEdit">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="inputMethodHints">
+                   <set>Qt::ImhDigitsOnly</set>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                  </property>
+                  <property name="readOnly">
+                   <bool>false</bool>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="nu_horizontalLayout">
+                <item>
+                 <widget class="QLineEdit" name="nu_lineEdit"/>
+                </item>
+               </layout>
               </item>
              </layout>
             </item>
@@ -815,17 +785,10 @@
                 <property name="text">
                  <string>P</string>
                 </property>
-                <property name="buddy">
-                 <cstring>P_doubleSpinBox</cstring>
-                </property>
                </widget>
               </item>
               <item>
-               <widget class="QDoubleSpinBox" name="P_doubleSpinBox">
-                <property name="decimals">
-                 <number>4</number>
-                </property>
-               </widget>
+               <widget class="QLineEdit" name="P_lineEdit"/>
               </item>
              </layout>
             </item>
@@ -890,8 +853,8 @@
           </property>
           <property name="sizeHint" stdset="0">
            <size>
-            <width>20</width>
-            <height>40</height>
+            <width>484</width>
+            <height>13</height>
            </size>
           </property>
          </spacer>
@@ -907,7 +870,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>787</width>
+     <width>762</width>
      <height>22</height>
     </rect>
    </property>
@@ -918,13 +881,7 @@
   <tabstop>chooseDataset_toolButton</tabstop>
   <tabstop>svmType_comboBox</tabstop>
   <tabstop>kernel_comboBox</tabstop>
-  <tabstop>degree_spinBox</tabstop>
-  <tabstop>gamma_doubleSpinBox</tabstop>
-  <tabstop>coef_doubleSpinBox</tabstop>
-  <tabstop>C_doubleSpinBox</tabstop>
   <tabstop>eps_lineEdit</tabstop>
-  <tabstop>nu_doubleSpinBox</tabstop>
-  <tabstop>P_doubleSpinBox</tabstop>
   <tabstop>shrinking_checkBox</tabstop>
   <tabstop>prob_checkBox</tabstop>
   <tabstop>train_pushButton</tabstop>
