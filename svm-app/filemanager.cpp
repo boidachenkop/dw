@@ -20,7 +20,7 @@ int FileManager::setTrainFilepath(QString filepath)
             _n_features = getNFeatures(filepath);
 
             _train_filepath_label->setText(filepath);
-            _fs_lineEdit.setText("1-"+QString::number(_n_features));
+            _fs_lineEdit->setText("1-"+QString::number(_n_features));
             _model_filepath_label->setText(filepath + ".model");
             return 0;
         }else{
@@ -59,12 +59,22 @@ int FileManager::setTestFilepath(QString filepath)
     }else{
         return -1;
     }
-    return 0;
 }
 
 int FileManager::setModelFilepath(QString filepath)
 {
-    return 0;
+    if(!filepath.isEmpty()){
+        _model_filepath = filepath;
+        _model_filepath_label->setText(filepath);
+        return 0;
+    }else if(!_model_filepath.isEmpty()){
+        return 0;
+    }else if(!_train_input_filepath.isEmpty()){
+        _model_filepath = _train_input_filepath + ".model";
+        return 0;
+    }else{
+        return -1;
+    }
 }
 
 QString FileManager::getTrainFilepath()

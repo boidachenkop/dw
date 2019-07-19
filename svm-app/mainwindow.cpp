@@ -126,11 +126,11 @@ void MainWindow::on_choose_tstFile_toolButton_clicked()
 void MainWindow::on_modelFile_toolButton_clicked()
 {
     QString path = QFileDialog::getSaveFileName(this, "Save model", "/Users/pavlo/Desktop/pr/dw/datasets");
-    if(!path.isEmpty()){
+    if(file_manager->setModelFilepath(path) == -1){
+       printf("Model file is not set!");
+       updateOutput();
+    }else{
         svm->setModelFilePath(path.toStdString());
-        ui->modelFile_path_label->setText(QString::fromStdString(svm->getModelFilePath()));
-    }else if(!svm->getModelFilePath().empty()){
-        ui->modelFile_path_label->setText(QString::fromStdString(svm->getModelFilePath()));
     }
 }
 
@@ -237,7 +237,7 @@ void MainWindow::on_y_scale_checkBox_toggled(bool checked)
 
 void MainWindow::on_visualize_pushButton_clicked()
 {
-    ScriptQtManager::runPlot(train_file_path, svm->getNFeatures());
+    ScriptQtManager::runPlot(file_manager->getTrainFilepath(), svm->getNFeatures());
 }
 
 int getNFeatures(std::string data_filepath){
@@ -280,19 +280,15 @@ int getNFeatures(std::string data_filepath){
 
 void MainWindow::on_select_pushButton_clicked()
 {
-    ScriptQtManager::runFeatureSelection(train_file_path, svm->getNFeatures(), ui->pattern_lineEdit->text());
-    updateOutput();
+    ScriptQtManager::runFeatureSelection(file_manager->getTrainFilepath(), svm->getNFeatures(), ui->pattern_lineEdit->text());
 
-    train_file_path = QString::fromStdString(train_file_path.toStdString() + ".fselected");
-    ui->chooseDataset_label->setText(train_file_path);
+    file_manager->setTrainFilepath(file_manager->getTrainFilepath() + ".fselected");
 
-    if(!test_file_path.isEmpty()){
-        ScriptQtManager::runFeatureSelection(test_file_path, svm->getNFeatures(), ui->pattern_lineEdit->text());
-        updateOutput();
+    if(!file_manager->getTestFilepath().isEmpty()){
+        ScriptQtManager::runFeatureSelection(file_manager->getTestFilepath(), svm->getNFeatures(), ui->pattern_lineEdit->text());
 
-        test_file_path = QString::fromStdString(test_file_path.toStdString() + ".fselected");
-        ui->tstFile_path_label->setText(test_file_path);
+        file_manager->setTestFilepath(file_manager->getTestFilepath() + ".fselected");
     }
-    svm->setNFeatures(getNFeatures(train_file_path.toStdString()));
-    ui->pattern_lineEdit->setText("1-"+QString::number(svm->getNFeatures()));
+    svm->setNFeatures(file_manager->getNFeatures());
+    updateOutput();
 }

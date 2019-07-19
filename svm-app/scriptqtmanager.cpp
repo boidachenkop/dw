@@ -23,7 +23,7 @@ void ScriptQtManager::runFeatureSelection(QString filepath, int n_features, QStr
     QProcess py_script;
     py_script.start("python3", args);
     py_script.waitForFinished();
-    QString py_script_out(py_script.readAllStandardOutput());
+    QString py_script_out(py_script.readAllStandardOutput()+py_script.readAllStandardError()); //DON'T NEED STD ERR ????????
     printf("%s", py_script_out.toLatin1().data());
 }
 

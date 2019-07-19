@@ -79,10 +79,6 @@ private:
     AvailabilityHandler *availability_handler;
     FileManager *file_manager;
 
-
-    QString train_file_path;
-    QString test_file_path;
-
     std::string stdout_redirect_path;
     FILE *std_old;
 

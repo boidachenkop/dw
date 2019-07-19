@@ -33,7 +33,7 @@ private:
     QLabel* _test_filepath_label;
     QLabel* _model_filepath_label;
 
-    QLineEdit _fs_lineEdit;
+    QLineEdit* _fs_lineEdit;
 
     int _n_features{-1};
     int _test_n_features{-1};
