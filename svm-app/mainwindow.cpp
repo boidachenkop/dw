@@ -8,6 +8,10 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    output_handler = new OutputHandler(ui->output_textEdit);
+    output_handler->startReaderThread();
+    output_handler->printToConsole(true);
+
     availability_handler = new AvailabilityHandler(ui->params_horizontalLayout, ui->tabWidget,
                                                    ui->train_pushButton, ui->test_pushButton);
     file_manager = new FileManager(ui->chooseDataset_label, ui->tstFile_path_label,
@@ -30,36 +34,13 @@ MainWindow::MainWindow(QWidget *parent) :
     availability_handler->filterSVMTypeParams(ui->svmType_comboBox->currentIndex());
     availability_handler->filterKernelParams(ui->kernel_comboBox->currentIndex());
 
-    stdout_redirect_path = "/tmp/svm-app-out";
-    std_old = stdout;
-    stdout = fopen(stdout_redirect_path.c_str(), "w");
-
 }
 
 MainWindow::~MainWindow()
 {
-    if(fclose(stdout) != 0){
-       std::cerr<<"Can't close stdout redirect file"<<std::endl;
-    }
-    stdout = std_old;
-
     system(rm_tmp_plot_cmd.c_str()); // remove tmp file for plot
 
     delete ui;
-}
-
-void MainWindow::updateOutput(){
-    // read redirected stdout and write to QTextEdit
-    fflush(stdout);
-    std::ifstream in_from_file(stdout_redirect_path);
-    std::string output((std::istreambuf_iterator<char>(in_from_file)),
-                       (std::istreambuf_iterator<char>()));
-    ui->output_textEdit->setText(QString::fromStdString(output));
-    in_from_file.close();
-
-    //output always down
-    ui->output_textEdit->verticalScrollBar()->setValue(
-                ui->output_textEdit->verticalScrollBar()->maximum());
 }
 
 int MainWindow::parseParameters()
@@ -163,7 +144,6 @@ void MainWindow::on_chooseDataset_toolButton_clicked()
             .cvTabEnabled(false);
 
     }
-    updateOutput();
 }
 
 void MainWindow::on_choose_tstFile_toolButton_clicked()
@@ -174,7 +154,6 @@ void MainWindow::on_choose_tstFile_toolButton_clicked()
     }else{
         availability_handler->testButtonEnabled(false);
     }
-    updateOutput();
 }
 
 void MainWindow::on_modelFile_toolButton_clicked()
@@ -182,7 +161,6 @@ void MainWindow::on_modelFile_toolButton_clicked()
     QString path = QFileDialog::getSaveFileName(this, "Save model", "/Users/pavlo/Desktop/pr/dw/datasets");
     if(file_manager->setModelFilepath(path) == -1){
        printf("Model file is not set!");
-       updateOutput();
     }else{
         svm->setModelFilePath(path.toStdString());
     }
@@ -193,7 +171,6 @@ void MainWindow::on_train_pushButton_clicked()
    if(parseParameters() == 0){
         svm->readProblem();
         svm->trainModel();
-        updateOutput();
    }
 }
 
@@ -202,7 +179,6 @@ void MainWindow::on_test_pushButton_clicked()
     svm->openPredictInputFile(file_manager->getTestFilepath().toStdString());
     svm->openPredictOutputFile(svm->getPredictOutputFilePath());
     svm->predict();
-    updateOutput();
 }
 
 void MainWindow::on_svmType_comboBox_currentIndexChanged(int index){
@@ -237,7 +213,6 @@ void MainWindow::on_scale_toolButton_clicked()
         //update filepathes and ui
         file_manager->setTrainFilepath(file_manager->getTrainFilepath()+".scale") ;
     }
-    updateOutput();
     if(!file_manager->getTestFilepath().isEmpty()){
         svmscale scale_test(file_manager->getTestFilepath().toStdString(),
                             file_manager->getTestFilepath().toStdString()+".scale");
@@ -253,7 +228,6 @@ void MainWindow::on_scale_toolButton_clicked()
             //update filepathes and ui
             file_manager->setTestFilepath(file_manager->getTestFilepath()+".scale");
         }
-        updateOutput();
     }
 }
 
@@ -320,5 +294,10 @@ void MainWindow::on_select_pushButton_clicked()
         file_manager->setTestFilepath(file_manager->getTestFilepath() + ".fselected");
     }
     svm->setNFeatures(file_manager->getNFeatures());
-    updateOutput();
+}
+
+void MainWindow::on_output_textEdit_textChanged()
+{
+    ui->output_textEdit->verticalScrollBar()->setValue(
+                ui->output_textEdit->verticalScrollBar()->maximum());
 }

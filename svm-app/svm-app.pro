@@ -30,7 +30,8 @@ SOURCES += main.cpp\
     scriptqtmanager.cpp \
     svmcontroller.cpp \
     svm.cpp \
-    svmscale.cpp
+    svmscale.cpp \
+    outputhandler.cpp
 
 HEADERS  += mainwindow.h \
     availabilityhandler.h \
@@ -39,7 +40,8 @@ HEADERS  += mainwindow.h \
     svmcontroller.h \
     svm.h \
     svmscale.h \
-    gnuplot_i.hpp
+    gnuplot_i.hpp \
+    outputhandler.h
 
 FORMS    += mainwindow.ui
 

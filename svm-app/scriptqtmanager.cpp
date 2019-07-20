@@ -5,11 +5,9 @@ int ScriptQtManager::runCheckData(QString filepath)
     QProcess py_script;
     QStringList args;
     args<<QCoreApplication::applicationDirPath()+"/checkdata.py"<<filepath;
-    py_script.setStandardErrorFile("/tmp/jojo");
-    py_script.setStandardErrorFile("/tmp/jojo");
     py_script.start("python3", args);
     py_script.waitForFinished();
-    QString py_script_out(py_script.readAllStandardOutput());
+    QString py_script_out(py_script.readAllStandardError()+py_script.readAllStandardOutput());
     if(py_script_out == "No error.\n"){
         return 0;
     }else{
@@ -25,7 +23,7 @@ void ScriptQtManager::runFeatureSelection(QString filepath, int n_features, QStr
     QProcess py_script;
     py_script.start("python3", args);
     py_script.waitForFinished();
-    QString py_script_out(py_script.readAllStandardOutput()+py_script.readAllStandardError()); //DON'T NEED STD ERR ????????
+    QString py_script_out(py_script.readAllStandardError()+py_script.readAllStandardOutput());
     printf("%s", py_script_out.toLatin1().data());
 }
 

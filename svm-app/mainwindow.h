@@ -23,6 +23,7 @@
 #include "availabilityhandler.h"
 #include "scriptqtmanager.h"
 #include "filemanager.h"
+#include "outputhandler.h"
 
 int getNFeatures(std::string);
 
@@ -68,8 +69,9 @@ private slots:
 
     void on_select_pushButton_clicked();
 
+    void on_output_textEdit_textChanged();
+
 private:
-    void updateOutput();
     int parseParameters();
     void setDefaultSVMParams();
 
@@ -78,9 +80,8 @@ private:
 
     AvailabilityHandler *availability_handler;
     FileManager *file_manager;
+    OutputHandler *output_handler;
 
-    std::string stdout_redirect_path;
-    FILE *std_old;
 
     std::string rm_tmp_plot_cmd{"rm -f "};
 };
