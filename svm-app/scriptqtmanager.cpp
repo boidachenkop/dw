@@ -4,7 +4,9 @@ int ScriptQtManager::runCheckData(QString filepath)
 {
     QProcess py_script;
     QStringList args;
-    args<<"./checkdata.py"<<filepath;
+    args<<QCoreApplication::applicationDirPath()+"/checkdata.py"<<filepath;
+    py_script.setStandardErrorFile("/tmp/jojo");
+    py_script.setStandardErrorFile("/tmp/jojo");
     py_script.start("python3", args);
     py_script.waitForFinished();
     QString py_script_out(py_script.readAllStandardOutput());
@@ -19,7 +21,7 @@ int ScriptQtManager::runCheckData(QString filepath)
 void ScriptQtManager::runFeatureSelection(QString filepath, int n_features, QString pattern)
 {
     QStringList args;
-    args<<"./f_select.py"<<filepath<<QString::number(n_features)<<pattern;
+    args<<QCoreApplication::applicationDirPath()+"/f_select.py"<<filepath<<QString::number(n_features)<<pattern;
     QProcess py_script;
     py_script.start("python3", args);
     py_script.waitForFinished();

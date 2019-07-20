@@ -3,6 +3,7 @@
 #include <QString>
 #include <QStringList>
 #include <QProcess>
+#include <QCoreApplication>
 
 #include <stdlib.h>
 #include <iostream>
