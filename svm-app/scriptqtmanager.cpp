@@ -28,12 +28,12 @@ void ScriptQtManager::runFeatureSelection(QString filepath, int n_features, QStr
 }
 
 #include "gnuplot_i.hpp"
-std::string ScriptQtManager::runPlot(QString filepath, int n_features)
+std::string ScriptQtManager::runPlot(QString filepath, int n_features, bool density)
 {
     //prepare unlabled file
     std::string prepare_data_cmd;
     if(n_features == 1){
-        prepare_data_cmd = R"( awk '{if($2 == ""){$2="0.0"} gsub("[0-9]+:", "", $2); print $2, $1}' )";
+        prepare_data_cmd = R"( awk '{if($2 == ""){$2="0.0"} gsub("[0-9]+:", "", $2); print $2, 0, $1}' )";
     }else if(n_features == 2){
         prepare_data_cmd = R"( awk '{if($3 == ""){$3="0.0"} if($2 == ""){$2="0.0"} gsub("[0-9]+:", "", $2); gsub("[0-9]+:", "", $3); print $2, $3, $1}' )";
     }else if(n_features == 3){

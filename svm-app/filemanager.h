@@ -5,7 +5,7 @@
 #include <QLineEdit>
 #include <fstream>
 #include <iostream>
-
+#include <string.h>
 
 #include "scriptqtmanager.h"
 

@@ -240,7 +240,7 @@ void MainWindow::on_y_scale_checkBox_toggled(bool checked)
 
 void MainWindow::on_visualize_pushButton_clicked()
 {
-    ScriptQtManager::runPlot(file_manager->getTrainFilepath(), svm->getNFeatures());
+    ScriptQtManager::runPlot(file_manager->getTrainFilepath(), svm->getNFeatures(), true);
 }
 
 int getNFeatures(std::string data_filepath){

@@ -1,6 +1,8 @@
 #ifndef SVMCONTROLLER_H
 #define SVMCONTROLLER_H
 #include <string>
+#include <set>
+#include <vector>
 #include <cstring>
 #include <exception>
 #include <errno.h>
@@ -57,6 +59,8 @@ public:
     int getCorrectPredicted(){return correct;}
     int getTotalPredicted(){return total;}
     int getNFeatures(){return n_features;}
+    int getNLabels(){return labels.size();}
+    std::vector<std::string> getLabels(){std::vector<std::string> out; std::copy(labels.begin(), labels.end(), std::back_inserter(out)); return out;}
 
 private:
     void setDefaultParams();
@@ -98,6 +102,7 @@ private:
     char *line{nullptr};
     int max_line_len{1024};
     bool model_read{false};
+    std::set<std::string> labels;
 
     //predict
     int correct{};

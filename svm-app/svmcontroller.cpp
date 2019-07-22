@@ -90,6 +90,8 @@ void SVMController::readProblem(){
     {
         char *p = strtok(line," \t"); // label
 
+        labels.insert(p); // save labels into set
+
         // features
         while(1)
         {
@@ -167,7 +169,6 @@ void SVMController::readProblem(){
             }
         }
 
-
     model_read = true;
 }
 
@@ -206,6 +207,7 @@ void SVMController::doCrossValidation(){
                 ++total_correct;
         printf("Cross Validation Accuracy = %g%%\n",100.0*total_correct/prob.l);
     }
+    fflush(stdout);
     free(target);
 }
 
