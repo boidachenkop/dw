@@ -45,7 +45,6 @@ public:
     SVMController& setWeight(int weight_label, double weight);
     void setModelFilePath(std::string fp){model_file_path = fp;}
     void setPredictProbability(bool pp){predict_probability=pp;}
-    void setPredictPrintFunction(int (*f)(const char* s, ...));
 
     //getters
     struct svm_parameter& getParams();
@@ -106,7 +105,6 @@ private:
     int predict_probability{0};
     int max_nr_attr{64};
     struct svm_node *x;
-    int (*info)(const char *fmt, ...); //predict print function(printf default)
 };
 
 

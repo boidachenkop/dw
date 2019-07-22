@@ -10,7 +10,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     output_handler = new OutputHandler(ui->output_textEdit);
     output_handler->startReaderThread();
-    output_handler->printToConsole(true);
 
     availability_handler = new AvailabilityHandler(ui->params_horizontalLayout, ui->tabWidget,
                                                    ui->train_pushButton, ui->test_pushButton);
@@ -177,7 +176,7 @@ void MainWindow::on_train_pushButton_clicked()
 void MainWindow::on_test_pushButton_clicked()
 {
     svm->openPredictInputFile(file_manager->getTestFilepath().toStdString());
-    svm->openPredictOutputFile(svm->getPredictOutputFilePath());
+    svm->openPredictOutputFile(svm->getPredictOutputFilePath()); //default svmcontroller path
     svm->predict();
 }
 

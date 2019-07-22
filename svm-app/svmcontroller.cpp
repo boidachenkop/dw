@@ -50,11 +50,6 @@ void SVMController::setDefaultParams(){
 
     //predict
     x = (struct svm_node *) malloc(max_nr_attr*sizeof(struct svm_node));
-    info = &printf;
-}
-
-void SVMController::setPredictPrintFunction(int (*f)(const char* s, ...)){
-    info=f;
 }
 
 char* SVMController::readLine(FILE* input){
@@ -296,7 +291,7 @@ void SVMController::predict(){
     else
     {
         if(svm_check_probability_model(model)!=0)
-            info("Model supports probability estimates, but disabled in prediction.\n");
+            printf("Model supports probability estimates, but disabled in prediction.\n");
     }
     correct = 0;
     total = 0;
@@ -310,7 +305,7 @@ void SVMController::predict(){
     if(predict_probability)
     {
         if (svm_type==NU_SVR || svm_type==EPSILON_SVR)
-            info("Prob. model for test data: target value = predicted value + z,\nz: Laplace distribution e^(-|z|/sigma)/(2sigma),sigma=%g\n",svm_get_svr_probability(model));
+            printf("Prob. model for test data: target value = predicted value + z,\nz: Laplace distribution e^(-|z|/sigma)/(2sigma),sigma=%g\n",svm_get_svr_probability(model));
         else
         {
             int *labels=(int *) malloc(nr_class*sizeof(int));
@@ -396,15 +391,17 @@ void SVMController::predict(){
     }
     if (svm_type==NU_SVR || svm_type==EPSILON_SVR)
     {
-        info("Mean squared error = %g (regression)\n",error/total);
-        info("Squared correlation coefficient = %g (regression)\n",
+        printf("Mean squared error = %g (regression)\n",error/total);
+        printf("Squared correlation coefficient = %g (regression)\n",
             ((total*sumpt-sump*sumt)*(total*sumpt-sump*sumt))/
             ((total*sumpp-sump*sump)*(total*sumtt-sumt*sumt))
             );
     }
-    else
-        info("Accuracy = %g%% (%d/%d) (classification)\n",
+    else{
+        printf("Accuracy = %g%% (%d/%d) (classification)\n",
             (double)correct/total*100,correct,total);
+        fflush(stdout);
+    }
     if(predict_probability)
         free(prob_estimates);
 }
