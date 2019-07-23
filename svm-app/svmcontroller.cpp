@@ -90,8 +90,6 @@ void SVMController::readProblem(){
     {
         char *p = strtok(line," \t"); // label
 
-        labels.insert(p); // save labels into set
-
         // features
         while(1)
         {

@@ -1,12 +1,12 @@
 #ifndef SVMCONTROLLER_H
 #define SVMCONTROLLER_H
 #include <string>
-#include <set>
-#include <vector>
 #include <cstring>
 #include <exception>
 #include <errno.h>
 #include "svm.h"
+
+#include <iostream>
 
 #define Malloc(type,n) (type *)malloc((n)*sizeof(type))
 
@@ -43,7 +43,6 @@ public:
     SVMController& setShrinking(bool shrink){param.shrinking=shrink; return *this;}
     SVMController& setProbability(bool probability){param.probability=probability; return *this;}
     SVMController& setCrossvalidation(bool cv, int f){cross_validation=cv; n_fold=f; return *this;}
-    SVMController& setNFeatures(int n_features){this->n_features = n_features; return *this;}
     SVMController& setWeight(int weight_label, double weight);
     void setModelFilePath(std::string fp){model_file_path = fp;}
     void setPredictProbability(bool pp){predict_probability=pp;}
@@ -58,9 +57,6 @@ public:
     std::string getTrainFilePath(){return train_file_path;}
     int getCorrectPredicted(){return correct;}
     int getTotalPredicted(){return total;}
-    int getNFeatures(){return n_features;}
-    int getNLabels(){return labels.size();}
-    std::vector<std::string> getLabels(){std::vector<std::string> out; std::copy(labels.begin(), labels.end(), std::back_inserter(out)); return out;}
 
 private:
     void setDefaultParams();
@@ -97,12 +93,10 @@ private:
     struct svm_node *x_space{nullptr};
     int cross_validation{0};
     int n_fold{0};
-    int n_features{-1};
 
     char *line{nullptr};
     int max_line_len{1024};
     bool model_read{false};
-    std::set<std::string> labels;
 
     //predict
     int correct{};

@@ -17,7 +17,7 @@ int FileManager::setTrainFilepath(QString filepath)
             _train_input_filepath = filepath;
             _model_filepath = filepath + ".model";
             _train_filepath_label->setStyleSheet("QLabel{color : black;}");
-            _n_features = getNFeatures(filepath);
+            _n_features = parseFile(filepath);
 
             _train_filepath_label->setText(filepath);
             _fs_lineEdit->setText("1-"+QString::number(_n_features));
@@ -42,7 +42,7 @@ int FileManager::setTestFilepath(QString filepath)
             _test_input_filepath = filepath;
             _test_filepath_label->setStyleSheet("QLabel{color : black;}");
             _test_filepath_label->setText(filepath);
-            _test_n_features = getNFeatures(filepath);
+            _test_n_features = parseFile(filepath);
             if((_n_features != -1) && (_n_features != _test_n_features)){
                 _test_filepath_label->setStyleSheet("QLabel{color : red;}");
                 _test_filepath_label->repaint();
@@ -92,13 +92,27 @@ QString FileManager::getModelFilepath()
     return _model_filepath;
 }
 
+std::vector<std::string> FileManager::getLabels()
+{
+    return std::vector<std::string>(_labels.begin(), _labels.end());
+}
+
+int FileManager::getNClasses()
+{
+    return _labels.size();
+}
+
 int FileManager::getNFeatures()
 {
    return _n_features;
 }
 
+int FileManager::getNLines(){
+    return _n_lines;
+}
 
-int FileManager::getNFeatures(QString data_filepath){
+
+int FileManager::parseFile(QString data_filepath){
     //read file and parse number of features
     std::fstream data;
     data.open(data_filepath.toStdString(), std::fstream::in);
@@ -109,8 +123,16 @@ int FileManager::getNFeatures(QString data_filepath){
     std::string ndim_str;
     std::string line;
     int max_dim=0;
-    int i=0;
+    int n_lines=0;
     while(std::getline(data, line)){
+        //labels
+        char* c_line = new char[1024];
+        std::copy(line.begin(), line.end(), c_line);
+        char *label = std::strtok(c_line, " \t");
+        _labels.insert(label);
+        while(label != nullptr){
+           label = strtok(nullptr, " \t");
+        }
         bool colon_met = false;
         for(auto c = line.end(); c != line.begin(); c--){
             if(*c == ':'){
@@ -126,12 +148,13 @@ int FileManager::getNFeatures(QString data_filepath){
         if(!colon_met){
             ndim_str+='0';
         }
-        i++;
+        n_lines++;
         reverse(ndim_str.begin(), ndim_str.end());
         int cur_dim = stoi(ndim_str);
         max_dim = max_dim < cur_dim ? cur_dim : max_dim;
         ndim_str = "";
     }
     data.close();
+    _n_lines = n_lines;
     return max_dim;
 }

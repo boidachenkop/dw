@@ -93,8 +93,6 @@ int MainWindow::parseParameters()
             ui->P_lineEdit->setStyleSheet("border-style: outset; border-width: 1px; border-color: red;");
         return -1;
     }
-    //model path:
-    ui->modelFile_path_label->setText(QString::fromStdString(svm->getModelFilePath()));
 }
 
 void MainWindow::setDefaultSVMParams(){
@@ -132,8 +130,10 @@ void MainWindow::on_chooseDataset_toolButton_clicked()
         }else{
             availability_handler->visualizationTabEnabled(false);
         }
-        svm->setNFeatures(file_manager->getNFeatures());
         svm->setModelFilePath(file_manager->getModelFilepath().toStdString());
+        ui->features_label->setText(QString::number(file_manager->getNFeatures()));
+        ui->classes_label->setText(QString::number(file_manager->getNClasses()));
+        ui->rows_label->setText(QString::number(file_manager->getNLines()));
     }else{
         availability_handler->
             trainButtonEnabled(false)
@@ -240,7 +240,7 @@ void MainWindow::on_y_scale_checkBox_toggled(bool checked)
 
 void MainWindow::on_visualize_pushButton_clicked()
 {
-    ScriptQtManager::runPlot(file_manager->getTrainFilepath(), svm->getNFeatures(), true);
+    ScriptQtManager::runPlot(file_manager->getTrainFilepath(), file_manager->getNFeatures(), true);
 }
 
 int getNFeatures(std::string data_filepath){
@@ -283,16 +283,15 @@ int getNFeatures(std::string data_filepath){
 
 void MainWindow::on_select_pushButton_clicked()
 {
-    ScriptQtManager::runFeatureSelection(file_manager->getTrainFilepath(), svm->getNFeatures(), ui->pattern_lineEdit->text());
+    ScriptQtManager::runFeatureSelection(file_manager->getTrainFilepath(), file_manager->getNFeatures(), ui->pattern_lineEdit->text());
 
     file_manager->setTrainFilepath(file_manager->getTrainFilepath() + ".fselected");
 
     if(!file_manager->getTestFilepath().isEmpty()){
-        ScriptQtManager::runFeatureSelection(file_manager->getTestFilepath(), svm->getNFeatures(), ui->pattern_lineEdit->text());
+        ScriptQtManager::runFeatureSelection(file_manager->getTestFilepath(), file_manager->getNFeatures(), ui->pattern_lineEdit->text());
 
         file_manager->setTestFilepath(file_manager->getTestFilepath() + ".fselected");
     }
-    svm->setNFeatures(file_manager->getNFeatures());
 }
 
 void MainWindow::on_output_textEdit_textChanged()

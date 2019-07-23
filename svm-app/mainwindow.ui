@@ -20,7 +20,7 @@
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
-      <widget class="QWidget" name="">
+      <widget class="QWidget" name="layoutWidget">
        <layout class="QVBoxLayout" name="verticalLayout_7">
         <item>
          <widget class="QTextEdit" name="output_textEdit">
@@ -126,6 +126,9 @@
             <property name="text">
              <string>...</string>
             </property>
+            <property name="buddy">
+             <cstring>choose_tstFile_toolButton</cstring>
+            </property>
            </widget>
           </item>
          </layout>
@@ -159,6 +162,9 @@
             <property name="text">
              <string>...</string>
             </property>
+            <property name="buddy">
+             <cstring>modelFile_toolButton</cstring>
+            </property>
            </widget>
           </item>
          </layout>
@@ -179,7 +185,7 @@
            </sizepolicy>
           </property>
           <property name="currentIndex">
-           <number>1</number>
+           <number>2</number>
           </property>
           <widget class="QWidget" name="crossValidation_tab">
            <attribute name="title">
@@ -437,6 +443,12 @@
              <layout class="QVBoxLayout" name="verticalLayout_4">
               <item>
                <widget class="QToolButton" name="scale_toolButton">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
                 <property name="text">
                  <string>Scale</string>
                 </property>
@@ -457,7 +469,113 @@
            <attribute name="title">
             <string>Visualization</string>
            </attribute>
-           <layout class="QHBoxLayout" name="horizontalLayout_4">
+           <layout class="QHBoxLayout" name="horizontalLayout_9">
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_8">
+              <item>
+               <layout class="QVBoxLayout" name="density_verticalLayout">
+                <item>
+                 <widget class="QCheckBox" name="densityPlot_checkBox">
+                  <property name="toolTip">
+                   <string>1d and 2d only</string>
+                  </property>
+                  <property name="text">
+                   <string>Show Density</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <layout class="QHBoxLayout" name="bandwidth_horizontalLayout">
+                  <item>
+                   <widget class="QLabel" name="bandwidth_label">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
+                    <property name="text">
+                     <string>Bandwidth: </string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QSpinBox" name="bandwidth_spinBox">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_7">
+                <item>
+                 <layout class="QVBoxLayout" name="datasetInfoText_verticalLayout">
+                  <item>
+                   <widget class="QLabel" name="rowsText_label">
+                    <property name="text">
+                     <string>Rows:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="featuresText_label">
+                    <property name="text">
+                     <string>Features:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="classesText_label">
+                    <property name="text">
+                     <string>Classes:</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <layout class="QVBoxLayout" name="datasetInfo_verticalLayout">
+                  <item>
+                   <widget class="QLabel" name="rows_label">
+                    <property name="text">
+                     <string>NaN</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="features_label">
+                    <property name="text">
+                     <string>NaN</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="classes_label">
+                    <property name="text">
+                     <string>NaN</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+               </layout>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
             <item>
              <widget class="QPushButton" name="visualize_pushButton">
               <property name="text">
@@ -658,12 +776,18 @@
                 <property name="text">
                  <string>gamma</string>
                 </property>
+                <property name="buddy">
+                 <cstring>gamma_lineEdit</cstring>
+                </property>
                </widget>
               </item>
               <item>
                <widget class="QLabel" name="coef_label">
                 <property name="text">
                  <string>coef0</string>
+                </property>
+                <property name="buddy">
+                 <cstring>coef0_lineEdit</cstring>
                 </property>
                </widget>
               </item>
@@ -712,6 +836,9 @@
                 <property name="text">
                  <string>C</string>
                 </property>
+                <property name="buddy">
+                 <cstring>C_lineEdit</cstring>
+                </property>
                </widget>
               </item>
               <item>
@@ -728,6 +855,9 @@
                <widget class="QLabel" name="nu_label">
                 <property name="text">
                  <string>Nu</string>
+                </property>
+                <property name="buddy">
+                 <cstring>nu_lineEdit</cstring>
                 </property>
                </widget>
               </item>
@@ -794,6 +924,9 @@
                <widget class="QLabel" name="P_label">
                 <property name="text">
                  <string>P</string>
+                </property>
+                <property name="buddy">
+                 <cstring>P_lineEdit</cstring>
                 </property>
                </widget>
               </item>
@@ -905,12 +1038,44 @@
    <slot>clear()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>124</x>
-     <y>44</y>
+     <x>134</x>
+     <y>518</y>
     </hint>
     <hint type="destinationlabel">
      <x>124</x>
      <y>290</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>densityPlot_checkBox</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>bandwidth_spinBox</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>320</x>
+     <y>189</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>341</x>
+     <y>217</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>densityPlot_checkBox</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>bandwidth_label</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>282</x>
+     <y>192</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>282</x>
+     <y>222</y>
     </hint>
    </hints>
   </connection>
