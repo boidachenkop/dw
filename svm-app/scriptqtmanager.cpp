@@ -28,9 +28,10 @@ void ScriptQtManager::runFeatureSelection(QString filepath, int n_features, QStr
 }
 
 #include "gnuplot_i.hpp"
-std::string ScriptQtManager::runPlot(QString filepath, int n_features, bool density)
+std::string ScriptQtManager::runPlot(QString filepath, int n_features, std::vector<std::string> labels, bool density, double band_width)
 {
     //prepare unlabled file
+    QString save_filepath = filepath + ".tmp";
     std::string prepare_data_cmd;
     if(n_features == 1){
         prepare_data_cmd = R"( awk '{if($2 == ""){$2="0.0"} gsub("[0-9]+:", "", $2); print $2, 0, $1}' )";
@@ -38,9 +39,21 @@ std::string ScriptQtManager::runPlot(QString filepath, int n_features, bool dens
         prepare_data_cmd = R"( awk '{if($3 == ""){$3="0.0"} if($2 == ""){$2="0.0"} gsub("[0-9]+:", "", $2); gsub("[0-9]+:", "", $3); print $2, $3, $1}' )";
     }else if(n_features == 3){
         prepare_data_cmd = R"( awk '{if($2 == ""){$2="0.0"} if($3 == ""){$3="0.0"} if($4 == ""){$4="0.0"} gsub("[0-9]+:", "", $2); gsub("[0-9]+:", "", $3); gsub("[0-9]+:", "", $4); print $2, $3, $4, $1}' )";
+    }else{
+
     }
-    prepare_data_cmd+=filepath.toStdString()+" > "+filepath.toStdString()+".tmp";
+    prepare_data_cmd+=filepath.toStdString()+" > " + save_filepath.toStdString();
     system(prepare_data_cmd.c_str());
+
+    if(density){
+        if(n_features == 1){
+            for(int i=0; i< (int)labels.size(); i++){
+                std::string grepcmd = "grep ' " + labels[i] + "' " + save_filepath.toStdString()
+                        + " > " + save_filepath.toStdString()+std::to_string(i);
+                printf("%s\n", grepcmd.c_str());
+            }
+        }
+    }
 
     //plot with gnuplot
     Gnuplot gp;

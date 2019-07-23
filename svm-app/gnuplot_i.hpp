@@ -27,8 +27,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 
-#ifndef _GNUPLOT_PIPES_H_
-#define _GNUPLOT_PIPES_H_
+#ifndef _IGNUPLOT_PIPES_H_
+#define _IGNUPLOT_PIPES_H_
 
 
 #include <iostream>

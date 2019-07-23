@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>739</width>
-    <height>529</height>
+    <height>534</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -497,11 +497,7 @@
                    </widget>
                   </item>
                   <item>
-                   <widget class="QSpinBox" name="bandwidth_spinBox">
-                    <property name="enabled">
-                     <bool>false</bool>
-                    </property>
-                   </widget>
+                   <widget class="QLineEdit" name="bandwidth_lineEdit"/>
                   </item>
                  </layout>
                 </item>
@@ -1050,22 +1046,6 @@
   <connection>
    <sender>densityPlot_checkBox</sender>
    <signal>clicked(bool)</signal>
-   <receiver>bandwidth_spinBox</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>320</x>
-     <y>189</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>341</x>
-     <y>217</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>densityPlot_checkBox</sender>
-   <signal>clicked(bool)</signal>
    <receiver>bandwidth_label</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
@@ -1076,6 +1056,22 @@
     <hint type="destinationlabel">
      <x>282</x>
      <y>222</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>densityPlot_checkBox</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>bandwidth_lineEdit</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>381</x>
+     <y>189</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>387</x>
+     <y>231</y>
     </hint>
    </hints>
   </connection>
