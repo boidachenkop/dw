@@ -6,9 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>739</width>
-    <height>534</height>
+    <width>803</width>
+    <height>547</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
@@ -17,8 +23,17 @@
    <layout class="QHBoxLayout" name="horizontalLayout_3">
     <item>
      <widget class="QSplitter" name="splitter">
+      <property name="lineWidth">
+       <number>1</number>
+      </property>
+      <property name="midLineWidth">
+       <number>0</number>
+      </property>
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
+      </property>
+      <property name="handleWidth">
+       <number>8</number>
       </property>
       <widget class="QWidget" name="layoutWidget">
        <layout class="QVBoxLayout" name="verticalLayout_7">
@@ -185,7 +200,7 @@
            </sizepolicy>
           </property>
           <property name="currentIndex">
-           <number>0</number>
+           <number>3</number>
           </property>
           <widget class="QWidget" name="crossValidation_tab">
            <attribute name="title">
@@ -469,91 +484,104 @@
            <attribute name="title">
             <string>Visualization</string>
            </attribute>
-           <layout class="QHBoxLayout" name="horizontalLayout_9">
+           <layout class="QHBoxLayout" name="horizontalLayout_4">
             <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_8">
+             <layout class="QHBoxLayout" name="horizontalLayout_7">
               <item>
-               <layout class="QVBoxLayout" name="density_verticalLayout">
+               <layout class="QVBoxLayout" name="datasetInfoText_verticalLayout">
                 <item>
-                 <widget class="QCheckBox" name="densityPlot_checkBox">
-                  <property name="toolTip">
-                   <string>1d and 2d only</string>
-                  </property>
+                 <widget class="QLabel" name="rowsText_label">
                   <property name="text">
-                   <string>Show Density</string>
+                   <string>Rows:</string>
                   </property>
                  </widget>
                 </item>
                 <item>
-                 <layout class="QHBoxLayout" name="bandwidth_horizontalLayout">
-                  <item>
-                   <widget class="QLabel" name="bandwidth_label">
-                    <property name="enabled">
-                     <bool>false</bool>
-                    </property>
-                    <property name="text">
-                     <string>Bandwidth: </string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QLineEdit" name="bandwidth_lineEdit"/>
-                  </item>
-                 </layout>
+                 <widget class="QLabel" name="featuresText_label">
+                  <property name="text">
+                   <string>Features:</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="classesText_label">
+                  <property name="text">
+                   <string>Classes:</string>
+                  </property>
+                 </widget>
                 </item>
                </layout>
               </item>
               <item>
-               <layout class="QHBoxLayout" name="horizontalLayout_7">
+               <layout class="QVBoxLayout" name="datasetInfo_verticalLayout">
                 <item>
-                 <layout class="QVBoxLayout" name="datasetInfoText_verticalLayout">
-                  <item>
-                   <widget class="QLabel" name="rowsText_label">
-                    <property name="text">
-                     <string>Rows:</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QLabel" name="featuresText_label">
-                    <property name="text">
-                     <string>Features:</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QLabel" name="classesText_label">
-                    <property name="text">
-                     <string>Classes:</string>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
+                 <widget class="QLabel" name="rows_label">
+                  <property name="text">
+                   <string>NaN</string>
+                  </property>
+                 </widget>
                 </item>
                 <item>
-                 <layout class="QVBoxLayout" name="datasetInfo_verticalLayout">
-                  <item>
-                   <widget class="QLabel" name="rows_label">
-                    <property name="text">
-                     <string>NaN</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QLabel" name="features_label">
-                    <property name="text">
-                     <string>NaN</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QLabel" name="classes_label">
-                    <property name="text">
-                     <string>NaN</string>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
+                 <widget class="QLabel" name="features_label">
+                  <property name="text">
+                   <string>NaN</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="classes_label">
+                  <property name="text">
+                   <string>NaN</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer_2">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <layout class="QVBoxLayout" name="density_verticalLayout">
+              <item>
+               <widget class="QCheckBox" name="densityPlot_checkBox">
+                <property name="toolTip">
+                 <string>1d and 2d only</string>
+                </property>
+                <property name="text">
+                 <string>Show Density</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="bandwidth_horizontalLayout">
+                <item>
+                 <widget class="QLabel" name="bandwidth_label">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="text">
+                   <string>Bandwidth: </string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLineEdit" name="bandwidth_lineEdit">
+                  <property name="text">
+                   <string>0.1</string>
+                  </property>
+                 </widget>
                 </item>
                </layout>
               </item>
@@ -792,25 +820,13 @@
             <item>
              <layout class="QVBoxLayout" name="verticalLayout_5">
               <item>
-               <layout class="QHBoxLayout" name="degree_horizontalLayout">
-                <item>
-                 <widget class="QSpinBox" name="degree_spinBox"/>
-                </item>
-               </layout>
+               <widget class="QSpinBox" name="degree_spinBox"/>
               </item>
               <item>
-               <layout class="QHBoxLayout" name="gamma_horizontalLayout">
-                <item>
-                 <widget class="QLineEdit" name="gamma_lineEdit"/>
-                </item>
-               </layout>
+               <widget class="QLineEdit" name="gamma_lineEdit"/>
               </item>
               <item>
-               <layout class="QHBoxLayout" name="coef0_horizontalLayout">
-                <item>
-                 <widget class="QLineEdit" name="coef0_lineEdit"/>
-                </item>
-               </layout>
+               <widget class="QLineEdit" name="coef0_lineEdit"/>
               </item>
              </layout>
             </item>
@@ -862,41 +878,29 @@
             <item>
              <layout class="QVBoxLayout" name="verticalLayout_6">
               <item>
-               <layout class="QHBoxLayout" name="C_horizontalLayout">
-                <item>
-                 <widget class="QLineEdit" name="C_lineEdit"/>
-                </item>
-               </layout>
+               <widget class="QLineEdit" name="C_lineEdit"/>
               </item>
               <item>
-               <layout class="QHBoxLayout" name="eps_horizontalLayout">
-                <item>
-                 <widget class="QLineEdit" name="eps_lineEdit">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="inputMethodHints">
-                   <set>Qt::ImhDigitsOnly</set>
-                  </property>
-                  <property name="alignment">
-                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                  </property>
-                  <property name="readOnly">
-                   <bool>false</bool>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
+               <widget class="QLineEdit" name="eps_lineEdit">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="inputMethodHints">
+                 <set>Qt::ImhDigitsOnly</set>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                </property>
+                <property name="readOnly">
+                 <bool>false</bool>
+                </property>
+               </widget>
               </item>
               <item>
-               <layout class="QHBoxLayout" name="nu_horizontalLayout">
-                <item>
-                 <widget class="QLineEdit" name="nu_lineEdit"/>
-                </item>
-               </layout>
+               <widget class="QLineEdit" name="nu_lineEdit"/>
               </item>
              </layout>
             </item>
@@ -970,6 +974,9 @@
             <height>0</height>
            </size>
           </property>
+          <property name="toolTip">
+           <string>Train model on selected dataset</string>
+          </property>
           <property name="text">
            <string>Train Model</string>
           </property>
@@ -977,6 +984,9 @@
         </item>
         <item>
          <widget class="QPushButton" name="test_pushButton">
+          <property name="toolTip">
+           <string>Test model on selected test file</string>
+          </property>
           <property name="text">
            <string>Test Model</string>
           </property>
@@ -1009,7 +1019,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>739</width>
+     <width>803</width>
      <height>22</height>
     </rect>
    </property>
@@ -1020,7 +1030,6 @@
   <tabstop>chooseDataset_toolButton</tabstop>
   <tabstop>svmType_comboBox</tabstop>
   <tabstop>kernel_comboBox</tabstop>
-  <tabstop>eps_lineEdit</tabstop>
   <tabstop>shrinking_checkBox</tabstop>
   <tabstop>prob_checkBox</tabstop>
   <tabstop>train_pushButton</tabstop>

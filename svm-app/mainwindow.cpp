@@ -262,7 +262,7 @@ void MainWindow::on_visualize_pushButton_clicked()
     bool ok = false;
     double bandwidth = QString(ui->bandwidth_lineEdit->text()).toDouble(&ok);
     if(ok){
-        ui->bandwidth_lineEdit->setStyleSheet("border-style: outset; border-width: 1px; border-color: black;");
+        ui->bandwidth_lineEdit->setStyleSheet("border-color: black;");
         ScriptQtManager::runPlot(file_manager->getTrainFilepath(),
                                  file_manager->getNFeatures(),
                                  file_manager->getLabels(),

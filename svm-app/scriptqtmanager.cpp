@@ -30,8 +30,10 @@ void ScriptQtManager::runFeatureSelection(QString filepath, int n_features, QStr
 #include "gnuplot_i.hpp"
 std::string ScriptQtManager::runPlot(QString filepath, int n_features, std::vector<std::string> labels, bool density, double band_width)
 {
+    std::string to_remove = "";
     //prepare unlabled file
-    QString save_filepath = filepath + ".tmp";
+    std::string save_filepath = filepath.toStdString() + ".tmp";
+    to_remove += save_filepath+" ";
     std::string prepare_data_cmd;
     if(n_features == 1){
         prepare_data_cmd = R"( awk '{if($2 == ""){$2="0.0"} gsub("[0-9]+:", "", $2); print $2, 0, $1}' )";
@@ -42,29 +44,52 @@ std::string ScriptQtManager::runPlot(QString filepath, int n_features, std::vect
     }else{
 
     }
-    prepare_data_cmd+=filepath.toStdString()+" > " + save_filepath.toStdString();
+    prepare_data_cmd+=filepath.toStdString()+" > " + save_filepath;
     system(prepare_data_cmd.c_str());
 
     if(density){
-        if(n_features == 1){
-            for(int i=0; i< (int)labels.size(); i++){
-                std::string grepcmd = "grep ' " + labels[i] + "' " + save_filepath.toStdString()
-                        + " > " + save_filepath.toStdString()+std::to_string(i);
-                printf("%s\n", grepcmd.c_str());
-            }
+        if(labels.size() > 8){
+            std::cout<<"Too many classes. Density plot is possible if dataset has less than 8 classes"<<std::endl;
+            return "";
         }
-    }
+        std::vector<std::string> colors{"red", "blue", "green", "black", "orange", "purple", "cyan", "coral"};
+        std::vector<std::string> one_class_files;
+        std::string grepcmd = "";
+        for(int i=0; i < (int)labels.size(); i++){
+            one_class_files.push_back(save_filepath + std::to_string(i));
+            grepcmd += "grep ' " + labels[i] + "$' " + save_filepath
+                    + " > " + *one_class_files.end() + "; ";
+            to_remove += *one_class_files.end();
+        }
 
-    //plot with gnuplot
-    Gnuplot gp;
-    std::string plot_cmd;
-    if(n_features == 3){
-        plot_cmd = "splot '";
+        if(n_features == 1){
+           std::string plot_cmd = R"(
+                set key off;
+                set border 3;
+
+
+                bin_width = 0.1;
+
+                bin_number(x) = floor(x/bin_width);
+
+                rounded(x) = bin_width * ( bin_number(x) + 0.5 );)";
+        }else if(n_features == 2){
+
+        }else{
+            return "";
+        }
     }else{
-        plot_cmd = "plot '";
-    }
-    plot_cmd+=filepath.toStdString()+".tmp' with points palette; pause mouse close";
-    gp<<plot_cmd;
+        //plot with gnuplot
+        Gnuplot gp;
+        std::string plot_cmd;
+        if(n_features == 3){
+            plot_cmd = "splot '";
+        }else{
+            plot_cmd = "plot '";
+        }
+        plot_cmd+=filepath.toStdString()+".tmp' with points palette; pause mouse close";
+        gp<<plot_cmd;
 
-    return filepath.toStdString()+".tmp ";//remove file in d-tor
+    }
+    return to_remove;//remove file in d-tor
 }
