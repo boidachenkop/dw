@@ -1,45 +1,36 @@
 #ifndef AVAILABILITYHANDLER_H
 #define AVAILABILITYHANDLER_H
-#include <QList>
-#include <QPushButton>
-#include <QHBoxLayout>
-#include <QDoubleSpinBox>
-#include <QTabWidget>
+#include <QObject>
 #include <iostream>
 
-enum {CV=1, SCALING=2, VISUALIZATION=4, FS=8};
-enum {TEST=1, TRAIN=2};
-
-class AvailabilityHandler
+class AvailabilityHandler : public QObject
 {
+    Q_OBJECT
 public:
-    AvailabilityHandler(QHBoxLayout* params, QTabWidget* tabs, QPushButton* train_button, QPushButton* test_button);
+    AvailabilityHandler();
     AvailabilityHandler& trainButtonEnabled(bool);
     AvailabilityHandler& testButtonEnabled(bool);
     AvailabilityHandler& cvTabEnabled(bool);
     AvailabilityHandler& scalingTabEnabled(bool);
     AvailabilityHandler& visualizationTabEnabled(bool);
     AvailabilityHandler& featureSelectionTabEnabled(bool);
+
     void filterSVMTypeParams(int svm_type);
     void filterKernelParams(int kernel);
-private:
-    //parameters
-    QHBoxLayout* _degree;
-    QHBoxLayout* _gamma;
-    QHBoxLayout* _coef0;
-    QHBoxLayout* _C;
-    QHBoxLayout* _nu;
-    QHBoxLayout* _P;
+signals:
+    void degreeEnabled(bool);
+    void gammaEnabled(bool);
+    void coef0Enabled(bool);
+    void cEnabled(bool);
+    void nuEnabled(bool);
+    void pEnabled(bool);
 
-    //buttons
-    QPushButton* _train_button;
-    QPushButton* _test_button;
-
-    //tabs
-    QWidget* _cv_tab;
-    QWidget* _scaling_tab;
-    QWidget* _visualization_tab;
-    QWidget* _fs_tab;
+    void trainEnabled(bool);
+    void testEnabled(bool);
+    void cvEnabled(bool);
+    void scalingEnabled(bool);
+    void visualizationEnabled(bool);
+    void fsEnabled(bool);
 };
 
 #endif // AVAILABILITYHANDLER_H

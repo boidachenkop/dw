@@ -11,16 +11,8 @@ MainWindow::MainWindow(QWidget *parent) :
     output_handler = new OutputHandler();
     output_handler->startReaderThread();
 
-    availability_handler = new AvailabilityHandler(ui->params_horizontalLayout, ui->tabWidget,
-                                                   ui->train_pushButton, ui->test_pushButton);
+    availability_handler = new AvailabilityHandler();
     file_manager = new FileManager();
-    //tabs and buttons unabled on start
-    availability_handler->cvTabEnabled(false)
-            .scalingTabEnabled(false)
-            .visualizationTabEnabled(false)
-            .featureSelectionTabEnabled(false)
-            .trainButtonEnabled(false)
-            .testButtonEnabled(false);
 
     // output textEdit read only
     ui->output_textEdit->setReadOnly(true);
@@ -28,10 +20,7 @@ MainWindow::MainWindow(QWidget *parent) :
     //set default params
     setDefaultSVMParams();
 
-    //filter params
-    availability_handler->filterSVMTypeParams(ui->svmType_comboBox->currentIndex());
-    availability_handler->filterKernelParams(ui->kernel_comboBox->currentIndex());
-
+    //info update
     connect(file_manager, &FileManager::updateNLines, this, &MainWindow::updateNRowsLabel);
     connect(file_manager, &FileManager::updateNClasses, this, &MainWindow::updateNClassesLabel);
     connect(file_manager, &FileManager::updateNFeatures, this, &MainWindow::updateNFeaturesLabel);
@@ -39,6 +28,30 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(file_manager, &FileManager::updateModelFilepath, this, &MainWindow::updateModelFilepathLabel);
     connect(file_manager, &FileManager::updateNFeatures, this, &MainWindow::updateFSLineEdit);
     connect(output_handler, &OutputHandler::updateOutput, this, &MainWindow::updateOutputTextEdit);
+    //availability
+    connect(availability_handler, &AvailabilityHandler::degreeEnabled, ui->degree_spinBox, &QSpinBox::setEnabled);
+    connect(availability_handler, &AvailabilityHandler::gammaEnabled, ui->gamma_lineEdit, &QLineEdit::setEnabled);
+    connect(availability_handler, &AvailabilityHandler::coef0Enabled, ui->coef0_lineEdit, &QLineEdit::setEnabled);
+    connect(availability_handler, &AvailabilityHandler::cEnabled, ui->C_lineEdit, &QLineEdit::setEnabled);
+    connect(availability_handler, &AvailabilityHandler::nuEnabled, ui->nu_lineEdit, &QLineEdit::setEnabled);
+    connect(availability_handler, &AvailabilityHandler::pEnabled, ui->P_lineEdit, &QLineEdit::setEnabled);
+    connect(availability_handler, &AvailabilityHandler::trainEnabled, ui->train_pushButton, &QPushButton::setEnabled);
+    connect(availability_handler, &AvailabilityHandler::testEnabled, ui->test_pushButton, &QPushButton::setEnabled);
+    connect(availability_handler, &AvailabilityHandler::cvEnabled, ui->crossValidation_tab, &QWidget::setEnabled);
+    connect(availability_handler, &AvailabilityHandler::scalingEnabled, ui->scaling_tab, &QWidget::setEnabled);
+    connect(availability_handler, &AvailabilityHandler::visualizationEnabled, ui->visualization_tab, &QWidget::setEnabled);
+    connect(availability_handler, &AvailabilityHandler::fsEnabled, ui->feature_selection_tab, &QWidget::setEnabled);
+
+    //tabs and buttons unabled on start
+    availability_handler->cvTabEnabled(false)
+            .scalingTabEnabled(false)
+            .visualizationTabEnabled(false)
+            .featureSelectionTabEnabled(false)
+            .trainButtonEnabled(false)
+            .testButtonEnabled(false);
+    //filter params
+    availability_handler->filterSVMTypeParams(ui->svmType_comboBox->currentIndex());
+    availability_handler->filterKernelParams(ui->kernel_comboBox->currentIndex());
 }
 
 MainWindow::~MainWindow()
