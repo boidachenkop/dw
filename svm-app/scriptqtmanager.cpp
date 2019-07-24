@@ -42,7 +42,7 @@ std::string ScriptQtManager::runPlot(QString filepath, int n_features, std::vect
     }else if(n_features == 3){
         prepare_data_cmd = R"( awk '{if($2 == ""){$2="0.0"} if($3 == ""){$3="0.0"} if($4 == ""){$4="0.0"} gsub("[0-9]+:", "", $2); gsub("[0-9]+:", "", $3); gsub("[0-9]+:", "", $4); print $2, $3, $4, $1}' )";
     }else{
-
+        return "";
     }
     prepare_data_cmd+=filepath.toStdString()+" > " + save_filepath;
     system(prepare_data_cmd.c_str());
@@ -54,25 +54,26 @@ std::string ScriptQtManager::runPlot(QString filepath, int n_features, std::vect
         }
         std::vector<std::string> colors{"red", "blue", "green", "black", "orange", "purple", "cyan", "coral"};
         std::vector<std::string> one_class_files;
-        std::string grepcmd = "";
+        std::stringstream grepcmd;
         for(int i=0; i < (int)labels.size(); i++){
             one_class_files.push_back(save_filepath + std::to_string(i));
-            grepcmd += "grep ' " + labels[i] + "$' " + save_filepath
-                    + " > " + *one_class_files.end() + "; ";
-            to_remove += *one_class_files.end();
+            grepcmd<<"grep ' "<<labels[i]<<"$' "<<save_filepath
+                    <<" > "<<one_class_files.back()<<"; ";
+            to_remove += one_class_files.back();
         }
-
         if(n_features == 1){
-           std::string plot_cmd = R"(
-                set key off;
-                set border 3;
-
-
-                bin_width = 0.1;
-
-                bin_number(x) = floor(x/bin_width);
-
-                rounded(x) = bin_width * ( bin_number(x) + 0.5 );)";
+           std::stringstream plot_cmd;
+           plot_cmd<<"set key off; set border 3; bin_width = "<<band_width<<";"
+                    <<"bin_number(x) = floor(x/bin_width);"<<"rounded(x) = bin_width * ( bin_number(x) + 0.5 );"
+                    << "plot ";
+           auto i = one_class_files.size();
+           for(i=0; i < one_class_files.size(); i++){
+                plot_cmd<<"'"<<one_class_files[i]<<"' (rounded($1)):(1) smooth kdensity lt rgb"<<colors[i]<<",\\";
+           }
+           for(i=0; i < one_class_files.size()-1; i++){
+                plot_cmd<<"'"<<one_class_files[i]<<"' lt rgb \""<<colors[i]<<"\",\\\n";
+           }
+           plot_cmd<<"'"<<one_class_files[i]<<"' lt rgb \""<<colors[i]<<"\"\n pause mouse close";
         }else if(n_features == 2){
 
         }else{

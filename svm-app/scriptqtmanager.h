@@ -9,6 +9,7 @@
 #include <string>
 #include <stdlib.h>
 #include <iostream>
+#include <sstream>
 
 class ScriptQtManager
 {
