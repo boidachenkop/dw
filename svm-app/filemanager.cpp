@@ -13,19 +13,13 @@ int FileManager::setTrainFilepath(QString filepath)
             _model_filepath = filepath + ".model";
             _n_features = parseFile(filepath);
 
-//            _train_filepath_label->setStyleSheet("QLabel{color : black;}");
-//            _train_filepath_label->setText(filepath);
             emit updateTrainInputFilepath(filepath, true);
-//            _fs_lineEdit->setText("1-"+QString::number(_n_features));
-//            _model_filepath_label->setText(filepath + ".model");
             emit updateModelFilepath(filepath + ".model");
             emit updateNLines(_n_lines);
             emit updateNClasses(getNClasses());
             emit updateNFeatures(_n_features);
             return 0;
         }else{
-//            _train_filepath_label->setStyleSheet("QLabel{color : red;}");
-//            _train_filepath_label->setText(filepath);
             emit updateTrainInputFilepath(filepath, false);
             return -1;
         }
@@ -41,20 +35,14 @@ int FileManager::setTestFilepath(QString filepath)
     if(!filepath.isEmpty()){
         if(ScriptQtManager::runCheckData(filepath) == 0){
             _test_input_filepath = filepath;
-//            _test_filepath_label->setStyleSheet("QLabel{color : black;}");
-//            _test_filepath_label->setText(filepath);
             emit updateTestInputFilepath(filepath, true);
             _test_n_features = parseFile(filepath);
             if((_n_features != -1) && (_n_features != _test_n_features)){
-//                _test_filepath_label->setStyleSheet("QLabel{color : red;}");
-//                _test_filepath_label->repaint();
                 emit updateTestInputFilepath(filepath, false);
                 return -1;
             }
             return 0;
         }else{
-//            _test_filepath_label->setStyleSheet("QLabel{color : red;}");
-//            _test_filepath_label->setText(filepath);
             emit updateTestInputFilepath(filepath, false);
             return -1;
         }

@@ -1,7 +1,6 @@
 #include "outputhandler.h"
 
-OutputHandler::OutputHandler(QTextEdit* output_textEdit):
-    _output_textEdit(output_textEdit)
+OutputHandler::OutputHandler()
 {
     _saved_stdout = dup(STDOUT_FILENO);
     pipe(_stdout_pipe);
@@ -20,7 +19,7 @@ void OutputHandler::handleOutput(){
     int bytes_read;
     char buf[1024];
     while((bytes_read = (int)read(_stdout_pipe[0], buf, sizeof(buf)))){
-        _output_textEdit->append(QString::fromLatin1(buf, bytes_read));
+        emit updateOutput(QString::fromLatin1(buf, bytes_read));
     }
 }
 

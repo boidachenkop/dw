@@ -65,6 +65,7 @@ private slots:
     void updateTrainFilepathLabel(QString filepath, bool correct);
     void updateTestFilepathLabel(QString filepath, bool correct);
     void updateModelFilepathLabel(QString filepath);
+    void updateOutputTextEdit(QString text);
 
 private:
     int parseParameters();

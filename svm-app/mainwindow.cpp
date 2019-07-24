@@ -8,7 +8,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    output_handler = new OutputHandler(ui->output_textEdit);
+    output_handler = new OutputHandler();
     output_handler->startReaderThread();
 
     availability_handler = new AvailabilityHandler(ui->params_horizontalLayout, ui->tabWidget,
@@ -38,6 +38,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(file_manager, &FileManager::updateTrainInputFilepath, this, &MainWindow::updateTrainFilepathLabel);
     connect(file_manager, &FileManager::updateModelFilepath, this, &MainWindow::updateModelFilepathLabel);
     connect(file_manager, &FileManager::updateNFeatures, this, &MainWindow::updateFSLineEdit);
+    connect(output_handler, &OutputHandler::updateOutput, this, &MainWindow::updateOutputTextEdit);
 }
 
 MainWindow::~MainWindow()
@@ -360,5 +361,15 @@ void MainWindow::updateTestFilepathLabel(QString filepath, bool correct)
 
 void MainWindow::updateModelFilepathLabel(QString filepath)
 {
-        ui->modelFile_path_label->setText(filepath);
+    ui->modelFile_path_label->setText(filepath);
 }
+
+void MainWindow::updateOutputTextEdit(QString text)
+{
+    ui->output_textEdit->moveCursor(QTextCursor::End);
+    ui->output_textEdit->insertPlainText(text);
+    ui->output_textEdit->moveCursor(QTextCursor::End);
+}
+
+
+
