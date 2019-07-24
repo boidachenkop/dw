@@ -13,8 +13,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     availability_handler = new AvailabilityHandler(ui->params_horizontalLayout, ui->tabWidget,
                                                    ui->train_pushButton, ui->test_pushButton);
-    file_manager = new FileManager(ui->chooseDataset_label, ui->tstFile_path_label,
-                                   ui->modelFile_path_label, ui->pattern_lineEdit);
+    file_manager = new FileManager();
     //tabs and buttons unabled on start
     availability_handler->cvTabEnabled(false)
             .scalingTabEnabled(false)
@@ -33,6 +32,12 @@ MainWindow::MainWindow(QWidget *parent) :
     availability_handler->filterSVMTypeParams(ui->svmType_comboBox->currentIndex());
     availability_handler->filterKernelParams(ui->kernel_comboBox->currentIndex());
 
+    connect(file_manager, &FileManager::updateNLines, this, &MainWindow::updateNRowsLabel);
+    connect(file_manager, &FileManager::updateNClasses, this, &MainWindow::updateNClassesLabel);
+    connect(file_manager, &FileManager::updateNFeatures, this, &MainWindow::updateNFeaturesLabel);
+    connect(file_manager, &FileManager::updateTrainInputFilepath, this, &MainWindow::updateTrainFilepathLabel);
+    connect(file_manager, &FileManager::updateModelFilepath, this, &MainWindow::updateModelFilepathLabel);
+    connect(file_manager, &FileManager::updateNFeatures, this, &MainWindow::updateFSLineEdit);
 }
 
 MainWindow::~MainWindow()
@@ -309,4 +314,51 @@ void MainWindow::on_output_textEdit_textChanged()
 {
     ui->output_textEdit->verticalScrollBar()->setValue(
                 ui->output_textEdit->verticalScrollBar()->maximum());
+}
+
+void MainWindow::updateNFeaturesLabel(int n_features)
+{
+   ui->features_label->setText(QString::number(n_features));
+}
+
+void MainWindow::updateNRowsLabel(int n_rows)
+{
+   ui->rows_label->setText(QString::number(n_rows));
+}
+
+void MainWindow::updateNClassesLabel(int n_classes)
+{
+    ui->classes_label->setText(QString::number(n_classes));
+}
+
+void MainWindow::updateFSLineEdit(int n_features)
+{
+   ui->pattern_lineEdit->setText("1-" + QString::number(n_features));
+}
+
+void MainWindow::updateTrainFilepathLabel(QString filepath, bool correct)
+{
+    if(correct){
+        ui->chooseDataset_label->setStyleSheet("QLabel{color : black;}");
+        ui->chooseDataset_label->setText(filepath);
+    }else{
+        ui->chooseDataset_label->setStyleSheet("QLabel{color : red;}");
+        ui->chooseDataset_label->setText(filepath);
+    }
+}
+
+void MainWindow::updateTestFilepathLabel(QString filepath, bool correct)
+{
+    if(correct){
+        ui->tstFile_path_label->setStyleSheet("QLabel{color : black;}");
+        ui->tstFile_path_label->setText(filepath);
+    }else{
+        ui->tstFile_path_label->setStyleSheet("QLabel{color : red;}");
+        ui->tstFile_path_label->setText(filepath);
+    }
+}
+
+void MainWindow::updateModelFilepathLabel(QString filepath)
+{
+        ui->modelFile_path_label->setText(filepath);
 }

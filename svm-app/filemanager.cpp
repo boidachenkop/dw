@@ -1,11 +1,6 @@
 #include "filemanager.h"
 
-FileManager::FileManager(QLabel* train_label, QLabel* test_label,
-                         QLabel* model_label, QLineEdit* fs_lineEdit):
-    _train_filepath_label(train_label),
-    _test_filepath_label(test_label),
-    _model_filepath_label(model_label),
-    _fs_lineEdit(fs_lineEdit)
+FileManager::FileManager()
 {
 }
 
@@ -16,16 +11,22 @@ int FileManager::setTrainFilepath(QString filepath)
         if(ScriptQtManager::runCheckData(filepath) == 0){
             _train_input_filepath = filepath;
             _model_filepath = filepath + ".model";
-            _train_filepath_label->setStyleSheet("QLabel{color : black;}");
             _n_features = parseFile(filepath);
 
-            _train_filepath_label->setText(filepath);
-            _fs_lineEdit->setText("1-"+QString::number(_n_features));
-            _model_filepath_label->setText(filepath + ".model");
+//            _train_filepath_label->setStyleSheet("QLabel{color : black;}");
+//            _train_filepath_label->setText(filepath);
+            emit updateTrainInputFilepath(filepath, true);
+//            _fs_lineEdit->setText("1-"+QString::number(_n_features));
+//            _model_filepath_label->setText(filepath + ".model");
+            emit updateModelFilepath(filepath + ".model");
+            emit updateNLines(_n_lines);
+            emit updateNClasses(getNClasses());
+            emit updateNFeatures(_n_features);
             return 0;
         }else{
-            _train_filepath_label->setStyleSheet("QLabel{color : red;}");
-            _train_filepath_label->setText(filepath);
+//            _train_filepath_label->setStyleSheet("QLabel{color : red;}");
+//            _train_filepath_label->setText(filepath);
+            emit updateTrainInputFilepath(filepath, false);
             return -1;
         }
     }else if(!_train_input_filepath.isEmpty()){
@@ -40,19 +41,22 @@ int FileManager::setTestFilepath(QString filepath)
     if(!filepath.isEmpty()){
         if(ScriptQtManager::runCheckData(filepath) == 0){
             _test_input_filepath = filepath;
-            _test_filepath_label->setStyleSheet("QLabel{color : black;}");
-            _test_filepath_label->setText(filepath);
+//            _test_filepath_label->setStyleSheet("QLabel{color : black;}");
+//            _test_filepath_label->setText(filepath);
+            emit updateTestInputFilepath(filepath, true);
             _test_n_features = parseFile(filepath);
             if((_n_features != -1) && (_n_features != _test_n_features)){
-                _test_filepath_label->setStyleSheet("QLabel{color : red;}");
-                _test_filepath_label->repaint();
+//                _test_filepath_label->setStyleSheet("QLabel{color : red;}");
+//                _test_filepath_label->repaint();
+                emit updateTestInputFilepath(filepath, false);
                 return -1;
             }
             return 0;
         }else{
-            _test_filepath_label->setStyleSheet("QLabel{color : red;}");
-            _test_filepath_label->setText(filepath);
-           return -1;
+//            _test_filepath_label->setStyleSheet("QLabel{color : red;}");
+//            _test_filepath_label->setText(filepath);
+            emit updateTestInputFilepath(filepath, false);
+            return -1;
         }
     }else if(!_test_input_filepath.isEmpty()){
         return 0;
@@ -65,7 +69,8 @@ int FileManager::setModelFilepath(QString filepath)
 {
     if(!filepath.isEmpty()){
         _model_filepath = filepath;
-        _model_filepath_label->setText(filepath);
+//        _model_filepath_label->setText(filepath);
+        emit updateModelFilepath(filepath);
         return 0;
     }else if(!_model_filepath.isEmpty()){
         return 0;
@@ -99,7 +104,7 @@ std::vector<std::string> FileManager::getLabels()
 
 int FileManager::getNClasses()
 {
-    return _labels.size();
+    return static_cast<int>(_labels.size());
 }
 
 int FileManager::getNFeatures()
