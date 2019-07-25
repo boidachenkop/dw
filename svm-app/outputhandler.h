@@ -14,6 +14,7 @@ public:
     OutputHandler();
     ~OutputHandler();
     void startReaderThread();
+    void setCmdOutput(bool cmd_out);
 signals:
     void updateOutput(QString);
 private:
@@ -23,6 +24,8 @@ private:
     std::thread* _reader_thead;
     int _saved_stdout;
     int _stdout_pipe[2];
+
+    bool _cmd_out{false};
 };
 
 #endif // OUTPUTHANDLER_H

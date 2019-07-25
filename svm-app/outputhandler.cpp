@@ -20,12 +20,18 @@ void OutputHandler::handleOutput(){
     char buf[1024];
     while((bytes_read = (int)read(_stdout_pipe[0], buf, sizeof(buf)))){
         emit updateOutput(QString::fromLatin1(buf, bytes_read));
+        if(_cmd_out){
+            write(_saved_stdout, buf, bytes_read);
+        }
     }
 }
-
 
 void OutputHandler::startReaderThread()
 {
     _reader_thead = new std::thread(&OutputHandler::handleOutput, this);
+}
+
+void OutputHandler::setCmdOutput(bool cmd_out){
+    _cmd_out = cmd_out ? true : false;
 }
 

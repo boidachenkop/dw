@@ -12,7 +12,6 @@ int FileManager::setTrainFilepath(QString filepath)
             _train_input_filepath = filepath;
             _model_filepath = filepath + ".model";
             _n_features = parseFile(filepath);
-
             emit updateTrainInputFilepath(filepath, true);
             emit updateModelFilepath(filepath + ".model");
             emit updateNLines(_n_lines);
@@ -119,7 +118,7 @@ int FileManager::parseFile(QString data_filepath){
     int n_lines=0;
     while(std::getline(data, line)){
         //labels
-        char* c_line = new char[1024];
+        char* c_line = new char[line.size()];
         std::copy(line.begin(), line.end(), c_line);
         char *label = std::strtok(c_line, " \t");
         _labels.insert(label);
@@ -146,6 +145,7 @@ int FileManager::parseFile(QString data_filepath){
         int cur_dim = stoi(ndim_str);
         max_dim = max_dim < cur_dim ? cur_dim : max_dim;
         ndim_str = "";
+        delete[] c_line;
     }
     data.close();
     _n_lines = n_lines;

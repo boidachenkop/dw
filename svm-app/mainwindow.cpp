@@ -10,6 +10,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     output_handler = new OutputHandler();
     output_handler->startReaderThread();
+    output_handler->setCmdOutput(true);
 
     availability_handler = new AvailabilityHandler();
     file_manager = new FileManager();
@@ -150,9 +151,6 @@ void MainWindow::on_chooseDataset_toolButton_clicked()
             availability_handler->visualizationTabEnabled(false);
         }
         svm->setModelFilePath(file_manager->getModelFilepath().toStdString());
-        ui->features_label->setText(QString::number(file_manager->getNFeatures()));
-        ui->classes_label->setText(QString::number(file_manager->getNClasses()));
-        ui->rows_label->setText(QString::number(file_manager->getNLines()));
     }else{
         availability_handler->
             trainButtonEnabled(false)
