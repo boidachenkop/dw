@@ -16,7 +16,7 @@ class ScriptQtManager
 public:
     static int runCheckData(QString filepath);
     static void runFeatureSelection(QString filepath, int n_features, QString pattern);
-    static std::string runPlot(QString filepath, int n_features, std::vector<std::string> labels, bool density, double band_width);
+    static std::string runPlot(QString filepath, int n_features, std::vector<double> labels, bool density, double band_width);
 };
 
 #endif // SCRIPTQTMANAGER_H

@@ -28,7 +28,7 @@ void ScriptQtManager::runFeatureSelection(QString filepath, int n_features, QStr
 }
 
 #include "gnuplot_i.hpp"
-std::string ScriptQtManager::runPlot(QString filepath, int n_features, std::vector<std::string> labels, bool density, double band_width)
+std::string ScriptQtManager::runPlot(QString filepath, int n_features, std::vector<double> labels, bool density, double band_width)
 {
     std::string to_remove = "";
     //prepare unlabled file
@@ -47,6 +47,8 @@ std::string ScriptQtManager::runPlot(QString filepath, int n_features, std::vect
     prepare_data_cmd+=filepath.toStdString()+" > " + save_filepath;
     system(prepare_data_cmd.c_str());
 
+    Gnuplot gp;
+    std::stringstream plot_cmd;
     if(density){
         if(labels.size() > 8){
             std::cout<<"Too many classes. Density plot is possible if dataset has less than 8 classes"<<std::endl;
@@ -57,23 +59,24 @@ std::string ScriptQtManager::runPlot(QString filepath, int n_features, std::vect
         std::stringstream grepcmd;
         for(int i=0; i < (int)labels.size(); i++){
             one_class_files.push_back(save_filepath + std::to_string(i));
-            grepcmd<<"grep ' "<<labels[i]<<"$' "<<save_filepath
+            grepcmd<<"grep ' "<<std::to_string(labels[i])<<"$' "<<save_filepath
                     <<" > "<<one_class_files.back()<<"; ";
             to_remove += one_class_files.back();
         }
+        system(grepcmd.str().c_str());
         if(n_features == 1){
-           std::stringstream plot_cmd;
-           plot_cmd<<"set key off; set border 3; bin_width = "<<band_width<<";"
-                    <<"bin_number(x) = floor(x/bin_width);"<<"rounded(x) = bin_width * ( bin_number(x) + 0.5 );"
+           plot_cmd<<"set key off;\n set border 3; \n bin_width = "<<band_width<<";"
+                    <<"bin_number(x) = floor(x/bin_width);\n"<<"rounded(x) = bin_width * ( bin_number(x) + 0.5 );\n"
                     << "plot ";
            auto i = one_class_files.size();
            for(i=0; i < one_class_files.size(); i++){
-                plot_cmd<<"'"<<one_class_files[i]<<"' (rounded($1)):(1) smooth kdensity lt rgb"<<colors[i]<<",\\";
+                plot_cmd<<"'"<<one_class_files[i]<<"' (rounded($1)):(1) smooth kdensity lt rgb \""<<colors[i]<<"\", ";
            }
            for(i=0; i < one_class_files.size()-1; i++){
-                plot_cmd<<"'"<<one_class_files[i]<<"' lt rgb \""<<colors[i]<<"\",\\\n";
+                plot_cmd<<"'"<<one_class_files[i]<<"' lt rgb \""<<colors[i]<<"\", ";
            }
            plot_cmd<<"'"<<one_class_files[i]<<"' lt rgb \""<<colors[i]<<"\"\n pause mouse close";
+           gp<<plot_cmd.str();
         }else if(n_features == 2){
 
         }else{
@@ -81,15 +84,13 @@ std::string ScriptQtManager::runPlot(QString filepath, int n_features, std::vect
         }
     }else{
         //plot with gnuplot
-        Gnuplot gp;
-        std::string plot_cmd;
         if(n_features == 3){
-            plot_cmd = "splot '";
+            plot_cmd<<"splot '";
         }else{
-            plot_cmd = "plot '";
+            plot_cmd<<"plot '";
         }
-        plot_cmd+=filepath.toStdString()+".tmp' with points palette; pause mouse close";
-        gp<<plot_cmd;
+        plot_cmd<<filepath.toStdString()<<".tmp' with points palette; pause mouse close";
+        gp<<plot_cmd.str();
 
     }
     return to_remove;//remove file in d-tor

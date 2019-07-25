@@ -27,7 +27,7 @@ public:
     QString getTrainFilepath();
     QString getTestFilepath();
     QString getModelFilepath();
-    std::vector<std::string> getLabels();
+    std::vector<double> getLabels();
     int getNClasses();
     int getNFeatures();
     int getNLines();
@@ -51,7 +51,7 @@ private:
     int _test_n_features{-1};
     int _n_lines{-1};
 
-    std::set<std::string> _labels;
+    std::set<double> _labels;
 };
 
 #endif // FILEMANAGER_H

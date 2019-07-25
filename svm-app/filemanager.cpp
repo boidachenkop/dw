@@ -84,9 +84,9 @@ QString FileManager::getModelFilepath()
     return _model_filepath;
 }
 
-std::vector<std::string> FileManager::getLabels()
+std::vector<double> FileManager::getLabels()
 {
-    return std::vector<std::string>(_labels.begin(), _labels.end());
+    return std::vector<double>(_labels.begin(), _labels.end());
 }
 
 int FileManager::getNClasses()
@@ -118,13 +118,27 @@ int FileManager::parseFile(QString data_filepath){
     int n_lines=0;
     while(std::getline(data, line)){
         //labels
+        char *endptr, *label;
         char* c_line = new char[line.size()];
         std::copy(line.begin(), line.end(), c_line);
-        char *label = std::strtok(c_line, " \t");
-        _labels.insert(label);
-        while(label != nullptr){
-           label = strtok(nullptr, " \t");
+
+        label = std::strtok(c_line," \t\n");
+        if(label == nullptr){ // empty line
+            std::cerr<<"Empty line: "<<n_lines<<std::endl;
+            return -1;
         }
+
+        double d_label = strtod(label,&endptr);
+        if(endptr == label){
+            std::cerr<<"strtod error: "<<n_lines<<std::endl;
+            return -1;
+        }
+        _labels.insert(d_label);
+
+        while(label != nullptr){
+           label = strtok(nullptr, " \t\n");
+        }
+
         bool colon_met = false;
         for(auto c = line.end(); c != line.begin(); c--){
             if(*c == ':'){
