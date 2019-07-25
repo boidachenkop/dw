@@ -123,17 +123,13 @@ int FileManager::parseFile(QString data_filepath){
         std::copy(line.begin(), line.end(), c_line);
 
         label = std::strtok(c_line," \t\n");
-        if(label == nullptr){ // empty line
-            std::cerr<<"Empty line: "<<n_lines<<std::endl;
-            return -1;
+        if(label != nullptr){ // empty line
+            double d_label = strtod(label,&endptr);
+            if(!(endptr == label || *endptr != '\0')){
+                _labels.insert(d_label);
+            }
         }
 
-        double d_label = strtod(label,&endptr);
-        if(endptr == label){
-            std::cerr<<"strtod error: "<<n_lines<<std::endl;
-            return -1;
-        }
-        _labels.insert(d_label);
 
         while(label != nullptr){
            label = strtok(nullptr, " \t\n");

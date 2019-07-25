@@ -59,24 +59,33 @@ std::string ScriptQtManager::runPlot(QString filepath, int n_features, std::vect
         std::stringstream grepcmd;
         for(int i=0; i < (int)labels.size(); i++){
             one_class_files.push_back(save_filepath + std::to_string(i));
-            grepcmd<<"grep ' "<<std::to_string(labels[i])<<"$' "<<save_filepath
+            grepcmd<<"grep ' "<<(labels[i] > 0 ? "+" : "")<<std::to_string((int)labels[i])<<"$' "<<save_filepath
                     <<" > "<<one_class_files.back()<<"; ";
             to_remove += one_class_files.back();
         }
+
         system(grepcmd.str().c_str());
+
         if(n_features == 1){
            plot_cmd<<"set key off;\n set border 3; \n bin_width = "<<band_width<<";"
                     <<"bin_number(x) = floor(x/bin_width);\n"<<"rounded(x) = bin_width * ( bin_number(x) + 0.5 );\n"
                     << "plot ";
+
            auto i = one_class_files.size();
            for(i=0; i < one_class_files.size(); i++){
-                plot_cmd<<"'"<<one_class_files[i]<<"' (rounded($1)):(1) smooth kdensity lt rgb \""<<colors[i]<<"\", ";
+                plot_cmd<<"'"<<one_class_files[i]<<"' using (rounded($1)):(1) smooth kdensity lt rgb \""<<colors[i]<<"\", ";
            }
-           for(i=0; i < one_class_files.size()-1; i++){
-                plot_cmd<<"'"<<one_class_files[i]<<"' lt rgb \""<<colors[i]<<"\", ";
+
+           for(i=0; i < one_class_files.size(); i++){
+                plot_cmd<<"'"<<one_class_files[i]<<"' lt rgb \""<<colors[i]<<"\"";
+                if(i+1 < one_class_files.size()){
+                   plot_cmd<<", ";
+                }
            }
-           plot_cmd<<"'"<<one_class_files[i]<<"' lt rgb \""<<colors[i]<<"\"\n pause mouse close";
+
+           plot_cmd<<"; pause mouse close";
            gp<<plot_cmd.str();
+
         }else if(n_features == 2){
 
         }else{
