@@ -28,12 +28,12 @@ void ScriptQtManager::runFeatureSelection(QString filepath, int n_features, QStr
 }
 
 #include "gnuplot_i.hpp"
-std::string ScriptQtManager::runPlot(QString filepath, int n_features, std::vector<double> labels, bool density, double band_width)
+std::string ScriptQtManager::runPlot(QString filepath, int n_features, std::vector<std::string> labels, bool density, double band_width)
 {
-    std::string to_remove = "";
+    std::string to_remove = " ";
     //prepare unlabled file
     std::string save_filepath = filepath.toStdString() + ".tmp";
-    to_remove += save_filepath+" ";
+    to_remove += save_filepath + " ";
     std::string prepare_data_cmd;
     if(n_features == 1){
         prepare_data_cmd = R"( awk '{if($2 == ""){$2="0.0"} gsub("[0-9]+:", "", $2); print $2, 0, $1}' )";
@@ -59,9 +59,9 @@ std::string ScriptQtManager::runPlot(QString filepath, int n_features, std::vect
         std::stringstream grepcmd;
         for(int i=0; i < (int)labels.size(); i++){
             one_class_files.push_back(save_filepath + std::to_string(i));
-            grepcmd<<"grep ' "<<(labels[i] > 0 ? "+" : "")<<std::to_string((int)labels[i])<<"$' "<<save_filepath
+            grepcmd<<"grep ' "<<labels[i]<<"$' "<<save_filepath
                     <<" > "<<one_class_files.back()<<"; ";
-            to_remove += one_class_files.back();
+            to_remove += one_class_files.back() + " ";
         }
 
         system(grepcmd.str().c_str());
@@ -85,7 +85,10 @@ std::string ScriptQtManager::runPlot(QString filepath, int n_features, std::vect
 
            plot_cmd<<"; pause mouse close";
            gp<<plot_cmd.str();
-
+//           for(auto item : one_class_files){
+//               std::cout<<"jo\n";
+//               to_remove += item + " ";
+//           }
         }else if(n_features == 2){
 
         }else{

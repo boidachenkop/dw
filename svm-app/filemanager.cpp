@@ -84,9 +84,9 @@ QString FileManager::getModelFilepath()
     return _model_filepath;
 }
 
-std::vector<double> FileManager::getLabels()
+std::vector<std::string> FileManager::getLabels()
 {
-    return std::vector<double>(_labels.begin(), _labels.end());
+    return std::vector<std::string>(_labels.begin(), _labels.end());
 }
 
 int FileManager::getNClasses()
@@ -117,24 +117,9 @@ int FileManager::parseFile(QString data_filepath){
     int max_dim=0;
     int n_lines=0;
     while(std::getline(data, line)){
-        //labels
-        char *endptr, *label;
-        char* c_line = new char[line.size()];
-        std::copy(line.begin(), line.end(), c_line);
-
-        label = std::strtok(c_line," \t\n");
-        if(label != nullptr){ // empty line
-            double d_label = strtod(label,&endptr);
-            if(!(endptr == label || *endptr != '\0')){
-                _labels.insert(d_label);
-            }
+        if(!insertLabel(line)){
+            std::cout<<"Line: "<<n_lines+1<<" Label can't be read."<<std::endl;
         }
-
-
-        while(label != nullptr){
-           label = strtok(nullptr, " \t\n");
-        }
-
         bool colon_met = false;
         for(auto c = line.end(); c != line.begin(); c--){
             if(*c == ':'){
@@ -155,9 +140,28 @@ int FileManager::parseFile(QString data_filepath){
         int cur_dim = stoi(ndim_str);
         max_dim = max_dim < cur_dim ? cur_dim : max_dim;
         ndim_str = "";
-        delete[] c_line;
     }
     data.close();
     _n_lines = n_lines;
     return max_dim;
 }
+
+bool FileManager::insertLabel(std::string line)
+{
+    std::string label;
+    auto c = line.begin();
+    while(!isspace(*c) && *c != '\0'){
+       label+=*c;
+       c++;
+    }
+    try{
+        std::stod(label);
+        _labels.insert(label);
+        label.clear();
+        return true;
+    }catch(std::exception &e){
+        label.clear();
+        return false;
+    }
+}
+

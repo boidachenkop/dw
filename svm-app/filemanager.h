@@ -4,13 +4,14 @@
 #include <QString>
 #include <QLabel>
 #include <QLineEdit>
+
 #include <set>
 #include <vector>
 #include <string>
 #include <cstring>
 #include <fstream>
 #include <iostream>
-#include <string.h>
+#include <cctype>
 
 #include "scriptqtmanager.h"
 
@@ -27,7 +28,7 @@ public:
     QString getTrainFilepath();
     QString getTestFilepath();
     QString getModelFilepath();
-    std::vector<double> getLabels();
+    std::vector<std::string> getLabels();
     int getNClasses();
     int getNFeatures();
     int getNLines();
@@ -41,7 +42,8 @@ signals:
     void updateModelFilepath(QString);
 
 private:
-    int parseFile(QString);
+    int parseFile(QString filepath);
+    bool insertLabel(std::string line);
 
     QString _train_input_filepath{};
     QString _test_input_filepath{};
@@ -51,7 +53,7 @@ private:
     int _test_n_features{-1};
     int _n_lines{-1};
 
-    std::set<double> _labels;
+    std::set<std::string> _labels;
 };
 
 #endif // FILEMANAGER_H
