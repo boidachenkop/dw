@@ -1,3 +1,12 @@
+#include <QLabel>
+#include <QLineEdit>
+#include <string>
+#include <cstring>
+#include <fstream>
+#include <iostream>
+#include <cctype>
+
+#include "scriptqtmanager.h"
 #include "filemanager.h"
 
 FileManager::FileManager()
@@ -12,6 +21,7 @@ int FileManager::setTrainFilepath(QString filepath)
             _train_input_filepath = filepath;
             _model_filepath = filepath + ".model";
             _n_features = parseFile(filepath);
+
             emit updateTrainInputFilepath(filepath, true);
             emit updateModelFilepath(filepath + ".model");
             emit updateNLines(_n_lines);

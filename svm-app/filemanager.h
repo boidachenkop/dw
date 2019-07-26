@@ -2,18 +2,10 @@
 #define FILEMANAGER_H
 #include <QObject>
 #include <QString>
-#include <QLabel>
-#include <QLineEdit>
 
 #include <set>
 #include <vector>
-#include <string>
-#include <cstring>
-#include <fstream>
-#include <iostream>
-#include <cctype>
 
-#include "scriptqtmanager.h"
 
 class FileManager : public QObject
 {

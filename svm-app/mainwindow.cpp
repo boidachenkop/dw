@@ -261,9 +261,7 @@ void MainWindow::on_visualize_pushButton_clicked()
     double bandwidth = QString(ui->bandwidth_lineEdit->text()).toDouble(&ok);
     if(ok){
         ui->bandwidth_lineEdit->setStyleSheet("border-color: black;");
-        rm_tmp_plot_cmd += ScriptQtManager::runPlot(file_manager->getTrainFilepath(),
-                                 file_manager->getNFeatures(),
-                                 file_manager->getLabels(),
+        rm_tmp_plot_cmd += ScriptQtManager::runPlot(file_manager,
                                  ui->densityPlot_checkBox->isChecked(),
                                  bandwidth);
     }else{
