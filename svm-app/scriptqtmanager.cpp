@@ -37,9 +37,6 @@ void ScriptQtManager::runFeatureSelection(QString filepath, int n_features, QStr
 
 std::string ScriptQtManager::runPlot(FileManager* file_manager, bool density, double band_width)
 {
-    for(auto item : file_manager->getLabels()){
-        std::cout<<item<<std::endl;
-    }
     Gnuplot gp;
     QString filepath = file_manager->getTrainFilepath();
     int n_features = file_manager->getNFeatures();
@@ -103,7 +100,6 @@ std::string ScriptQtManager::runPlot(FileManager* file_manager, bool density, do
             plot_cmd<<"; pause mouse close";
             gp<<plot_cmd.str();
         }else if(n_features == 2){
-            std::cout<<"here"<<std::endl;
             plot_cmd<<"N = "<<n_lines<<"; Delta = "<<band_width<<"; "<<"TimeStart = time(0.0); set table $Data;  set samples N; plot '"
                    <<save_filepath<<R"('  u 1:2 w table;
                                     unset table
