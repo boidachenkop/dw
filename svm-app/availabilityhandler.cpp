@@ -15,6 +15,10 @@ AvailabilityHandler& AvailabilityHandler::visualizationTabEnabled(bool enabled) 
 
 AvailabilityHandler& AvailabilityHandler::featureSelectionTabEnabled(bool enabled) { emit fsEnabled(enabled); return *this; }
 
+AvailabilityHandler& AvailabilityHandler::cvPercentLabelVisible(bool visible) { emit cvPercentVisible(visible); return *this; }
+
+AvailabilityHandler& AvailabilityHandler::cvSpinBoxEnabled(bool enabled) { emit cvSBEnabled(enabled); return *this; }
+
 void AvailabilityHandler::filterSVMTypeParams(int svm_type){
     switch(svm_type){
         case 0: // C-SVC

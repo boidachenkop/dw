@@ -1,3 +1,18 @@
+#include <QFile>
+#include <QScrollBar>
+#include <QTextStream>
+#include <QFileDialog>
+#include <QHBoxLayout>
+#include <QSpinBox>
+
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <fstream>
+#include <iostream>
+#include <cstdio>
+
+#include "svmscale.h"
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
@@ -17,7 +32,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // output textEdit read only
     ui->output_textEdit->setReadOnly(true);
-
     //set default params
     setDefaultSVMParams();
 
@@ -42,6 +56,10 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(availability_handler, &AvailabilityHandler::scalingEnabled, ui->scaling_tab, &QWidget::setEnabled);
     connect(availability_handler, &AvailabilityHandler::visualizationEnabled, ui->visualization_tab, &QWidget::setEnabled);
     connect(availability_handler, &AvailabilityHandler::fsEnabled, ui->feature_selection_tab, &QWidget::setEnabled);
+    connect(availability_handler, &AvailabilityHandler::cvPercentVisible, ui->percent_label, &QLabel::setVisible);
+    connect(availability_handler, &AvailabilityHandler::cvSBEnabled, ui->cv_spinBox, &QSpinBox::setEnabled);
+    connect(ui->svmType_comboBox, SIGNAL(currentIndexChanged(int)), availability_handler, SLOT(filterSVMTypeParams(int)));
+    connect(ui->kernel_comboBox, SIGNAL(currentIndexChanged(int)), availability_handler,SLOT(filterKernelParams(int)));
 
     //tabs and buttons unabled on start
     availability_handler->cvTabEnabled(false)
@@ -49,7 +67,9 @@ MainWindow::MainWindow(QWidget *parent) :
             .visualizationTabEnabled(false)
             .featureSelectionTabEnabled(false)
             .trainButtonEnabled(false)
-            .testButtonEnabled(false);
+            .testButtonEnabled(false)
+            .cvPercentLabelVisible(false);
+
     //filter params
     availability_handler->filterSVMTypeParams(ui->svmType_comboBox->currentIndex());
     availability_handler->filterKernelParams(ui->kernel_comboBox->currentIndex());
@@ -89,7 +109,9 @@ int MainWindow::parseParameters()
             .setP(QString(ui->P_lineEdit->text()).toDouble(&P_ok))
             .setShrinking(ui->shrinking_checkBox->isChecked())
             .setProbability(ui->prob_checkBox->isChecked())
-            .setCrossvalidation(ui->crossValidation_checkBox->isChecked(), ui->nFold_spinBox->value());
+            .setCrossvalidation(ui->crossValidation_checkBox->isChecked(),
+                                ui->cvType_comboBox->currentIndex(),
+                                ui->cv_spinBox->value());
     if(gamma_ok && coef0_ok && C_ok && eps_ok && nu_ok && P_ok){
         ui->gamma_lineEdit->setStyleSheet("");
         ui->coef0_lineEdit->setStyleSheet("");
@@ -132,8 +154,8 @@ void MainWindow::setDefaultSVMParams(){
     ui->prob_checkBox->setChecked(svm->getParams().probability);
 
     ui->crossValidation_checkBox->setChecked(svm->isCrossvalidation());
-    on_crossValidation_checkBox_toggled(svm->isCrossvalidation());
     on_y_scale_checkBox_toggled(false);
+
 }
 
 void MainWindow::on_chooseDataset_toolButton_clicked()
@@ -195,20 +217,6 @@ void MainWindow::on_test_pushButton_clicked()
     svm->openPredictInputFile(file_manager->getTestFilepath().toStdString());
     svm->openPredictOutputFile(svm->getPredictOutputFilePath()); //default svmcontroller path
     svm->predict();
-}
-
-void MainWindow::on_svmType_comboBox_currentIndexChanged(int index){
-    availability_handler->filterSVMTypeParams(index);
-}
-
-void MainWindow::on_kernel_comboBox_currentIndexChanged(int index){
-    availability_handler->filterKernelParams(index);
-}
-
-void MainWindow::on_crossValidation_checkBox_toggled(bool checked)
-{
-    ui->nFold_label->setEnabled(checked);
-    ui->nFold_spinBox->setEnabled(checked);
 }
 
 void MainWindow::on_scale_toolButton_clicked()
@@ -380,5 +388,26 @@ void MainWindow::updateOutputTextEdit(QString text)
     ui->output_textEdit->moveCursor(QTextCursor::End);
 }
 
-
-
+void MainWindow::on_cvType_comboBox_currentIndexChanged(int index)
+{
+    switch(index){
+        case 0: // n-fold
+            availability_handler->cvSpinBoxEnabled(true);
+            availability_handler->cvPercentLabelVisible(false);
+            ui->cv_spinBox->setMaximum(file_manager->getNLines()-1);
+            ui->cv_spinBox->setValue(0);
+        break;
+        case 1: //leave one out
+            availability_handler->cvSpinBoxEnabled(false);
+            availability_handler->cvPercentLabelVisible(false);
+            ui->cv_spinBox->setMaximum(file_manager->getNLines());
+            ui->cv_spinBox->setValue(file_manager->getNLines()-1);
+        break;
+        case 2: // percentage
+            availability_handler->cvSpinBoxEnabled(true);
+            availability_handler->cvPercentLabelVisible(true);
+            ui->cv_spinBox->setMaximum(100);
+            ui->cv_spinBox->setValue(0);
+        break;
+    }
+}

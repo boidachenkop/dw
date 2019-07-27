@@ -1,3 +1,4 @@
+#include <math.h>
 #include "svmcontroller.h"
 
 SVMController::SVMController(){
@@ -404,6 +405,19 @@ void SVMController::predict(){
     }
     if(predict_probability)
         free(prob_estimates);
+}
+
+SVMController &SVMController::setCrossvalidation(bool cv, int type, int f){
+    //type 0 - n-fold, 1 - leave one out, 2 - percentage
+    cross_validation=cv;
+    if(cv){
+        if(type == 0 || type == 1){
+            n_fold=f;
+        }else{
+            n_fold = (int)round(100.0/(100-f));
+        }
+    }
+    return *this;
 }
 
 void SVMController::openModelFile(std::string input){

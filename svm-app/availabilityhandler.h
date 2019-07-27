@@ -14,9 +14,13 @@ public:
     AvailabilityHandler& scalingTabEnabled(bool);
     AvailabilityHandler& visualizationTabEnabled(bool);
     AvailabilityHandler& featureSelectionTabEnabled(bool);
+    AvailabilityHandler& cvPercentLabelVisible(bool);
+    AvailabilityHandler& cvSpinBoxEnabled(bool enabled);
 
+public Q_SLOTS:
     void filterSVMTypeParams(int svm_type);
     void filterKernelParams(int kernel);
+
 signals:
     void degreeEnabled(bool);
     void gammaEnabled(bool);
@@ -31,6 +35,9 @@ signals:
     void scalingEnabled(bool);
     void visualizationEnabled(bool);
     void fsEnabled(bool);
+
+    void cvPercentVisible(bool);
+    void cvSBEnabled(bool);
 };
 
 #endif // AVAILABILITYHANDLER_H
