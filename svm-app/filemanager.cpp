@@ -13,54 +13,49 @@ FileManager::FileManager()
 {
 }
 
-int FileManager::setTrainFilepath(QString filepath)
+int FileManager::setDatasetFilepath(QString filepath, DATASET_TYPE type)
 {
     //return 0 if file can be used othervise -1
     if(!filepath.isEmpty()){
         if(ScriptQtManager::runCheckData(filepath) == 0){
             _labels.clear();
-            _train_input_filepath = filepath;
-            _model_filepath = filepath + ".model";
-            _n_features = parseFile(filepath);
-
-            emit updateTrainInputFilepath(filepath, true);
-            emit updateModelFilepath(filepath + ".model");
-            emit updateTrainNLines(QString::number(_n_lines));
-            emit updateTrainNClasses(QString::number(getNClasses()));
-            emit updateTrainNFeatures(QString::number(_n_features));
-            emit updateFeatureSelection("1-"+QString::number(_n_features));
-            return 0;
-        }else{
-            emit updateTrainInputFilepath(filepath, false);
-            return -1;
-        }
-    }else if(!_train_input_filepath.isEmpty()){
-        return 0;
-    }else{
-        return -1;
-    }
-}
-
-int FileManager::setTestFilepath(QString filepath)
-{
-    if(!filepath.isEmpty()){
-        if(ScriptQtManager::runCheckData(filepath) == 0){
-            std::cout<<filepath.toStdString()<<std::endl;
-            _test_input_filepath = filepath;
-            emit updateTestInputFilepath(filepath, true);
-            _test_n_features = parseFile(filepath);
-            if((_n_features != -1) && (_n_features != _test_n_features)){
-                emit updateTestInputFilepath(filepath, false);
-                return -1;
+            if(type == TRAIN){
+                _train_input_filepath = filepath;
+                _model_filepath = filepath + ".model";
+                _train_n_features = parseFile(filepath);
+                emit updateTrainInputFilepath(filepath, true);
+                emit updateModelFilepath(filepath + ".model");
+                emit updateTrainNLines(QString::number(_n_lines));
+                emit updateTrainNClasses(QString::number(getNClasses()));
+                emit updateTrainNFeatures(QString::number(_train_n_features));
+                emit updateFeatureSelection("1-"+QString::number(_train_n_features));
+            }else if(type == TEST){
+                _test_input_filepath = filepath;
+                _test_n_features = parseFile(filepath);
+                if((_train_n_features != -1) && (_train_n_features != _test_n_features)){
+                    emit updateTestInputFilepath(filepath, false);
+                    return -1;
+                }
+                emit updateTestInputFilepath(filepath, true);
+                emit updateTestNLines(QString::number(_n_lines));
+                emit updateTestNClasses(QString::number(getNClasses()));
+                emit updateTestNFeatures(QString::number(_train_n_features));
             }
             return 0;
         }else{
-            emit updateTestInputFilepath(filepath, false);
+            if(type == TRAIN){
+                emit updateTrainInputFilepath(filepath, false);
+            }else if(type == TEST){
+                emit updateTestInputFilepath(filepath, false);
+            }
             return -1;
         }
-    }else if(!_test_input_filepath.isEmpty()){
-        return 0;
     }else{
+        if(type == TRAIN && !_train_input_filepath.isEmpty()){
+            return 0;
+        }else if(type == TEST && !_test_input_filepath.isEmpty()){
+            return 0;
+        }
         return -1;
     }
 }
@@ -109,7 +104,7 @@ int FileManager::getNClasses()
 
 int FileManager::getNFeatures()
 {
-   return _n_features;
+   return _train_n_features;
 }
 
 int FileManager::getNLines(){

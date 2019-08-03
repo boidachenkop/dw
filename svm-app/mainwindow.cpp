@@ -39,6 +39,9 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(file_manager, &FileManager::updateTrainNLines, ui->train_rows_label, &QLabel::setText);
     connect(file_manager, &FileManager::updateTrainNClasses, ui->train_classes_label, &QLabel::setText);
     connect(file_manager, &FileManager::updateTrainNFeatures, ui->train_features_label, &QLabel::setText);
+    connect(file_manager, &FileManager::updateTestNLines, ui->test_rows_label, &QLabel::setText);
+    connect(file_manager, &FileManager::updateTestNClasses, ui->test_classes_label, &QLabel::setText);
+    connect(file_manager, &FileManager::updateTestNFeatures, ui->test_features_label, &QLabel::setText);
     connect(file_manager, &FileManager::updateTrainInputFilepath, this, &MainWindow::updateTrainFilepathLabel);
     connect(file_manager, &FileManager::updateTestInputFilepath, this, &MainWindow::updateTestFilepathLabel);
     connect(file_manager, &FileManager::updateModelFilepath, this, &MainWindow::updateModelFilepathLabel);
@@ -178,7 +181,7 @@ void MainWindow::setDefaultSVMParams(){
 void MainWindow::on_chooseDataset_toolButton_clicked()
 {
     QString path = QFileDialog::getOpenFileName(this, "Choose train dataset", "/home/pavlo/Desktop/pr/dw/datasets");
-    if(file_manager->setTrainFilepath(path) == 0){
+    if(file_manager->setDatasetFilepath(path, file_manager->TRAIN) == 0){
         availability_handler->
                 trainButtonEnabled(true)
                 .scalingTabEnabled(true)
@@ -206,7 +209,7 @@ void MainWindow::on_chooseDataset_toolButton_clicked()
 void MainWindow::on_choose_tstFile_toolButton_clicked()
 {
     QString path = QFileDialog::getOpenFileName(this, "Choose test dataset", "/home/pavlo/Desktop/pr/dw/datasets");
-    if(file_manager->setTestFilepath(path) == 0){
+    if(file_manager->setDatasetFilepath(path, file_manager->TEST) == 0){
         availability_handler->testButtonEnabled(true)
                 .testInfoVisible(true);
     }else{
@@ -256,7 +259,7 @@ void MainWindow::on_scale_toolButton_clicked()
     if(scale_train.check()){
         scale_train.scale();
         //update filepathes and ui
-        file_manager->setTrainFilepath(file_manager->getTrainFilepath()+".scale") ;
+        file_manager->setDatasetFilepath(file_manager->getTrainFilepath()+".scale", file_manager->TRAIN);
     }
     if(!file_manager->getTestFilepath().isEmpty()){
         svmscale scale_test(file_manager->getTestFilepath().toStdString(),
@@ -271,7 +274,7 @@ void MainWindow::on_scale_toolButton_clicked()
         if(scale_test.check()){
             scale_test.scale();
             //update filepathes and ui
-            file_manager->setTestFilepath(file_manager->getTestFilepath()+".scale");
+            file_manager->setDatasetFilepath(file_manager->getTestFilepath()+".scale", file_manager->TEST);
         }
     }
 }
@@ -340,12 +343,12 @@ void MainWindow::on_select_pushButton_clicked()
 {
     ScriptQtManager::runFeatureSelection(file_manager->getTrainFilepath(), file_manager->getNFeatures(), ui->pattern_lineEdit->text());
 
-    file_manager->setTrainFilepath(file_manager->getTrainFilepath() + ".fselected");
+    file_manager->setDatasetFilepath(file_manager->getTrainFilepath() + ".fselected", file_manager->TRAIN);
 
     if(!file_manager->getTestFilepath().isEmpty()){
         ScriptQtManager::runFeatureSelection(file_manager->getTestFilepath(), file_manager->getNFeatures(), ui->pattern_lineEdit->text());
 
-        file_manager->setTestFilepath(file_manager->getTestFilepath() + ".fselected");
+        file_manager->setDatasetFilepath(file_manager->getTestFilepath() + ".fselected", file_manager->TEST);
     }
 }
 

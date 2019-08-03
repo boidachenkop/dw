@@ -13,8 +13,10 @@ class FileManager : public QObject
 public:
     FileManager();
     virtual ~FileManager(){}
-    int setTrainFilepath(QString);
-    int setTestFilepath(QString);
+
+    enum DATASET_TYPE{TRAIN, TEST};
+
+    int setDatasetFilepath(QString, DATASET_TYPE);
     int setModelFilepath(QString);
 
     QString getTrainFilepath();
@@ -24,11 +26,13 @@ public:
     int getNClasses();
     int getNFeatures();
     int getNLines();
-
 signals:
     void updateTrainNFeatures(QString);
     void updateTrainNClasses(QString);
     void updateTrainNLines(QString);
+    void updateTestNFeatures(QString);
+    void updateTestNClasses(QString);
+    void updateTestNLines(QString);
     void updateFeatureSelection(QString);
     void updateTrainInputFilepath(QString, bool);
     void updateTestInputFilepath(QString, bool);
@@ -42,7 +46,7 @@ private:
     QString _test_input_filepath{};
     QString _model_filepath{};
 
-    int _n_features{-1};
+    int _train_n_features{-1};
     int _test_n_features{-1};
     int _n_lines{-1};
 
