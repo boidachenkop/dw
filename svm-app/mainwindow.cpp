@@ -36,12 +36,13 @@ MainWindow::MainWindow(QWidget *parent) :
     setDefaultSVMParams();
 
     //info update
-    connect(file_manager, &FileManager::updateNLines, this, &MainWindow::updateNRowsLabel);
-    connect(file_manager, &FileManager::updateNClasses, this, &MainWindow::updateNClassesLabel);
-    connect(file_manager, &FileManager::updateNFeatures, this, &MainWindow::updateNFeaturesLabel);
+    connect(file_manager, &FileManager::updateTrainNLines, ui->train_rows_label, &QLabel::setText);
+    connect(file_manager, &FileManager::updateTrainNClasses, ui->train_classes_label, &QLabel::setText);
+    connect(file_manager, &FileManager::updateTrainNFeatures, ui->train_features_label, &QLabel::setText);
     connect(file_manager, &FileManager::updateTrainInputFilepath, this, &MainWindow::updateTrainFilepathLabel);
+    connect(file_manager, &FileManager::updateTestInputFilepath, this, &MainWindow::updateTestFilepathLabel);
     connect(file_manager, &FileManager::updateModelFilepath, this, &MainWindow::updateModelFilepathLabel);
-    connect(file_manager, &FileManager::updateNFeatures, this, &MainWindow::updateFSLineEdit);
+    connect(file_manager, &FileManager::updateFeatureSelection, ui->pattern_lineEdit, &QLineEdit::setText);
     connect(output_handler, &OutputHandler::updateOutput, this, &MainWindow::updateOutputTextEdit);
     //availability
     connect(availability_handler, &AvailabilityHandler::degreeEnabled, ui->degree_spinBox, &QSpinBox::setEnabled);
@@ -60,6 +61,18 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(availability_handler, &AvailabilityHandler::cvSBEnabled, ui->cv_spinBox, &QSpinBox::setEnabled);
     connect(ui->svmType_comboBox, SIGNAL(currentIndexChanged(int)), availability_handler, SLOT(filterSVMTypeParams(int)));
     connect(ui->kernel_comboBox, SIGNAL(currentIndexChanged(int)), availability_handler,SLOT(filterKernelParams(int)));
+    connect(availability_handler, &AvailabilityHandler::trainInfoVisible, ui->train_classesText_label, &QLabel::setVisible);
+    connect(availability_handler, &AvailabilityHandler::trainInfoVisible, ui->train_classes_label, &QLabel::setVisible);
+    connect(availability_handler, &AvailabilityHandler::trainInfoVisible, ui->train_featuresText_label, &QLabel::setVisible);
+    connect(availability_handler, &AvailabilityHandler::trainInfoVisible, ui->train_features_label, &QLabel::setVisible);
+    connect(availability_handler, &AvailabilityHandler::trainInfoVisible, ui->train_rowsText_label, &QLabel::setVisible);
+    connect(availability_handler, &AvailabilityHandler::trainInfoVisible, ui->train_rows_label, &QLabel::setVisible);
+    connect(availability_handler, &AvailabilityHandler::testInfoVisible, ui->test_classesText_label, &QLabel::setVisible);
+    connect(availability_handler, &AvailabilityHandler::testInfoVisible, ui->test_classes_label, &QLabel::setVisible);
+    connect(availability_handler, &AvailabilityHandler::testInfoVisible, ui->test_featuresText_label, &QLabel::setVisible);
+    connect(availability_handler, &AvailabilityHandler::testInfoVisible, ui->test_features_label, &QLabel::setVisible);
+    connect(availability_handler, &AvailabilityHandler::testInfoVisible, ui->test_rowsText_label, &QLabel::setVisible);
+    connect(availability_handler, &AvailabilityHandler::testInfoVisible, ui->test_rows_label, &QLabel::setVisible);
 
     //tabs and buttons unabled on start
     availability_handler->cvTabEnabled(false)
@@ -73,6 +86,10 @@ MainWindow::MainWindow(QWidget *parent) :
     //filter params
     availability_handler->filterSVMTypeParams(ui->svmType_comboBox->currentIndex());
     availability_handler->filterKernelParams(ui->kernel_comboBox->currentIndex());
+
+    //info invisible
+    availability_handler->trainInfoVisible(false);
+    availability_handler->testInfoVisible(false);
 }
 
 MainWindow::~MainWindow()
@@ -166,7 +183,8 @@ void MainWindow::on_chooseDataset_toolButton_clicked()
                 trainButtonEnabled(true)
                 .scalingTabEnabled(true)
                 .featureSelectionTabEnabled(true)
-                .cvTabEnabled(true);
+                .cvTabEnabled(true)
+                .trainInfoVisible(true);
         if(file_manager->getNFeatures() <= 3){
             availability_handler->visualizationTabEnabled(true);
         }else{
@@ -179,7 +197,8 @@ void MainWindow::on_chooseDataset_toolButton_clicked()
             .scalingTabEnabled(false)
             .visualizationTabEnabled(false)
             .featureSelectionTabEnabled(false)
-            .cvTabEnabled(false);
+            .cvTabEnabled(false)
+            .trainInfoVisible(false);
 
     }
 }
@@ -188,9 +207,11 @@ void MainWindow::on_choose_tstFile_toolButton_clicked()
 {
     QString path = QFileDialog::getOpenFileName(this, "Choose test dataset", "/home/pavlo/Desktop/pr/dw/datasets");
     if(file_manager->setTestFilepath(path) == 0){
-        availability_handler->testButtonEnabled(true);
+        availability_handler->testButtonEnabled(true)
+                .testInfoVisible(true);
     }else{
-        availability_handler->testButtonEnabled(false);
+        availability_handler->testButtonEnabled(false)
+                .testInfoVisible(false);
     }
 }
 
@@ -221,7 +242,7 @@ void MainWindow::on_test_pushButton_clicked()
 
 void MainWindow::on_scale_toolButton_clicked()
 {
-    char *range_filepath = "/tmp/svm-app-scale-range";
+    char *range_filepath = (char*)"/tmp/svm-app-scale-range";
 
     svmscale scale_train(file_manager->getTrainFilepath().toStdString(),
                    file_manager->getTrainFilepath().toStdString()+".scale");
@@ -332,26 +353,6 @@ void MainWindow::on_output_textEdit_textChanged()
 {
     ui->output_textEdit->verticalScrollBar()->setValue(
                 ui->output_textEdit->verticalScrollBar()->maximum());
-}
-
-void MainWindow::updateNFeaturesLabel(int n_features)
-{
-   ui->features_label->setText(QString::number(n_features));
-}
-
-void MainWindow::updateNRowsLabel(int n_rows)
-{
-   ui->rows_label->setText(QString::number(n_rows));
-}
-
-void MainWindow::updateNClassesLabel(int n_classes)
-{
-    ui->classes_label->setText(QString::number(n_classes));
-}
-
-void MainWindow::updateFSLineEdit(int n_features)
-{
-   ui->pattern_lineEdit->setText("1-" + QString::number(n_features));
 }
 
 void MainWindow::updateTrainFilepathLabel(QString filepath, bool correct)

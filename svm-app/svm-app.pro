@@ -57,8 +57,8 @@ DISTFILES += \
     f_select.py
 
 #copy python scripts
-copydata.commands = $(COPY_DIR) $$PWD/checkdata.py $$PWD/f_select.py $$OUT_PWD
-first.depends = $(first) copydata
-export(first.depends)
-export(copydata.commands)
-QMAKE_EXTRA_TARGETS += first copydata
+#copydata.commands = $(COPY_DIR) $$PWD/checkdata.py $$PWD/f_select.py $$OUT_PWD
+#first.depends = $(first) copydata
+#export(first.depends)
+#export(copydata.commands)
+#QMAKE_EXTRA_TARGETS += first copydata

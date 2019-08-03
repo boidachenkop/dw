@@ -41,10 +41,6 @@ private slots:
     void on_output_textEdit_textChanged();
     void on_cvType_comboBox_currentIndexChanged(int index);
 
-    void updateNFeaturesLabel(int n_features);
-    void updateNRowsLabel(int n_rows);
-    void updateNClassesLabel(int n_classes);
-    void updateFSLineEdit(int n_features);
     void updateTrainFilepathLabel(QString filepath, bool correct);
     void updateTestFilepathLabel(QString filepath, bool correct);
     void updateModelFilepathLabel(QString filepath);

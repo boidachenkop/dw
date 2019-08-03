@@ -16,6 +16,9 @@ public:
     AvailabilityHandler& featureSelectionTabEnabled(bool);
     AvailabilityHandler& cvPercentLabelVisible(bool);
     AvailabilityHandler& cvSpinBoxEnabled(bool enabled);
+    AvailabilityHandler& trainInfoLabelsVisible(bool visible);
+    AvailabilityHandler& testInfoLabelsVisible(bool visible);
+
 
 public Q_SLOTS:
     void filterSVMTypeParams(int svm_type);
@@ -38,6 +41,9 @@ signals:
 
     void cvPercentVisible(bool);
     void cvSBEnabled(bool);
+
+    void trainInfoVisible(bool);
+    void testInfoVisible(bool);
 };
 
 #endif // AVAILABILITYHANDLER_H

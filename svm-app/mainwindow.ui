@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>822</width>
-    <height>509</height>
+    <height>554</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -20,7 +20,7 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QHBoxLayout" name="horizontalLayout_3">
+   <layout class="QHBoxLayout" name="horizontalLayout_13">
     <item>
      <widget class="QSplitter" name="splitter">
       <property name="lineWidth">
@@ -36,7 +36,7 @@
        <number>8</number>
       </property>
       <widget class="QWidget" name="layoutWidget">
-       <layout class="QVBoxLayout" name="verticalLayout_7">
+       <layout class="QVBoxLayout" name="output_verticalLayout">
         <item>
          <widget class="QTextEdit" name="output_textEdit">
           <property name="sizePolicy">
@@ -63,7 +63,7 @@
        </layout>
       </widget>
       <widget class="QWidget" name="layoutWidget">
-       <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0,0,0,0,0,0,0,0,0,0,0,0">
+       <layout class="QVBoxLayout" name="global_verticalLayout" stretch="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0">
         <property name="sizeConstraint">
          <enum>QLayout::SetMinimumSize</enum>
         </property>
@@ -116,6 +116,136 @@
          </layout>
         </item>
         <item>
+         <layout class="QHBoxLayout" name="trainInfo_global_horizontalLayout">
+          <item>
+           <layout class="QHBoxLayout" name="train_rows_horizontalLayout">
+            <item>
+             <widget class="QLabel" name="train_rowsText_label">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="font">
+               <font>
+                <family>Sans</family>
+                <pointsize>8</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>Rows:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="train_rows_label">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="font">
+               <font>
+                <family>Sans</family>
+                <pointsize>8</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>NaN</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="train_features_horizontalLayout">
+            <item>
+             <widget class="QLabel" name="train_featuresText_label">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="font">
+               <font>
+                <family>Sans</family>
+                <pointsize>8</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>Features:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="train_features_label">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="font">
+               <font>
+                <family>Sans</family>
+                <pointsize>8</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>NaN</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="train_classes_horizontalLayout">
+            <item>
+             <widget class="QLabel" name="train_classesText_label">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="font">
+               <font>
+                <family>Sans</family>
+                <pointsize>8</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>Classes:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="train_classes_label">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="font">
+               <font>
+                <family>Sans</family>
+                <pointsize>8</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>NaN</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </item>
+        <item>
          <layout class="QHBoxLayout" name="tstFile_horizontalLayout" stretch="0,1">
           <property name="sizeConstraint">
            <enum>QLayout::SetFixedSize</enum>
@@ -151,6 +281,130 @@
              <cstring>choose_tstFile_toolButton</cstring>
             </property>
            </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="testInfo_global_horizontalLayout">
+          <item>
+           <layout class="QHBoxLayout" name="test_rows_horizontalLayout">
+            <item>
+             <widget class="QLabel" name="test_rowsText_label">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>8</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>Rows:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="test_rows_label">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>8</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>NaN</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="test_features_horizontalLayout">
+            <item>
+             <widget class="QLabel" name="test_featuresText_label">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>8</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>Features:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="test_features_label">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>8</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>NaN</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="test_classes_horizontalLayout">
+            <item>
+             <widget class="QLabel" name="test_classesText_label">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>8</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>Classes:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="test_classes_label">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>8</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>NaN</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
          </layout>
         </item>
@@ -206,7 +460,7 @@
            </sizepolicy>
           </property>
           <property name="currentIndex">
-           <number>0</number>
+           <number>3</number>
           </property>
           <widget class="QWidget" name="crossValidation_tab">
            <attribute name="title">
@@ -511,74 +765,7 @@
            <attribute name="title">
             <string>Visualization</string>
            </attribute>
-           <layout class="QHBoxLayout" name="horizontalLayout_4">
-            <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_7">
-              <item>
-               <layout class="QVBoxLayout" name="datasetInfoText_verticalLayout">
-                <item>
-                 <widget class="QLabel" name="rowsText_label">
-                  <property name="text">
-                   <string>Rows:</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QLabel" name="featuresText_label">
-                  <property name="text">
-                   <string>Features:</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QLabel" name="classesText_label">
-                  <property name="text">
-                   <string>Classes:</string>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </item>
-              <item>
-               <layout class="QVBoxLayout" name="datasetInfo_verticalLayout">
-                <item>
-                 <widget class="QLabel" name="rows_label">
-                  <property name="text">
-                   <string>NaN</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QLabel" name="features_label">
-                  <property name="text">
-                   <string>NaN</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QLabel" name="classes_label">
-                  <property name="text">
-                   <string>NaN</string>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </item>
-             </layout>
-            </item>
-            <item>
-             <spacer name="horizontalSpacer_2">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
+           <layout class="QHBoxLayout" name="horizontalLayout_3">
             <item>
              <layout class="QVBoxLayout" name="density_verticalLayout">
               <item>
@@ -642,7 +829,7 @@
            </attribute>
            <layout class="QHBoxLayout" name="horizontalLayout_6">
             <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_5">
+             <layout class="QHBoxLayout" name="fs_horizontalLayout">
               <item>
                <widget class="QLabel" name="pattern_label">
                 <property name="text">
@@ -687,7 +874,7 @@
          </widget>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="svmType_horizontalLayout" stretch="1,2">
+         <layout class="QHBoxLayout" name="svmType_ComboBox_horizontalLayout" stretch="1,2">
           <property name="sizeConstraint">
            <enum>QLayout::SetFixedSize</enum>
           </property>
@@ -845,7 +1032,7 @@
              </layout>
             </item>
             <item>
-             <layout class="QVBoxLayout" name="verticalLayout_5">
+             <layout class="QVBoxLayout" name="kernelParams_verticalLayout">
               <item>
                <widget class="QSpinBox" name="degree_spinBox"/>
               </item>
@@ -867,7 +1054,7 @@
            </widget>
           </item>
           <item>
-           <layout class="QHBoxLayout" name="svmType_horizontalLayout_2">
+           <layout class="QHBoxLayout" name="svmType_horizontalLayout">
             <item>
              <layout class="QVBoxLayout" name="svmTypeLabel_verticalLayout">
               <item>
@@ -903,7 +1090,7 @@
              </layout>
             </item>
             <item>
-             <layout class="QVBoxLayout" name="verticalLayout_6">
+             <layout class="QVBoxLayout" name="svmParams_verticalLayout">
               <item>
                <widget class="QLineEdit" name="C_lineEdit"/>
               </item>

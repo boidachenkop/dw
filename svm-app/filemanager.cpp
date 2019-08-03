@@ -18,15 +18,17 @@ int FileManager::setTrainFilepath(QString filepath)
     //return 0 if file can be used othervise -1
     if(!filepath.isEmpty()){
         if(ScriptQtManager::runCheckData(filepath) == 0){
+            _labels.clear();
             _train_input_filepath = filepath;
             _model_filepath = filepath + ".model";
             _n_features = parseFile(filepath);
 
             emit updateTrainInputFilepath(filepath, true);
             emit updateModelFilepath(filepath + ".model");
-            emit updateNLines(_n_lines);
-            emit updateNClasses(getNClasses());
-            emit updateNFeatures(_n_features);
+            emit updateTrainNLines(QString::number(_n_lines));
+            emit updateTrainNClasses(QString::number(getNClasses()));
+            emit updateTrainNFeatures(QString::number(_n_features));
+            emit updateFeatureSelection("1-"+QString::number(_n_features));
             return 0;
         }else{
             emit updateTrainInputFilepath(filepath, false);
@@ -43,6 +45,7 @@ int FileManager::setTestFilepath(QString filepath)
 {
     if(!filepath.isEmpty()){
         if(ScriptQtManager::runCheckData(filepath) == 0){
+            std::cout<<filepath.toStdString()<<std::endl;
             _test_input_filepath = filepath;
             emit updateTestInputFilepath(filepath, true);
             _test_n_features = parseFile(filepath);

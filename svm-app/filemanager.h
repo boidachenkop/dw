@@ -26,9 +26,10 @@ public:
     int getNLines();
 
 signals:
-    void updateNFeatures(int);
-    void updateNClasses(int);
-    void updateNLines(int);
+    void updateTrainNFeatures(QString);
+    void updateTrainNClasses(QString);
+    void updateTrainNLines(QString);
+    void updateFeatureSelection(QString);
     void updateTrainInputFilepath(QString, bool);
     void updateTestInputFilepath(QString, bool);
     void updateModelFilepath(QString);
