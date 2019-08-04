@@ -42,7 +42,7 @@ public:
     SVMController& setP(double p){param.p=p; return *this;}
     SVMController& setShrinking(bool shrink){param.shrinking=shrink; return *this;}
     SVMController& setProbability(bool probability){param.probability=probability; return *this;}
-    SVMController& setCrossvalidation(bool cv, int type, int f);
+    SVMController& setCrossvalidation(bool cv, int f);
     SVMController& setWeight(int weight_label, double weight);
     void setModelFilePath(std::string fp){model_file_path = fp;}
     void setPredictProbability(bool pp){predict_probability=pp;}

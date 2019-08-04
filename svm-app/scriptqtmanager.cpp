@@ -167,3 +167,21 @@ std::string ScriptQtManager::runPlot(FileManager* file_manager, bool density, do
     }
     return to_remove;//remove file in d-tor
 }
+
+int ScriptQtManager::runHoldout(int type, QString dataset_filepath, int test_part_percent, QString train_part, QString test_part)
+{
+    QStringList args;
+    if(type == 0){ // classification
+        args<<QCoreApplication::applicationDirPath()+"/h4c.py"<<dataset_filepath<<
+              QString::number(test_part_percent)<<train_part<<test_part;
+    }else if(type == 1){ // regression
+        args<<QCoreApplication::applicationDirPath()+"/h4r.py"<<dataset_filepath<<
+              QString::number(test_part_percent)<<train_part<<test_part;
+    }
+    QProcess py_script;
+    py_script.start("python3", args);
+    py_script.waitForFinished();
+    QString py_script_out(py_script.readAllStandardError()+py_script.readAllStandardOutput());
+    printf("%s", py_script_out.toLatin1().data());
+    return py_script.exitCode();
+}

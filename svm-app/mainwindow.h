@@ -46,6 +46,8 @@ private slots:
     void updateModelFilepathLabel(QString filepath);
     void updateOutputTextEdit(QString text);
 
+    void on_holdout_pushButton_clicked();
+
 private:
     int parseParameters();
     void setDefaultSVMParams();

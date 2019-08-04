@@ -77,6 +77,8 @@ OBJECTS       = main.o \
 		moc_outputhandler.o
 DIST          = checkdata.py \
 		f_select.py \
+		h4c.py \
+		h4r.py \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/unix.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/linux.conf \

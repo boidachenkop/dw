@@ -54,10 +54,12 @@ OTHER_FILES += \
 
 DISTFILES += \
     checkdata.py \
-    f_select.py
+    f_select.py \
+    h4c.py \
+    h4r.py
 
 #copy python scripts
-#copydata.commands = $(COPY_DIR) $$PWD/checkdata.py $$PWD/f_select.py $$OUT_PWD
+copydata.commands = $(COPY_DIR) $$PWD/checkdata.py $$PWD/f_select.py $$PWD/h4c.py $$PWD/h4r.py /$$OUT_PWD
 #first.depends = $(first) copydata
 #export(first.depends)
 #export(copydata.commands)

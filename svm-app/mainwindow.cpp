@@ -131,7 +131,6 @@ int MainWindow::parseParameters()
             .setShrinking(ui->shrinking_checkBox->isChecked())
             .setProbability(ui->prob_checkBox->isChecked())
             .setCrossvalidation(ui->crossValidation_checkBox->isChecked(),
-                                ui->cvType_comboBox->currentIndex(),
                                 ui->cv_spinBox->value());
     if(gamma_ok && coef0_ok && C_ok && eps_ok && nu_ok && P_ok){
         ui->gamma_lineEdit->setStyleSheet("");
@@ -414,5 +413,32 @@ void MainWindow::on_cvType_comboBox_currentIndexChanged(int index)
             ui->cv_spinBox->setMaximum(100);
             ui->cv_spinBox->setValue(0);
         break;
+    }
+}
+
+void MainWindow::on_holdout_pushButton_clicked()
+{
+    bool ok;
+    double test_percent = ui->holdout_testPart_lineEdit->text().toDouble(&ok);
+    if(ok){
+        ui->holdout_testPart_lineEdit->setStyleSheet("");
+        QString train_part = file_manager->getTrainFilepath()+".ho_train";
+        QString test_part = file_manager->getTrainFilepath()+".ho_test";
+        int exitCode = ScriptQtManager::runHoldout(ui->holdout_comboBox->currentIndex(),
+                                    file_manager->getTrainFilepath(),
+                                    test_percent,
+                                    train_part, test_part);
+        if(exitCode == 0){
+            file_manager->setDatasetFilepath(train_part, file_manager->TRAIN);
+            file_manager->setDatasetFilepath(test_part, file_manager->TEST);
+            availability_handler->trainButtonEnabled(true)
+                    .testButtonEnabled(true);
+        }else{
+            availability_handler->trainButtonEnabled(false)
+                    .testButtonEnabled(false);
+            std::cout<<"Holdout error."<<std::endl;
+        }
+    }else{
+        ui->holdout_testPart_lineEdit->setStyleSheet("border-style: outset; border-width: 1px; border-color: red;");
     }
 }
