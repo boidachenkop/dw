@@ -116,7 +116,7 @@
          </layout>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="trainInfo_global_horizontalLayout">
+         <layout class="QHBoxLayout" name="trainInfo_global_horizontalLayout" stretch="0,0,0,0">
           <item>
            <layout class="QHBoxLayout" name="train_rows_horizontalLayout">
             <item>
@@ -243,6 +243,19 @@
             </item>
            </layout>
           </item>
+          <item>
+           <widget class="QLabel" name="train_spacer_label">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
          </layout>
         </item>
         <item>
@@ -285,7 +298,7 @@
          </layout>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="testInfo_global_horizontalLayout">
+         <layout class="QHBoxLayout" name="testInfo_global_horizontalLayout" stretch="0,0,0,0">
           <item>
            <layout class="QHBoxLayout" name="test_rows_horizontalLayout">
             <item>
@@ -406,6 +419,19 @@
             </item>
            </layout>
           </item>
+          <item>
+           <widget class="QLabel" name="test_spacer_label">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
          </layout>
         </item>
         <item>
@@ -460,7 +486,7 @@
            </sizepolicy>
           </property>
           <property name="currentIndex">
-           <number>3</number>
+           <number>2</number>
           </property>
           <widget class="QWidget" name="crossValidation_tab">
            <attribute name="title">
@@ -521,19 +547,6 @@
               </property>
               <property name="maximum">
                <number>999999999</number>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="percent_label">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="text">
-               <string>%</string>
               </property>
              </widget>
             </item>

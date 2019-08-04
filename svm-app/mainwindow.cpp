@@ -60,7 +60,6 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(availability_handler, &AvailabilityHandler::scalingEnabled, ui->scaling_tab, &QWidget::setEnabled);
     connect(availability_handler, &AvailabilityHandler::visualizationEnabled, ui->visualization_tab, &QWidget::setEnabled);
     connect(availability_handler, &AvailabilityHandler::fsEnabled, ui->feature_selection_tab, &QWidget::setEnabled);
-    connect(availability_handler, &AvailabilityHandler::cvPercentVisible, ui->percent_label, &QLabel::setVisible);
     connect(availability_handler, &AvailabilityHandler::cvSBEnabled, ui->cv_spinBox, &QSpinBox::setEnabled);
     connect(ui->svmType_comboBox, SIGNAL(currentIndexChanged(int)), availability_handler, SLOT(filterSVMTypeParams(int)));
     connect(ui->kernel_comboBox, SIGNAL(currentIndexChanged(int)), availability_handler,SLOT(filterKernelParams(int)));
@@ -70,12 +69,14 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(availability_handler, &AvailabilityHandler::trainInfoVisible, ui->train_features_label, &QLabel::setVisible);
     connect(availability_handler, &AvailabilityHandler::trainInfoVisible, ui->train_rowsText_label, &QLabel::setVisible);
     connect(availability_handler, &AvailabilityHandler::trainInfoVisible, ui->train_rows_label, &QLabel::setVisible);
+    connect(availability_handler, &AvailabilityHandler::trainInfoVisible, ui->train_spacer_label, &QLabel::setVisible);
     connect(availability_handler, &AvailabilityHandler::testInfoVisible, ui->test_classesText_label, &QLabel::setVisible);
     connect(availability_handler, &AvailabilityHandler::testInfoVisible, ui->test_classes_label, &QLabel::setVisible);
     connect(availability_handler, &AvailabilityHandler::testInfoVisible, ui->test_featuresText_label, &QLabel::setVisible);
     connect(availability_handler, &AvailabilityHandler::testInfoVisible, ui->test_features_label, &QLabel::setVisible);
     connect(availability_handler, &AvailabilityHandler::testInfoVisible, ui->test_rowsText_label, &QLabel::setVisible);
     connect(availability_handler, &AvailabilityHandler::testInfoVisible, ui->test_rows_label, &QLabel::setVisible);
+    connect(availability_handler, &AvailabilityHandler::testInfoVisible, ui->test_spacer_label, &QLabel::setVisible);
 
     //tabs and buttons unabled on start
     availability_handler->cvTabEnabled(false)
