@@ -432,7 +432,9 @@ void MainWindow::on_holdout_pushButton_clicked()
             file_manager->setDatasetFilepath(train_part, file_manager->TRAIN);
             file_manager->setDatasetFilepath(test_part, file_manager->TEST);
             availability_handler->trainButtonEnabled(true)
-                    .testButtonEnabled(true);
+                    .testButtonEnabled(true)
+                    .trainInfoLabelsVisible(true)
+                    .testInfoLabelsVisible(true);
         }else{
             availability_handler->trainButtonEnabled(false)
                     .testButtonEnabled(false);
