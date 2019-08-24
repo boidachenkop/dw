@@ -20,6 +20,7 @@ int ScriptQtManager::runCheckData(QString filepath)
         return 0;
     }else{
         printf("%s\n", py_script_out.toLatin1().data());
+        fflush(stdout);
         return -1;
     }
 }
@@ -33,6 +34,7 @@ void ScriptQtManager::runFeatureSelection(QString filepath, int n_features, QStr
     py_script.waitForFinished();
     QString py_script_out(py_script.readAllStandardError()+py_script.readAllStandardOutput());
     printf("%s", py_script_out.toLatin1().data());
+    fflush(stdout);
 }
 
 std::string ScriptQtManager::runPlot(FileManager* file_manager, bool density, double band_width)
@@ -183,5 +185,22 @@ int ScriptQtManager::runHoldout(int type, QString dataset_filepath, int test_par
     py_script.waitForFinished();
     QString py_script_out(py_script.readAllStandardError()+py_script.readAllStandardOutput());
     printf("%s", py_script_out.toLatin1().data());
+    fflush(stdout);
     return py_script.exitCode();
 }
+
+int ScriptQtManager::runConvert2SvmFormat(QString filepath, QString outfilepath, QString sep, QString dec_sep, bool label_first)
+{
+    QStringList args;
+    args<<QCoreApplication::applicationDirPath()+"/convert2svm.py"<<filepath<<outfilepath<<
+          sep<<dec_sep<<(label_first ? "1" : "0");
+    QProcess py_script;
+    py_script.start("python3", args);
+    py_script.waitForFinished();
+    QString py_script_out(py_script.readAllStandardError()+py_script.readAllStandardOutput());
+    printf("%s", py_script_out.toLatin1().data());
+    fflush(stdout);
+    return py_script.exitCode();
+}
+
+

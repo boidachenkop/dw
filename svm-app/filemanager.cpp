@@ -23,6 +23,7 @@ int FileManager::setDatasetFilepath(QString filepath, DATASET_TYPE type)
                 _train_input_filepath = filepath;
                 _model_filepath = filepath + ".model";
                 _train_n_features = parseFile(filepath);
+                _trainFileOK = true;
                 emit updateTrainInputFilepath(filepath, true);
                 emit updateModelFilepath(filepath + ".model");
                 emit updateTrainNLines(QString::number(_n_lines));
@@ -32,6 +33,7 @@ int FileManager::setDatasetFilepath(QString filepath, DATASET_TYPE type)
             }else if(type == TEST){
                 _test_input_filepath = filepath;
                 _test_n_features = parseFile(filepath);
+                _testFileOK = true;
                 if((_train_n_features != -1) && (_train_n_features != _test_n_features)){
                     emit updateTestInputFilepath(filepath, false);
                     return -1;
@@ -44,9 +46,14 @@ int FileManager::setDatasetFilepath(QString filepath, DATASET_TYPE type)
             return 0;
         }else{
             if(type == TRAIN){
+                _train_input_filepath = filepath;
+                _model_filepath = filepath + ".model";
                 emit updateTrainInputFilepath(filepath, false);
+                _trainFileOK = false;
             }else if(type == TEST){
+                _test_input_filepath = filepath;
                 emit updateTestInputFilepath(filepath, false);
+                _testFileOK = false;
             }
             return -1;
         }

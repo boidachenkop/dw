@@ -18,7 +18,7 @@ public:
     AvailabilityHandler& cvSpinBoxEnabled(bool enabled);
     AvailabilityHandler& trainInfoLabelsVisible(bool visible);
     AvailabilityHandler& testInfoLabelsVisible(bool visible);
-
+    AvailabilityHandler& convertTabEnabled(bool enabled);
 
 public Q_SLOTS:
     void filterSVMTypeParams(int svm_type);
@@ -38,6 +38,7 @@ signals:
     void scalingEnabled(bool);
     void visualizationEnabled(bool);
     void fsEnabled(bool);
+    void convertEnabled(bool);
 
     void cvPercentVisible(bool);
     void cvSBEnabled(bool);

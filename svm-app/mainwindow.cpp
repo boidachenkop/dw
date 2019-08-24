@@ -61,8 +61,10 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(availability_handler, &AvailabilityHandler::visualizationEnabled, ui->visualization_tab, &QWidget::setEnabled);
     connect(availability_handler, &AvailabilityHandler::fsEnabled, ui->feature_selection_tab, &QWidget::setEnabled);
     connect(availability_handler, &AvailabilityHandler::cvSBEnabled, ui->cv_spinBox, &QSpinBox::setEnabled);
+    connect(availability_handler, &AvailabilityHandler::convertEnabled, ui->format_tab, &QSpinBox::setEnabled);
     connect(ui->svmType_comboBox, SIGNAL(currentIndexChanged(int)), availability_handler, SLOT(filterSVMTypeParams(int)));
     connect(ui->kernel_comboBox, SIGNAL(currentIndexChanged(int)), availability_handler,SLOT(filterKernelParams(int)));
+    //info labels visibility
     connect(availability_handler, &AvailabilityHandler::trainInfoVisible, ui->train_classesText_label, &QLabel::setVisible);
     connect(availability_handler, &AvailabilityHandler::trainInfoVisible, ui->train_classes_label, &QLabel::setVisible);
     connect(availability_handler, &AvailabilityHandler::trainInfoVisible, ui->train_featuresText_label, &QLabel::setVisible);
@@ -83,6 +85,7 @@ MainWindow::MainWindow(QWidget *parent) :
             .scalingTabEnabled(false)
             .visualizationTabEnabled(false)
             .featureSelectionTabEnabled(false)
+            .convertTabEnabled(false)
             .trainButtonEnabled(false)
             .testButtonEnabled(false)
             .cvPercentLabelVisible(false);
@@ -187,7 +190,8 @@ void MainWindow::on_chooseDataset_toolButton_clicked()
                 .scalingTabEnabled(true)
                 .featureSelectionTabEnabled(true)
                 .cvTabEnabled(true)
-                .trainInfoVisible(true);
+                .trainInfoLabelsVisible(true)
+                .convertTabEnabled(file_manager->isTestOK() ? false : true);
         if(file_manager->getNFeatures() <= 3){
             availability_handler->visualizationTabEnabled(true);
         }else{
@@ -201,7 +205,8 @@ void MainWindow::on_chooseDataset_toolButton_clicked()
             .visualizationTabEnabled(false)
             .featureSelectionTabEnabled(false)
             .cvTabEnabled(false)
-            .trainInfoVisible(false);
+            .trainInfoLabelsVisible(false)
+            .convertTabEnabled(true);
 
     }
 }
@@ -211,10 +216,12 @@ void MainWindow::on_choose_tstFile_toolButton_clicked()
     QString path = QFileDialog::getOpenFileName(this, "Choose test dataset", "/home/pavlo/Desktop/pr/dw/datasets");
     if(file_manager->setDatasetFilepath(path, file_manager->TEST) == 0){
         availability_handler->testButtonEnabled(true)
-                .testInfoVisible(true);
+                .testInfoLabelsVisible(true)
+                .convertTabEnabled(file_manager->isTrainOK() ? false : true);
     }else{
         availability_handler->testButtonEnabled(false)
-                .testInfoVisible(false);
+                .testInfoLabelsVisible(false)
+                .convertTabEnabled(true);
     }
 }
 
@@ -442,5 +449,50 @@ void MainWindow::on_holdout_pushButton_clicked()
         }
     }else{
         ui->holdout_testPart_lineEdit->setStyleSheet("border-style: outset; border-width: 1px; border-color: red;");
+    }
+}
+
+void MainWindow::on_convert_pushButton_clicked()
+{
+    if(ui->feature_sep_lineEdit->text().isEmpty()){
+        ui->feature_sep_lineEdit->setStyleSheet("border-style: outset; border-width: 1px; border-color: red;");
+        return;
+    }else{
+        ui->feature_sep_lineEdit->setStyleSheet("");
+    }
+    QString dec_sep;
+    bool label_first;
+    dec_sep = ui->dec_sep_comboBox->currentIndex() == 0 ? dec_sep = "." : ",";
+    label_first =  ui->label_at_end_checkBox->isChecked() ? false : true;
+    int exitCode = 0;
+    if(!file_manager->isTrainOK()){
+        exitCode = ScriptQtManager::runConvert2SvmFormat(file_manager->getTrainFilepath(),
+                                                             file_manager->getTrainFilepath()+".libsvm",
+                                                             ui->feature_sep_lineEdit->text(),
+                                                             dec_sep,
+                                                             label_first);
+        if(exitCode == 0){
+            file_manager->setDatasetFilepath(file_manager->getTrainFilepath()+".libsvm", file_manager->TRAIN);
+            availability_handler->
+                    trainButtonEnabled(true)
+                    .scalingTabEnabled(true)
+                    .featureSelectionTabEnabled(true)
+                    .cvTabEnabled(true)
+                    .trainInfoLabelsVisible(true)
+                    .convertTabEnabled(file_manager->isTestOK() ? false : true);
+        }
+    }
+    if(!file_manager->isTestOK()){
+        exitCode = ScriptQtManager::runConvert2SvmFormat(file_manager->getTestFilepath(),
+                                                             file_manager->getTestFilepath()+".libsvm",
+                                                             ui->feature_sep_lineEdit->text(),
+                                                             dec_sep,
+                                                             label_first);
+        if(exitCode == 0){
+            file_manager->setDatasetFilepath(file_manager->getTestFilepath()+".libsvm", file_manager->TEST);
+            availability_handler->testButtonEnabled(true)
+                    .testInfoLabelsVisible(true)
+                    .convertTabEnabled(file_manager->isTrainOK() ? false : true);
+        }
     }
 }

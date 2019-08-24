@@ -26,6 +26,8 @@ public:
     int getNClasses();
     int getNFeatures();
     int getNLines();
+    bool isTrainOK(){ return _trainFileOK; }
+    bool isTestOK(){ return _testFileOK; }
 signals:
     void updateTrainNFeatures(QString);
     void updateTrainNClasses(QString);
@@ -41,6 +43,9 @@ signals:
 private:
     int parseFile(QString filepath);
     bool insertLabel(std::string line);
+
+    bool _trainFileOK{true};
+    bool _testFileOK{true};
 
     QString _train_input_filepath{};
     QString _test_input_filepath{};

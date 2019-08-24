@@ -23,6 +23,8 @@ AvailabilityHandler &AvailabilityHandler::trainInfoLabelsVisible(bool visible) {
 
 AvailabilityHandler &AvailabilityHandler::testInfoLabelsVisible(bool visible) { emit testInfoVisible(visible); return *this; }
 
+AvailabilityHandler &AvailabilityHandler::convertTabEnabled(bool enabled) { emit convertEnabled(enabled); return *this; }
+
 void AvailabilityHandler::filterSVMTypeParams(int svm_type){
     switch(svm_type){
         case 0: // C-SVC
