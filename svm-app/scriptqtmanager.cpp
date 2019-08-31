@@ -102,57 +102,13 @@ std::string ScriptQtManager::runPlot(FileManager* file_manager, bool density, do
             plot_cmd<<"; pause mouse close";
             gp<<plot_cmd.str();
         }else if(n_features == 2){
-            plot_cmd<<"N = "<<n_lines<<"; Delta = "<<band_width<<"; "<<"TimeStart = time(0.0); set table $Data;  set samples N; plot '"
-                   <<save_filepath<<R"('  u 1:2 w table;
-                                    unset table
-                                    print sprintf("Data generated: %.3f sec",time(0.0)-TimeStart)
-                                    TimeStart = time(0.0)
-                                    stats $Data nooutput
-                                    RowCount = STATS_records
-                                    array ColX[RowCount]
-                                    array ColY[RowCount]
-                                    array ColC[RowCount]
-                                    do for [i=1:RowCount] {
-                                    set table $Dummy
-                                    plot $Data u (ColX[$0+1]=$1,0):(ColY[$0+1]=$2,0) with table
-                                    unset table
-                                    }
-                                    print sprintf("Data put into arrays: %.3f sec",time(0.0)-TimeStart)
-
-
-                                    # look at each datapoint and its sourrounding
-                                    do for [i=1:RowCount] {
-                                    # print sprintf("Datapoint %g of %g",i,RowCount)
-                                    x0 = ColX[i]
-                                    y0 = ColY[i]
-                                    # count the datapoints with distances <Delta around the datapoint of interest
-                                    set table $Occurrences
-                                    plot $Data u ((abs(x0-$1)<Delta) & (abs(y0-$2)<Delta) ? 1 : 0):(1) smooth frequency
-                                    unset table
-                                    # extract the number from $Occurrences which will be used to color the datapoint
-                                    set table $Dummmy
-                                    plot $Occurrences u (c0=$2,0):($0) every ::1::1 with table
-                                    unset table
-                                    ColC[i] = c0
-                                    }
-
-                                    # put the arrays into a dataset again
-                                    set print $Data
-                                    do for [i=1:RowCount] {
-                                    print sprintf("%g\t%g\t%g",ColX[i],ColY[i],ColC[i])
-                                    }
-                                    set print
-                                    print sprintf("Duration: %.3f sec",time(0.0)-TimeStart)
-
-                                    set palette rgb 33,13,10
-                                    plot $Data u 1:2:3 w p ps 1 pt 7 lc palette z notitle
-                                    #set dgrid3d 30,30
-                                    #set hidden3d
-                                    #splot $Data u 1:2:3 with lines lc palette z notitle, \
-                                    #'fc2d.tmp' u 1:2:3
-                                    ### end of code
-                                    pause mouse close)";
-            gp<<plot_cmd.str();
+            QString datafile = file_manager->getTrainFilepath()+".tmp";
+            if(!runGetDencityColumn(file_manager->getTrainFilepath(), datafile)){
+                plot_cmd<<"set dgrid3d 100,100;"<<"set contour base; set cntrparam bspline;"<<
+                          "set style data lines; set view map; unset key; unset surface;"<<
+                          "set cntrparam levels 15; splot \""<<datafile.toStdString()<<"\"; pause mouse close;";
+                gp<<plot_cmd.str();
+            }
         }else{
             return "";
         }
@@ -194,6 +150,19 @@ int ScriptQtManager::runConvert2SvmFormat(QString filepath, QString outfilepath,
     QStringList args;
     args<<QCoreApplication::applicationDirPath()+"/convert2svm.py"<<filepath<<outfilepath<<
           sep<<dec_sep<<(label_first ? "1" : "0");
+    QProcess py_script;
+    py_script.start("python3", args);
+    py_script.waitForFinished();
+    QString py_script_out(py_script.readAllStandardError()+py_script.readAllStandardOutput());
+    printf("%s", py_script_out.toLatin1().data());
+    fflush(stdout);
+    return py_script.exitCode();
+}
+
+int ScriptQtManager::runGetDencityColumn(QString filepath, QString outfilepath)
+{
+    QStringList args;
+    args<<QCoreApplication::applicationDirPath()+"/dencity.py"<<filepath<<outfilepath;
     QProcess py_script;
     py_script.start("python3", args);
     py_script.waitForFinished();

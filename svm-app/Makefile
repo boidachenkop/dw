@@ -80,6 +80,7 @@ DIST          = checkdata.py \
 		h4c.py \
 		h4r.py \
 		convert2svm.py \
+		dencity.py \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/unix.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/linux.conf \
