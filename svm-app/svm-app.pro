@@ -53,14 +53,16 @@ OTHER_FILES += \
         f_select.py
 
 DISTFILES += \
+    svm-train.c \
     checkdata.py \
     f_select.py \
+    grid.py \
     h4c.py \
     h4r.py \
     convert2svm.py
 
 #copy python scripts
-copydata.commands = $(COPY_DIR) $$PWD/checkdata.py $$PWD/f_select.py $$PWD/h4c.py $$PWD/h4r.py $$PWD/convert2svm.py /$$OUT_PWD
+copydata.commands = $(COPY_DIR) $$PWD/checkdata.py $$PWD/f_select.py $$PWD/h4c.py $$PWD/h4r.py $$PWD/convert2svm.py $$PWD/grid.py $$PWD/svm-train.c $$PWD/$$OUT_PWD
 #first.depends = $(first) copydata
 #export(first.depends)
 #export(copydata.commands)

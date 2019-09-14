@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>856</width>
-    <height>554</height>
+    <width>760</width>
+    <height>501</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -32,7 +32,7 @@
    <set>QMainWindow::AllowTabbedDocks|QMainWindow::AnimatedDocks</set>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QHBoxLayout" name="horizontalLayout_7">
+   <layout class="QHBoxLayout" name="horizontalLayout_10">
     <item>
      <widget class="QSplitter" name="splitter">
       <property name="sizePolicy">
@@ -507,7 +507,7 @@
            </sizepolicy>
           </property>
           <property name="currentIndex">
-           <number>4</number>
+           <number>5</number>
           </property>
           <widget class="QWidget" name="crossValidation_tab">
            <attribute name="title">
@@ -949,7 +949,7 @@
                    <bool>false</bool>
                   </property>
                   <property name="text">
-                   <string>Bandwidth: </string>
+                   <string>Bandwidth</string>
                   </property>
                   <property name="buddy">
                    <cstring>bandwidth_lineEdit</cstring>
@@ -1130,6 +1130,103 @@
                </widget>
               </item>
              </layout>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="tab">
+           <attribute name="title">
+            <string>Grid Search</string>
+           </attribute>
+           <layout class="QHBoxLayout" name="horizontalLayout_9">
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_7">
+              <item>
+               <layout class="QVBoxLayout" name="grid_log2_labels_verticalLayout">
+                <item>
+                 <widget class="QLabel" name="grid_log2c_label">
+                  <property name="text">
+                   <string>log2c</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="grid_log2g_label">
+                  <property name="text">
+                   <string>log2g</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QVBoxLayout" name="grid_log2_lineEdits_verticalLayout">
+                <item>
+                 <widget class="QLineEdit" name="grid_log2c_lineEdit"/>
+                </item>
+                <item>
+                 <widget class="QLineEdit" name="grid_log2g_lineEdit"/>
+                </item>
+               </layout>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <spacer name="grid_horizontalSpacer">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <layout class="QVBoxLayout" name="grid_cv_anim_verticalLayout">
+              <item>
+               <layout class="QHBoxLayout" name="grid_cv_horizontalLayout">
+                <item>
+                 <widget class="QLabel" name="gird_cv_label">
+                  <property name="text">
+                   <string>CV n-fold</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QSpinBox" name="grid_cv_spinBox"/>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <widget class="QCheckBox" name="grid_anim_checkBox">
+                <property name="text">
+                 <string>Animation</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <spacer name="grid_horizontalSpacer_2">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <widget class="QPushButton" name="grid_pushButton">
+              <property name="text">
+               <string>Grid Search</string>
+              </property>
+             </widget>
             </item>
            </layout>
           </widget>
@@ -1502,8 +1599,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>856</width>
-     <height>20</height>
+     <width>760</width>
+     <height>18</height>
     </rect>
    </property>
   </widget>
