@@ -26,6 +26,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += main.cpp\
     availabilityhandler.cpp \
     filemanager.cpp \
+    loadingindicator.cpp \
         mainwindow.cpp \
     scriptqtmanager.cpp \
     svmcontroller.cpp \
@@ -36,6 +37,7 @@ SOURCES += main.cpp\
 HEADERS  += mainwindow.h \
     availabilityhandler.h \
     filemanager.h \
+    loadingindicator.h \
     scriptqtmanager.h \
     svmcontroller.h \
     svm.h \

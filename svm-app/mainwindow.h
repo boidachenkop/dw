@@ -50,6 +50,8 @@ private slots:
 
     void on_convert_pushButton_clicked();
 
+    void on_grid_pushButton_clicked();
+
 private:
     int parseParameters();
     void setDefaultSVMParams();

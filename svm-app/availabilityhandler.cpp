@@ -19,11 +19,13 @@ AvailabilityHandler& AvailabilityHandler::cvPercentLabelVisible(bool visible) { 
 
 AvailabilityHandler& AvailabilityHandler::cvSpinBoxEnabled(bool enabled) { emit cvSBEnabled(enabled); return *this; }
 
-AvailabilityHandler &AvailabilityHandler::trainInfoLabelsVisible(bool visible) { emit trainInfoVisible(visible); return *this; }
+AvailabilityHandler& AvailabilityHandler::trainInfoLabelsVisible(bool visible) { emit trainInfoVisible(visible); return *this; }
 
-AvailabilityHandler &AvailabilityHandler::testInfoLabelsVisible(bool visible) { emit testInfoVisible(visible); return *this; }
+AvailabilityHandler& AvailabilityHandler::testInfoLabelsVisible(bool visible) { emit testInfoVisible(visible); return *this; }
 
-AvailabilityHandler &AvailabilityHandler::convertTabEnabled(bool enabled) { emit convertEnabled(enabled); return *this; }
+AvailabilityHandler& AvailabilityHandler::convertTabEnabled(bool enabled) { emit convertEnabled(enabled); return *this; }
+
+AvailabilityHandler& AvailabilityHandler::gridSearchTabEnabled(bool enabled) { emit gridSearchEnabled(enabled); return *this; }
 
 void AvailabilityHandler::filterSVMTypeParams(int svm_type){
     switch(svm_type){

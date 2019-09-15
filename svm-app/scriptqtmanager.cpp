@@ -5,6 +5,7 @@
 #include <iostream>
 #include <sstream>
 
+#include "loadingindicator.h"
 #include "gnuplot_i.hpp"
 #include "scriptqtmanager.h"
 
@@ -171,5 +172,29 @@ int ScriptQtManager::runGetDencityColumn(QString filepath, QString outfilepath)
     fflush(stdout);
     return py_script.exitCode();
 }
+
+int ScriptQtManager::runGridSearch(QString filepath, QString log2c, QString log2g, QString cv_nfold, bool animation)
+{
+    LoadingIndicator::startLoadingAnimation();
+    QStringList args;
+    args<<QCoreApplication::applicationDirPath()+"/grid.py"<<"-out"<<"null"<<"-log2c"<<log2c<<"-log2g"<<log2g<<"-v"<<cv_nfold;
+    if(!animation){
+        args<<"-gnuplot"<<"null";
+    }
+    args<<filepath;
+    QProcess py_script;
+    py_script.setProcessChannelMode(QProcess::ForwardedOutputChannel);
+    py_script.startDetached("python3", args);
+    connect(py_script, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
+            [=](int exitCode, QProcess::ExitStatus exitStatus){ /* ... */ });
+    fflush(stdout);
+    LoadingIndicator::stopLoadingAnimation();
+    return py_script.exitCode();
+}
+
+
+
+
+
 
 

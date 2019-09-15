@@ -32,7 +32,7 @@
    <set>QMainWindow::AllowTabbedDocks|QMainWindow::AnimatedDocks</set>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QHBoxLayout" name="horizontalLayout_10">
+   <layout class="QHBoxLayout" name="horizontalLayout_7">
     <item>
      <widget class="QSplitter" name="splitter">
       <property name="sizePolicy">
@@ -54,7 +54,7 @@
        <number>8</number>
       </property>
       <widget class="QWidget" name="layoutWidget">
-       <layout class="QVBoxLayout" name="output_verticalLayout">
+       <layout class="QVBoxLayout" name="output_verticalLayout" stretch="1,0">
         <item>
          <widget class="QTextEdit" name="output_textEdit">
           <property name="sizePolicy">
@@ -72,11 +72,37 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="clearOutput_pushButton">
-          <property name="text">
-           <string>Clear</string>
+         <layout class="QHBoxLayout" name="loading_clear_horizontalLayout">
+          <property name="sizeConstraint">
+           <enum>QLayout::SetDefaultConstraint</enum>
           </property>
-         </widget>
+          <item>
+           <widget class="QLabel" name="loading_label">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="clearOutput_pushButton">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Clear</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
        </layout>
       </widget>
@@ -1133,13 +1159,13 @@
             </item>
            </layout>
           </widget>
-          <widget class="QWidget" name="tab">
+          <widget class="QWidget" name="gridSearch_tab">
            <attribute name="title">
             <string>Grid Search</string>
            </attribute>
            <layout class="QHBoxLayout" name="horizontalLayout_9">
             <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_7">
+             <layout class="QHBoxLayout" name="grid_log2_horizontalLayout">
               <item>
                <layout class="QVBoxLayout" name="grid_log2_labels_verticalLayout">
                 <item>

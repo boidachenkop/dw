@@ -55,6 +55,7 @@ OBJECTS_DIR   = ./
 SOURCES       = main.cpp \
 		availabilityhandler.cpp \
 		filemanager.cpp \
+		loadingindicator.cpp \
 		mainwindow.cpp \
 		scriptqtmanager.cpp \
 		svmcontroller.cpp \
@@ -68,6 +69,7 @@ SOURCES       = main.cpp \
 OBJECTS       = main.o \
 		availabilityhandler.o \
 		filemanager.o \
+		loadingindicator.o \
 		mainwindow.o \
 		scriptqtmanager.o \
 		svmcontroller.o \
@@ -213,6 +215,7 @@ DIST          = svm-train.c \
 		svm-app.pro mainwindow.h \
 		availabilityhandler.h \
 		filemanager.h \
+		loadingindicator.h \
 		scriptqtmanager.h \
 		svmcontroller.h \
 		svm.h \
@@ -221,6 +224,7 @@ DIST          = svm-train.c \
 		outputhandler.h main.cpp \
 		availabilityhandler.cpp \
 		filemanager.cpp \
+		loadingindicator.cpp \
 		mainwindow.cpp \
 		scriptqtmanager.cpp \
 		svmcontroller.cpp \
@@ -507,8 +511,8 @@ distdir: FORCE
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents res.qrc $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/qt/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents mainwindow.h availabilityhandler.h filemanager.h scriptqtmanager.h svmcontroller.h svm.h svmscale.h gnuplot_i.hpp outputhandler.h $(DISTDIR)/
-	$(COPY_FILE) --parents main.cpp availabilityhandler.cpp filemanager.cpp mainwindow.cpp scriptqtmanager.cpp svmcontroller.cpp svm.cpp svmscale.cpp outputhandler.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents mainwindow.h availabilityhandler.h filemanager.h loadingindicator.h scriptqtmanager.h svmcontroller.h svm.h svmscale.h gnuplot_i.hpp outputhandler.h $(DISTDIR)/
+	$(COPY_FILE) --parents main.cpp availabilityhandler.cpp filemanager.cpp loadingindicator.cpp mainwindow.cpp scriptqtmanager.cpp svmcontroller.cpp svm.cpp svmscale.cpp outputhandler.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents mainwindow.ui $(DISTDIR)/
 
 
@@ -537,7 +541,9 @@ compiler_rcc_make_all: qrc_res.cpp
 compiler_rcc_clean:
 	-$(DEL_FILE) qrc_res.cpp
 qrc_res.cpp: res.qrc \
-		/usr/bin/rcc
+		/usr/bin/rcc \
+		loading.gif \
+		loader.gif
 	/usr/bin/rcc -name res res.qrc -o qrc_res.cpp
 
 compiler_qmlcache_make_all:
@@ -616,6 +622,9 @@ availabilityhandler.o: availabilityhandler.cpp availabilityhandler.h
 filemanager.o: filemanager.cpp scriptqtmanager.h \
 		filemanager.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o filemanager.o filemanager.cpp
+
+loadingindicator.o: loadingindicator.cpp loadingindicator.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o loadingindicator.o loadingindicator.cpp
 
 mainwindow.o: mainwindow.cpp svmscale.h \
 		mainwindow.h \

@@ -461,7 +461,6 @@ def find_parameters(dataset_pathname, options=''):
 
 
 if __name__ == '__main__':
-
 	def exit_with_help():
 		print("""\
 Usage: grid.py [grid_options] [svm_options] dataset

@@ -4,6 +4,7 @@
 #include <QFileDialog>
 #include <QHBoxLayout>
 #include <QSpinBox>
+#include <QMovie>
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -12,6 +13,7 @@
 #include <iostream>
 #include <cstdio>
 
+#include "loadingindicator.h"
 #include "svmscale.h"
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
@@ -34,6 +36,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->output_textEdit->setReadOnly(true);
     //set default params
     setDefaultSVMParams();
+
+    LoadingIndicator::setIndicatorLabel(ui->loading_label);
 
     //info update
     connect(file_manager, &FileManager::updateTrainNLines, ui->train_rows_label, &QLabel::setText);
@@ -62,6 +66,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(availability_handler, &AvailabilityHandler::fsEnabled, ui->feature_selection_tab, &QWidget::setEnabled);
     connect(availability_handler, &AvailabilityHandler::cvSBEnabled, ui->cv_spinBox, &QSpinBox::setEnabled);
     connect(availability_handler, &AvailabilityHandler::convertEnabled, ui->format_tab, &QSpinBox::setEnabled);
+    connect(availability_handler, &AvailabilityHandler::gridSearchEnabled, ui->gridSearch_tab, &QSpinBox::setEnabled);
     connect(ui->svmType_comboBox, SIGNAL(currentIndexChanged(int)), availability_handler, SLOT(filterSVMTypeParams(int)));
     connect(ui->kernel_comboBox, SIGNAL(currentIndexChanged(int)), availability_handler,SLOT(filterKernelParams(int)));
     //info labels visibility
@@ -86,6 +91,7 @@ MainWindow::MainWindow(QWidget *parent) :
             .visualizationTabEnabled(false)
             .featureSelectionTabEnabled(false)
             .convertTabEnabled(false)
+            .gridSearchTabEnabled(false)
             .trainButtonEnabled(false)
             .testButtonEnabled(false)
             .cvPercentLabelVisible(false);
@@ -179,6 +185,9 @@ void MainWindow::setDefaultSVMParams(){
     ui->crossValidation_checkBox->setChecked(svm->isCrossvalidation());
     on_y_scale_checkBox_toggled(false);
 
+    ui->grid_cv_spinBox->setValue(5);
+    ui->grid_log2c_lineEdit->setText("-5,15,2");
+    ui->grid_log2g_lineEdit->setText("3,-15,-2");
 }
 
 void MainWindow::on_chooseDataset_toolButton_clicked()
@@ -190,6 +199,7 @@ void MainWindow::on_chooseDataset_toolButton_clicked()
                 .scalingTabEnabled(true)
                 .featureSelectionTabEnabled(true)
                 .cvTabEnabled(true)
+                .gridSearchTabEnabled(true)
                 .trainInfoLabelsVisible(true)
                 .convertTabEnabled(file_manager->isTestOK() ? false : true);
         if(file_manager->getNFeatures() <= 3){
@@ -205,6 +215,7 @@ void MainWindow::on_chooseDataset_toolButton_clicked()
             .visualizationTabEnabled(false)
             .featureSelectionTabEnabled(false)
             .cvTabEnabled(false)
+            .gridSearchTabEnabled(false)
             .trainInfoLabelsVisible(false)
             .convertTabEnabled(true);
 
@@ -496,3 +507,19 @@ void MainWindow::on_convert_pushButton_clicked()
         }
     }
 }
+
+void MainWindow::on_grid_pushButton_clicked()
+{
+    ScriptQtManager::runGridSearch(file_manager->getTrainFilepath(),
+                                   ui->grid_log2c_lineEdit->text(),
+                                   ui->grid_log2g_lineEdit->text(),
+                                   QString::number(ui->grid_cv_spinBox->value()),
+                                   ui->grid_anim_checkBox->isChecked());
+}
+
+
+
+
+
+
+
