@@ -85,7 +85,7 @@
              </sizepolicy>
             </property>
             <property name="text">
-             <string/>
+             <string>Performing...</string>
             </property>
            </widget>
           </item>

@@ -542,7 +542,6 @@ compiler_rcc_clean:
 	-$(DEL_FILE) qrc_res.cpp
 qrc_res.cpp: res.qrc \
 		/usr/bin/rcc \
-		loading.gif \
 		loader.gif
 	/usr/bin/rcc -name res res.qrc -o qrc_res.cpp
 
@@ -626,7 +625,8 @@ filemanager.o: filemanager.cpp scriptqtmanager.h \
 loadingindicator.o: loadingindicator.cpp loadingindicator.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o loadingindicator.o loadingindicator.cpp
 
-mainwindow.o: mainwindow.cpp svmscale.h \
+mainwindow.o: mainwindow.cpp loadingindicator.h \
+		svmscale.h \
 		mainwindow.h \
 		svmcontroller.h \
 		svm.h \
@@ -637,7 +637,8 @@ mainwindow.o: mainwindow.cpp svmscale.h \
 		ui_mainwindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o mainwindow.cpp
 
-scriptqtmanager.o: scriptqtmanager.cpp gnuplot_i.hpp \
+scriptqtmanager.o: scriptqtmanager.cpp loadingindicator.h \
+		gnuplot_i.hpp \
 		scriptqtmanager.h \
 		filemanager.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o scriptqtmanager.o scriptqtmanager.cpp

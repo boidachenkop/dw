@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QString>
 
+#include "loadingindicator.h"
 #include "svmcontroller.h"
 #include "availabilityhandler.h"
 #include "scriptqtmanager.h"
@@ -62,7 +63,6 @@ private:
     AvailabilityHandler *availability_handler;
     FileManager *file_manager;
     OutputHandler *output_handler;
-
 
     std::string rm_tmp_plot_cmd{"rm -f "};
 };
