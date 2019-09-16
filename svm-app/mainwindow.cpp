@@ -51,15 +51,22 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(file_manager, &FileManager::updateModelFilepath, this, &MainWindow::updateModelFilepathLabel);
     connect(file_manager, &FileManager::updateFeatureSelection, ui->pattern_lineEdit, &QLineEdit::setText);
     connect(output_handler, &OutputHandler::updateOutput, this, &MainWindow::updateOutputTextEdit);
+
     //availability
+    //parameters
     connect(availability_handler, &AvailabilityHandler::degreeEnabled, ui->degree_spinBox, &QSpinBox::setEnabled);
     connect(availability_handler, &AvailabilityHandler::gammaEnabled, ui->gamma_lineEdit, &QLineEdit::setEnabled);
     connect(availability_handler, &AvailabilityHandler::coef0Enabled, ui->coef0_lineEdit, &QLineEdit::setEnabled);
     connect(availability_handler, &AvailabilityHandler::cEnabled, ui->C_lineEdit, &QLineEdit::setEnabled);
     connect(availability_handler, &AvailabilityHandler::nuEnabled, ui->nu_lineEdit, &QLineEdit::setEnabled);
     connect(availability_handler, &AvailabilityHandler::pEnabled, ui->P_lineEdit, &QLineEdit::setEnabled);
+    //train and test buttons + validation
     connect(availability_handler, &AvailabilityHandler::trainEnabled, ui->train_pushButton, &QPushButton::setEnabled);
     connect(availability_handler, &AvailabilityHandler::testEnabled, ui->test_pushButton, &QPushButton::setEnabled);
+    connect(availability_handler, &AvailabilityHandler::testEnabled, ui->validation_label, &QLabel::setEnabled);
+    connect(availability_handler, &AvailabilityHandler::testEnabled, ui->validation_percent_label, &QLabel::setEnabled);
+    connect(availability_handler, &AvailabilityHandler::testEnabled, ui->validation_lineEdit, &QLineEdit::setEnabled);
+    //tabs
     connect(availability_handler, &AvailabilityHandler::cvEnabled, ui->crossValidation_tab, &QWidget::setEnabled);
     connect(availability_handler, &AvailabilityHandler::scalingEnabled, ui->scaling_tab, &QWidget::setEnabled);
     connect(availability_handler, &AvailabilityHandler::visualizationEnabled, ui->visualization_tab, &QWidget::setEnabled);
@@ -256,9 +263,27 @@ void MainWindow::on_train_pushButton_clicked()
 
 void MainWindow::on_test_pushButton_clicked()
 {
-    svm->openPredictInputFile(file_manager->getTestFilepath().toStdString());
-    svm->openPredictOutputFile(svm->getPredictOutputFilePath()); //default svmcontroller path
-    svm->predict();
+    bool convert_ok;
+    int validation_percent = QString(ui->validation_lineEdit->text()).toInt(&convert_ok);
+    if(convert_ok){
+        ui->validation_lineEdit->setStyleSheet("");
+        svm->openPredictInputFile(file_manager->getTestFilepath().toStdString());
+        svm->openPredictOutputFile(svm->getPredictOutputFilePath()); //default svmcontroller path
+        svm->predict();
+
+        if(ScriptQtManager::runHoldout(1, file_manager->getTrainFilepath(), validation_percent,
+                                    "null", file_manager->getTrainFilepath()+".tmp") != -1){
+
+            svm->openPredictInputFile((file_manager->getTrainFilepath()+".tmp").toStdString());
+            svm->openPredictOutputFile((file_manager->getTrainFilepath()+".tmpout").toStdString());
+            std::cout<<"Validation ";
+            fflush(stdout);
+            svm->predict();
+            system("rm -rf "+(file_manager->getTrainFilepath()+".tmp ").toLocal8Bit()+(file_manager->getTrainFilepath()+".tmpout").toLocal8Bit());
+        }
+    }else{
+        ui->validation_lineEdit->setStyleSheet("border-style: outset; border-width: 1px; border-color: red;");
+    }
 }
 
 void MainWindow::on_scale_toolButton_clicked()

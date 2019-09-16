@@ -13,11 +13,20 @@ def holdout(dataset, test_percent, train_part, test_part):
     i=1
     for _, line in data:
         if i < trainsize:
-            train_part.write( line )
+            i+=1
+            if train_part != None:
+                train_part.write( line )
         else:
-            test_part.write( line )
-    train_part.close()
-    test_part.close()
+            if test_part != None:
+                test_part.write( line )
+
+    if train_part != None:
+        print("Train part will be ready")
+        train_part.close()
+
+    if test_part != None:
+        print("Test part will be ready")
+        test_part.close()
 
 
 
@@ -36,13 +45,21 @@ if __name__ == "__main__":
         except IOError:
             print("Can't open dataset file. Exit 1")
             sys.exit(1)
-        try:
-            tr_part = open(sys.argv[3], "w");
-        except IOError:
-            tr_part = open(sys.argv[3], "x");
-        try:
-            tst_part = open(sys.argv[4], "w");
-        except IOError:
-            tst_part = open(sys.argv[4], "x");
+            
+        if sys.argv[3] != "null":
+            try:
+                tr_part = open(sys.argv[3], "w");
+            except IOError:
+                tr_part = open(sys.argv[3], "x");
+        else:
+            tr_part = None
+
+        if sys.argv[4] != "null":
+            try:
+                tst_part = open(sys.argv[4], "w");
+            except IOError:
+                tst_part = open(sys.argv[4], "x");
+        else:
+            tst_part = None
         holdout(dataset, test_percent, tr_part, tst_part)
 

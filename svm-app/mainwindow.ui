@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>760</width>
-    <height>501</height>
+    <height>505</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -32,7 +32,7 @@
    <set>QMainWindow::AllowTabbedDocks|QMainWindow::AnimatedDocks</set>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QHBoxLayout" name="horizontalLayout_7">
+   <layout class="QVBoxLayout" name="verticalLayout_8">
     <item>
      <widget class="QSplitter" name="splitter">
       <property name="sizePolicy">
@@ -107,7 +107,7 @@
        </layout>
       </widget>
       <widget class="QWidget" name="layoutWidget">
-       <layout class="QVBoxLayout" name="global_verticalLayout" stretch="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0">
+       <layout class="QVBoxLayout" name="global_verticalLayout" stretch="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0">
         <property name="sizeConstraint">
          <enum>QLayout::SetMinimumSize</enum>
         </property>
@@ -972,7 +972,7 @@
                 <item>
                  <widget class="QLabel" name="bandwidth_label">
                   <property name="enabled">
-                   <bool>false</bool>
+                   <bool>true</bool>
                   </property>
                   <property name="text">
                    <string>Bandwidth</string>
@@ -1187,10 +1187,18 @@
               <item>
                <layout class="QVBoxLayout" name="grid_log2_lineEdits_verticalLayout">
                 <item>
-                 <widget class="QLineEdit" name="grid_log2c_lineEdit"/>
+                 <widget class="QLineEdit" name="grid_log2c_lineEdit">
+                  <property name="toolTip">
+                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;log2c {begin,end,step | &amp;quot;null&amp;quot;} : set the range of c (default -5,15,2)&lt;/p&gt;&lt;p&gt;    begin,end,step -- c_range = 2^{begin,...,begin+k*step,...,end}&lt;/p&gt;&lt;p&gt;    &amp;quot;null&amp;quot;         -- do not grid with c&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  </property>
+                 </widget>
                 </item>
                 <item>
-                 <widget class="QLineEdit" name="grid_log2g_lineEdit"/>
+                 <widget class="QLineEdit" name="grid_log2g_lineEdit">
+                  <property name="toolTip">
+                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;log2g {begin,end,step | &amp;quot;null&amp;quot;} : set the range of g (default 3,-15,-2)&lt;/p&gt;&lt;p&gt;    begin,end,step -- g_range = 2^{begin,...,begin+k*step,...,end}&lt;/p&gt;&lt;p&gt;    &amp;quot;null&amp;quot;         -- do not grid with g&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  </property>
+                 </widget>
                 </item>
                </layout>
               </item>
@@ -1567,36 +1575,110 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="train_pushButton">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>1</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="baseSize">
-           <size>
-            <width>0</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="toolTip">
-           <string>Train model on selected dataset</string>
-          </property>
-          <property name="text">
-           <string>Train Model</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="test_pushButton">
-          <property name="toolTip">
-           <string>Test model on selected test file</string>
-          </property>
-          <property name="text">
-           <string>Test Model</string>
-          </property>
-         </widget>
+         <layout class="QHBoxLayout" name="validation_train_test_horizontalLayout">
+          <item>
+           <layout class="QVBoxLayout" name="validation_verticalLayout">
+            <item>
+             <widget class="QLabel" name="validation_filler_label">
+              <property name="text">
+               <string/>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="validation_horizontalLayout">
+              <item>
+               <widget class="QLabel" name="validation_label">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="text">
+                 <string>Validation</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="validation_lineEdit">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>35</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>20</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="validation_percent_label">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="text">
+                 <string>%</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QVBoxLayout" name="test_train_verticalLayout">
+            <item>
+             <widget class="QPushButton" name="train_pushButton">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>1</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="baseSize">
+               <size>
+                <width>0</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="toolTip">
+               <string>Train model on selected dataset</string>
+              </property>
+              <property name="text">
+               <string>Train Model</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="test_pushButton">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="toolTip">
+               <string>Test model on selected test file</string>
+              </property>
+              <property name="text">
+               <string>Test Model</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
         </item>
         <item>
          <spacer name="global_verticalSpacer">
@@ -1638,7 +1720,6 @@
   <tabstop>kernel_comboBox</tabstop>
   <tabstop>shrinking_checkBox</tabstop>
   <tabstop>prob_checkBox</tabstop>
-  <tabstop>train_pushButton</tabstop>
  </tabstops>
  <resources/>
  <connections>
