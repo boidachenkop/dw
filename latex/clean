@@ -1,0 +1,3 @@
+#! /bin/bash
+
+rm -f `ls -l | grep -v *.tex | grep -v img | grep -v clean | awk '{print $9}'`

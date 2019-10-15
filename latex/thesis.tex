@@ -1,0 +1,176 @@
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[paper=a4, fontsize=11pt]{scrartcl} % A4 paper and 11pt font size
+\usepackage[a4paper, left=2.5cm, right=2cm, top=2cm, bottom=2cm]{geometry}
+\linespread{1.2}
+
+\usepackage[utf8]{inputenc}
+\addtokomafont{disposition}{\rmfamily}
+\usepackage{polski} % Język polski/hyphenation
+\usepackage{amsmath,amsfonts,amsthm} % Math packages
+\usepackage{physics}
+\usepackage{marvosym}
+\usepackage{wasysym}
+\usepackage{indentfirst}
+\usepackage{graphicx}
+\usepackage{caption}
+
+
+
+
+\def \nazwa {Praca licencjacka - Aplikacja uczenia maszynowego metodą SVM\\ \textbf{BRUDNOPIS}}
+\def \autor {Pavlo Boidachenko}
+
+
+
+
+\usepackage{lipsum} % Used for inserting dummy 'Lorem ipsum' text into the template
+
+\usepackage{sectsty} % Allows customizing section commands
+%\allsections{\mdseries\itshape} % Make all sections centered, the default font and small caps
+
+\usepackage{fancyhdr} % Custom headers and footers
+\pagestyle{fancy} % Makes all pages in the document conform to the custom headers and footers
+\fancyhead[L]{\textbf{Praca licencjacka:} Aplikacja uczenia maszynowego metodą SVM} % No page header - if you want one, create it in the same way as the footers below
+\fancyhead[C]{}
+\fancyhead[R]{}
+\fancyfoot[L]{\autor} % left footer
+\fancyfoot[C]{\thepage} % center footer
+\fancyfoot[R]{} % right footer
+\renewcommand{\headrulewidth}{0.3pt} % Remove header underlines
+\renewcommand{\footrulewidth}{0.3pt} % Remove footer underlines
+\setlength{\headheight}{14.06pt} % Customize the height of the header
+
+\usepackage[style=alphabetic,sorting=nyt,sortcites=true,autopunct=true,babel=hyphen,hyperref=true,abbreviate=false,backref=true,backend=biber]{biblatex}
+
+
+\numberwithin{equation}{section} % Number equations within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+\numberwithin{figure}{section} % Number figures within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+\renewcommand{\thetable}{\Roman{table}}
+
+\setlength\parindent{10pt} % Removes all indentation from paragraphs - comment this line for an assignment with lots of text
+
+\newcommand{\horrule}[1]{\rule{\linewidth}{#1}} % Create horizontal rule command with 1 argument of height
+
+%Other packages
+\usepackage{multirow}
+\usepackage{url}
+\usepackage{bm}
+\usepackage{xcolor}
+\definecolor{Black}{RGB}{0,0,0}
+\definecolor{Red}{RGB}{255,0,0}
+\definecolor{Blue}{RGB}{0,0,255}
+\definecolor{Green}{RGB}{0,255,0}
+\definecolor{Gray}{RGB}{45,45,45}
+\definecolor{linkcol}{RGB}{57,0,155}
+\usepackage[unicode, pdftex, colorlinks=true, urlcolor=Gray, linkcolor=Gray, citecolor=Gray]{hyperref}
+
+\usepackage{tocloft}
+\renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}}
+
+\title{	
+\normalfont \normalsize 
+Uniwersytet Jagielloński\\Wydział Fizyki, Astronomii i Informatyki Stosowanej\\Instytut - Obserwatorium Astronomiczne \\ [20pt] % Your university, school and/or department name(s)
+\horrule{0.5pt} \\[0.4cm] % Thin top horizontal rule
+\Large Pracownia astronomii praktycznej \\  \nazwa \\
+\horrule{2pt} \\[0.5cm] % Thick bottom horizontal rule
+}
+
+\author{\autor\\} % Your name
+
+\date{\data} % Today's date or a custom date
+
+\begin{document}
+\thispagestyle{empty}
+\begin{titlepage}
+    \begin{center}
+
+           \Large
+	\textbf{Uniwersytet Jagielloński w Krakowie}\vspace{0.2cm}\\ Wydział Fizyki, Astronomii i Informatyki Stosowanej
+               \vspace*{1cm}
+               
+         \vspace{3cm}
+         \Large
+          \textbf{Pavlo Boidachenko}\\\vspace{0.5cm}
+         \normalsize Nr albumu: 1124969\\
+             \vspace{2cm}
+        \Huge
+        \textbf{Aplikacja uczenia maszynowego metodą SVM}
+      
+        \vspace{1.5cm}
+        \normalsize
+        Praca licencjacka\\
+        na kierunku informatyki\\ \vspace{0.15cm}
+        
+        \vfill
+        \vspace{2cm}
+       \begin{minipage}{1\textwidth}
+\begin{flushright}
+Praca wykonana pod kierunkiem\\
+dr Grzegorz Surówka\\
+\end{flushright}
+\end{minipage}
+        
+        \vspace{2cm}
+        \begin{center}
+      Kraków 2019
+        \end{center}
+    \end{center}
+\end{titlepage}
+
+\newpage 
+ \thispagestyle{empty}
+\vspace{2.5cm}
+\begin{flushleft}
+\large \textbf{Oświadczenie autora pracy}\vspace{0.6cm}\\
+\end{flushleft}
+
+\noindent Świadom odpowiedzialności prawnej oświadczam, że niniejsza praca dyplomowa została napisana przeze mnie samodzielnie i nie zawiera treści uzyskanych w sposób niezgodny z obowiązującymi przepisami.\\
+
+\noindent Oświadczam również, że przedstawiona praca nie była wcześniej przedmiotem procedur związanych z uzyskaniem tytułu zawodowego w wyższej uczelni.
+\vspace{2cm}
+\begin{center}
+    \begin{tabular}{lr}
+        ................................~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~&
+        .......................................... \\
+        {~~~~Kraków, dnia} & {Podpis autora pracy~~~~}
+    \end{tabular}
+\end{center}
+\vspace{5cm}
+\begin{flushleft}
+    \large \textbf{Oświadczenie kierującego pracą}
+\end{flushleft}
+
+\noindent Potwierdzam, że niniejsza praca została przygotowana pod moim kierunkiem i~kwalifikuje się do przedstawienia jej w postępowaniu o nadanie tytułu zawodowego.
+\vspace{2cm}
+\begin{center}
+    \begin{tabular}{lr}
+        ................................~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~&
+        ............................................ \\
+        {~~~~Kraków, dnia} & {Podpis kierującego pracą~~}
+    \end{tabular}
+\end{center}
+\vfill
+\newpage
+\tableofcontents
+\newpage
+\section{Wstęp}
+\subsection{Motywacja}
+\subsection{Cel}
+\subsection{Zakres}
+\section{Metoda klasyfikacji SVM}
+\subsection{Opis}
+\subsection{C-SVM}
+\subsection{$\mu$-SVM}
+\subsection{Kernel}
+\section{Projekt aplikacji}
+\subsection{Opis}
+\subsection{Technologie}
+\subsection{}
+\section{Podsumowanie}
+\subsection{Odniesienie do celu pracy}
+\subsection{Co można dodać}
+
+\end{document}
