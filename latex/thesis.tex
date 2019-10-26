@@ -138,15 +138,17 @@
     \end{tabular}
 \end{center}
 \vfill
+
 \newpage
 \tableofcontents
-\newpage
 
+\newpage
 \section{Wstęp} % SECTION
 \subsection{Motywacja}
     \par W aktualne czasy temat Uczenia Maszynowego jest popularny\ref{fig:google-trends-ml} jak nigdy do tego. 
     Projekty z użyciem Uczenia Maszynowego pozwalają na tworzenie aplikacji które
     jeszcze 10 lat temu trudno było wyobrazić.
+
 \begin{figure}[h]
     \begin{center}
         \includegraphics[scale=0.5]{./img/google-trends-ml.png}
@@ -154,10 +156,12 @@
         \label{fig:google-trends-ml}
     \end{center}
 \end{figure}
+
     \par Rozpowszechnienie Uczenia Maszynowego również spowodowało i moje zainteresowanie tematem.
     Z tego powodu dla swojej pracy licencjackiej wybrałem temat: Aplikacja uczenia maszynowego 
     metodą SVM.  Po zakończeniu pracy spodziewam się podwyższyć swoją kompetencje w dziale 
     Uczenia Maszynowego.
+
 \subsection{Cel}
     \par Celem mojej pracy licencjackiej jest stworzenie oprogramowania pozwalającego na generowanie
     modeli używając Maszyny wektorów nośnych\textit{(ang. Support Vector Machine, SVM)} z graficznym 
@@ -165,22 +169,39 @@
     modeli, przetestować ich dla różnych parametrów, zwizualizować dane. Program ma na celu ułatwienie
     pracę z Maszyną wektorów nośnych poprzez graficzny interfejs użytkownika
     oparty na bibliotekę QT. Część funkcjonalna programu jest oparta o bibliotekę LIBSVM\cite{CC01a}.
+
 \subsection{Zakres}
     Program powinien móc ustawiać parametry dla wybranej metody oraz jądra\textit(ang. kernel), 
     generować wykresy podawanych zbiorów danych, interpretować różne formaty zbiorów danych, 
     wykonywać Sprawdzian krzyżowy (ang. Cross validation, CV), mieć metodę do optymalizacji 
     parametrów, pokazywać wyniki trenowania oraz testowania modeli.
-    \newpage
+\newpage
+
 \section{Metoda klasyfikacji SVM} % SECTION
 \subsection{Opis}
     \par Swój program napisałem w oparciu o bibliotekę LIBSVM\cite{CC01a}. Maszyna Wektorów
     Nośnych(ang. Support Vector Machine. SVM) - klasyfikator, nauka którego ma na celu 
     wyznaczenie hiperpłaszczyzny rozdzielającej dwie klasy z maksymalnym marginesem. 
-    LIBSVM implementuje pięć typów Maszyny Wektorów Nośnych: C-SVC, $\mu$-SVC, One class SVM,
-    $\epsilon$-SVR, $\mu$-SVR.
+    Zaletą takiego klasyfikatora jest to że po uczeniu margines mówi jak dobrze są 
+    odseparowane klasy. LIBSVM implementuje pięć typów Maszyny Wektorów Nośnych: C-SVC, 
+    $\nu$-SVC, One class SVM, $\epsilon$-SVR, $\nu$-SVR.
 \subsection{C-SVC}
-    \par C-Support Vector Classification
-\subsection{$\mu$-SVM}
+    \par C-Support Vector Classification - rodzaj klasyfikatora używający $C$ jako 
+    parametr regularyzacji. Jeśli jest dany wektor $x_i \in R^n$, $i=1,...,l$ %TODO: https://medium.com/@pushkarmandot/what-is-the-significance-of-c-value-in-support-vector-machine-28224e852c5a
+    w dwóch klasach i wektor etykiet $y_i \in {1, -1}$ to C-SVC rozwiązuję tak
+    sformułowany problem:
+
+    \begin{center}
+        \begin{tabular}{rc}
+            $\min\limits_{\omega, b, \varepsilon}$ & $\frac{1}{2} \omega ^T \omega +
+            C \sum\limits_{i=1}^{l}\varepsilon_i$ \\
+            Z zastrzeżeniem że & $y_i(\omega^T\phi(x_i) + b) \geq 1 - \varepsilon_i$ \\
+                               & $\varepsilon_i \geq 0,i=1,...,l$
+        \end{tabular}
+    \end{center}
+
+\subsection{$\nu$-SVM}
+    \par $\nu$-Support Vector Classification  % TODO: find in internet
 \subsection{Kernel}
 \newpage
 \section{Projekt aplikacji} % SECTION
