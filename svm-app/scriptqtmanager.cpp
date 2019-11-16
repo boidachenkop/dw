@@ -6,7 +6,6 @@
 #include <sstream>
 
 #include "loadingindicator.h"
-#include "gnuplot_i.hpp"
 #include "scriptqtmanager.h"
 
 int ScriptQtManager::runCheckData(QString filepath)
