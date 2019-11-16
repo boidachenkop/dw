@@ -28,6 +28,9 @@ public:
     int getNLines();
     bool isTrainOK(){ return _trainFileOK; }
     bool isTestOK(){ return _testFileOK; }
+    bool isModelFileReady(){ return _modelFileReady; }
+
+    void setModelFileReady(bool ready){ _modelFileReady = ready; }
 signals:
     void updateTrainNFeatures(QString);
     void updateTrainNClasses(QString);
@@ -39,6 +42,7 @@ signals:
     void updateTrainInputFilepath(QString, bool);
     void updateTestInputFilepath(QString, bool);
     void updateModelFilepath(QString);
+    void updateModelReady(bool);
 
 private:
     int parseFile(QString filepath);
@@ -46,6 +50,7 @@ private:
 
     bool _trainFileOK{true};
     bool _testFileOK{true};
+    bool _modelFileReady{false};
 
     QString _train_input_filepath{};
     QString _test_input_filepath{};

@@ -127,7 +127,6 @@ class LibsvmPlot:
                 y = [item[1] for item in self.__points[key]]
                 z = [item[2] for item in self.__points[key]]
                 ax.scatter(x, y, z, s=2)
-                colorn+=1
         else:
             print("Unsupported number of features");
             sys.exit(1)

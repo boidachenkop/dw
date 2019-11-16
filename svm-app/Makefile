@@ -81,7 +81,9 @@ OBJECTS       = main.o \
 		moc_availabilityhandler.o \
 		moc_filemanager.o \
 		moc_outputhandler.o
-DIST          = svm-train.c \
+DIST          = plotter.py \
+		svm-train.c \
+		svm-predict.c \
 		checkdata.py \
 		f_select.py \
 		grid.py \
@@ -98,6 +100,7 @@ DIST          = svm-train.c \
 		/usr/lib/qt/mkspecs/common/g++-unix.conf \
 		/usr/lib/qt/mkspecs/qconfig.pri \
 		/usr/lib/qt/mkspecs/modules/qt_KSyntaxHighlighting.pri \
+		/usr/lib/qt/mkspecs/modules/qt_KWindowSystem.pri \
 		/usr/lib/qt/mkspecs/modules/qt_lib_accessibility_support_private.pri \
 		/usr/lib/qt/mkspecs/modules/qt_lib_bootstrap_private.pri \
 		/usr/lib/qt/mkspecs/modules/qt_lib_concurrent.pri \
@@ -184,6 +187,8 @@ DIST          = svm-train.c \
 		/usr/lib/qt/mkspecs/modules/qt_lib_webenginewidgets_private.pri \
 		/usr/lib/qt/mkspecs/modules/qt_lib_widgets.pri \
 		/usr/lib/qt/mkspecs/modules/qt_lib_widgets_private.pri \
+		/usr/lib/qt/mkspecs/modules/qt_lib_x11extras.pri \
+		/usr/lib/qt/mkspecs/modules/qt_lib_x11extras_private.pri \
 		/usr/lib/qt/mkspecs/modules/qt_lib_xcb_qpa_lib_private.pri \
 		/usr/lib/qt/mkspecs/modules/qt_lib_xkbcommon_support_private.pri \
 		/usr/lib/qt/mkspecs/modules/qt_lib_xml.pri \
@@ -252,6 +257,7 @@ Makefile: svm-app.pro /usr/lib/qt/mkspecs/linux-g++/qmake.conf /usr/lib/qt/mkspe
 		/usr/lib/qt/mkspecs/common/g++-unix.conf \
 		/usr/lib/qt/mkspecs/qconfig.pri \
 		/usr/lib/qt/mkspecs/modules/qt_KSyntaxHighlighting.pri \
+		/usr/lib/qt/mkspecs/modules/qt_KWindowSystem.pri \
 		/usr/lib/qt/mkspecs/modules/qt_lib_accessibility_support_private.pri \
 		/usr/lib/qt/mkspecs/modules/qt_lib_bootstrap_private.pri \
 		/usr/lib/qt/mkspecs/modules/qt_lib_concurrent.pri \
@@ -338,6 +344,8 @@ Makefile: svm-app.pro /usr/lib/qt/mkspecs/linux-g++/qmake.conf /usr/lib/qt/mkspe
 		/usr/lib/qt/mkspecs/modules/qt_lib_webenginewidgets_private.pri \
 		/usr/lib/qt/mkspecs/modules/qt_lib_widgets.pri \
 		/usr/lib/qt/mkspecs/modules/qt_lib_widgets_private.pri \
+		/usr/lib/qt/mkspecs/modules/qt_lib_x11extras.pri \
+		/usr/lib/qt/mkspecs/modules/qt_lib_x11extras_private.pri \
 		/usr/lib/qt/mkspecs/modules/qt_lib_xcb_qpa_lib_private.pri \
 		/usr/lib/qt/mkspecs/modules/qt_lib_xkbcommon_support_private.pri \
 		/usr/lib/qt/mkspecs/modules/qt_lib_xml.pri \
@@ -379,6 +387,7 @@ Makefile: svm-app.pro /usr/lib/qt/mkspecs/linux-g++/qmake.conf /usr/lib/qt/mkspe
 /usr/lib/qt/mkspecs/common/g++-unix.conf:
 /usr/lib/qt/mkspecs/qconfig.pri:
 /usr/lib/qt/mkspecs/modules/qt_KSyntaxHighlighting.pri:
+/usr/lib/qt/mkspecs/modules/qt_KWindowSystem.pri:
 /usr/lib/qt/mkspecs/modules/qt_lib_accessibility_support_private.pri:
 /usr/lib/qt/mkspecs/modules/qt_lib_bootstrap_private.pri:
 /usr/lib/qt/mkspecs/modules/qt_lib_concurrent.pri:
@@ -465,6 +474,8 @@ Makefile: svm-app.pro /usr/lib/qt/mkspecs/linux-g++/qmake.conf /usr/lib/qt/mkspe
 /usr/lib/qt/mkspecs/modules/qt_lib_webenginewidgets_private.pri:
 /usr/lib/qt/mkspecs/modules/qt_lib_widgets.pri:
 /usr/lib/qt/mkspecs/modules/qt_lib_widgets_private.pri:
+/usr/lib/qt/mkspecs/modules/qt_lib_x11extras.pri:
+/usr/lib/qt/mkspecs/modules/qt_lib_x11extras_private.pri:
 /usr/lib/qt/mkspecs/modules/qt_lib_xcb_qpa_lib_private.pri:
 /usr/lib/qt/mkspecs/modules/qt_lib_xkbcommon_support_private.pri:
 /usr/lib/qt/mkspecs/modules/qt_lib_xml.pri:
@@ -560,6 +571,7 @@ compiler_moc_header_make_all: moc_mainwindow.cpp moc_availabilityhandler.cpp moc
 compiler_moc_header_clean:
 	-$(DEL_FILE) moc_mainwindow.cpp moc_availabilityhandler.cpp moc_filemanager.cpp moc_outputhandler.cpp
 moc_mainwindow.cpp: mainwindow.h \
+		loadingindicator.h \
 		svmcontroller.h \
 		svm.h \
 		availabilityhandler.h \
@@ -607,6 +619,7 @@ compiler_clean: compiler_rcc_clean compiler_moc_predefs_clean compiler_moc_heade
 ####### Compile
 
 main.o: main.cpp mainwindow.h \
+		loadingindicator.h \
 		svmcontroller.h \
 		svm.h \
 		availabilityhandler.h \

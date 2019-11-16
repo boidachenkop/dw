@@ -97,7 +97,7 @@
             \begin{flushright}
                 Praca wykonana pod kierunkiem\\
                 dr Grzegorz Surówka\\
-                Department of Information Technologies
+                Zakład Technologii Informatycznych 
             \end{flushright}
         \end{minipage}
         \vspace{2cm}
@@ -167,10 +167,10 @@
 
 \subsection{Cel}
     \par Celem mojej pracy licencjackiej jest stworzenie oprogramowania pozwalającego na generowanie
-    modeli używając Maszyny wektorów nośnych\textit{(ang. Support Vector Machine, SVM)} z graficznym 
+    modeli używając Maszyny wektorów wspierających\textit{(ang. Support Vector Machine, SVM)} z graficznym 
     interfejsem użytkownika.  Program będą mogli użyć osoby potrzebujące szybko przetrenować kilka 
     modeli, przetestować ich dla różnych parametrów, zwizualizować dane. Program ma na celu ułatwienie
-    pracę z Maszyną wektorów nośnych poprzez graficzny interfejs użytkownika
+    pracę z Maszyną wektorów wspierających poprzez graficzny interfejs użytkownika
     oparty na bibliotekę QT. Część funkcjonalna programu jest oparta o bibliotekę LIBSVM\cite{CC01a}.
 
 \subsection{Zakres}
@@ -181,15 +181,15 @@
 \newpage
 
 \section{Metoda klasyfikacji SVM} % SECTION
-    \par W tym paragrafie w ogólnych zarysach jest opisana Maszyna Wektorów Nośnych
+    \par W tym paragrafie w ogólnych zarysach jest opisana Maszyna Wektorów Wspierających
     oraz jej typy zaimplementowane w LIBSVM. Również będą krótkie opisy zaimplementowanych
     jąder.
 \subsection{Opis}
     \par Swój program napisałem w oparciu o bibliotekę LIBSVM\cite{CC01a}. Maszyna Wektorów
-    Nośnych(ang. Support Vector Machine. SVM) - klasyfikator, nauka którego ma na celu 
+    Wspierajacych(ang. Support Vector Machine. SVM) - klasyfikator, nauka którego ma na celu 
     wyznaczenie hiperpłaszczyzny rozdzielającej dwie klasy z maksymalnym marginesem. 
     Zaletą takiego klasyfikatora jest to że po uczeniu margines mówi jak dobrze są 
-    odseparowane klasy. LIBSVM implementuje pięć typów Maszyny Wektorów Nośnych: C-SVC, 
+    odseparowane klasy. LIBSVM implementuje pięć typów Maszyny Wektorów Wspierajacych C-SVC, 
     $\nu$-SVC, One class SVM, $\epsilon$-SVR, $\nu$-SVR.
 \subsection{C-SVC}
     \par C-Support Vector Classification - rodzaj klasyfikatora używający $C$ jako 
@@ -219,9 +219,8 @@
 
     \par Dobry model dobrze separuję dane i razem z tym ma duży margines. Natomiast w
     w rzeczywistości jedno wyłącza drugie: duży margines włącza punkty z dwóch klas, a
-    dobre separowanie może powodować nadmierne dopasowanie(ang. Overfitting). Nadmierne
-    dopasowanie może skutkować tym że model jest dobry na danych treningowych ale jest
-    zły na danych testowych.
+    dobre separowanie może powodować przeuczanie(ang. Overfitting). Przeuczanie może 
+    skutkować tym że model jest dobry na danych treningowych ale jest zły na danych testowych.
 
 \newpage % description and equations was on different pages
 \subsection{$\nu$-SVM}
@@ -243,7 +242,7 @@
         \end{tabular}
     \end{center}
 
-\section{One-class SVM}
+\subsection{One-class SVM}
     \par One-class Support Vector Machine - rodzaj klasyfikatora uczenia
     nienadzorowanego, które zakłada brak etykiet w danych uczących. Ma na celu
     znalezienie niewiadomych wzorców/anomalii(klastrów) w danych wejściowych.  
@@ -270,7 +269,7 @@
     \end{center}
 
 \newpage
-\section{$\epsilon$-SVR}
+\subsection{$\epsilon$-SVR}
     \par Jeśli wektor etykiet $y_i \in R$ to jest używana metoda regresji.
     $\epsilon$-Support Vector Classification -  używa $C$ i $\epsilon$ jako
     parametrów regularyzacji. Celem jest znalezienie takiej funkcji $f(x)$
@@ -293,7 +292,7 @@
         \end{tabular}
     \end{center}
 
-\section{$\nu$-SVR}
+\subsection{$\nu$-SVR}
     \par $\nu$-Support Vector Regression - podobnie do $\nu$-SVC, używa parameter $\nu\in(0,1]$
     dla kontroli liczby wektorów wspierających. Również używa parametru $\epsilon$. Z parametrami
     $(C,\nu)$ $\nu$-SVR rozwiązuję:
@@ -312,6 +311,7 @@
     \end{center}
 
 \subsection{Jądra}
+    \par 
 \newpage
 \section{Projekt aplikacji} % SECTION
 \subsection{Opis}

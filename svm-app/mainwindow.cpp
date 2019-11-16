@@ -46,6 +46,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(file_manager, &FileManager::updateTestNLines, ui->test_rows_label, &QLabel::setText);
     connect(file_manager, &FileManager::updateTestNClasses, ui->test_classes_label, &QLabel::setText);
     connect(file_manager, &FileManager::updateTestNFeatures, ui->test_features_label, &QLabel::setText);
+    connect(file_manager, &FileManager::updateModelReady, ui->showModel_checkBox, &QCheckBox::setEnabled);
     connect(file_manager, &FileManager::updateTrainInputFilepath, this, &MainWindow::updateTrainFilepathLabel);
     connect(file_manager, &FileManager::updateTestInputFilepath, this, &MainWindow::updateTestFilepathLabel);
     connect(file_manager, &FileManager::updateModelFilepath, this, &MainWindow::updateModelFilepathLabel);
@@ -259,6 +260,7 @@ void MainWindow::on_train_pushButton_clicked()
         svm->readProblem();
         svm->trainModel();
    }
+   file_manager->updateModelReady(true);
 }
 
 void MainWindow::on_test_pushButton_clicked()
@@ -284,6 +286,7 @@ void MainWindow::on_test_pushButton_clicked()
     }else{
         ui->validation_lineEdit->setStyleSheet("border-style: outset; border-width: 1px; border-color: red;");
     }
+
 }
 
 void MainWindow::on_scale_toolButton_clicked()
@@ -336,8 +339,9 @@ void MainWindow::on_visualize_pushButton_clicked()
     double bandwidth = QString(ui->bandwidth_lineEdit->text()).toDouble(&ok);
     if(ok){
         ui->bandwidth_lineEdit->setStyleSheet("border-color: black;");
-        rm_tmp_plot_cmd += ScriptQtManager::runPlot(file_manager,
+        ScriptQtManager::runPlot(file_manager,
                                  ui->densityPlot_checkBox->isChecked(),
+                                 ui->showModel_checkBox->isChecked(),
                                  bandwidth);
     }else{
         ui->bandwidth_lineEdit->setStyleSheet("border-style: outset; border-width: 1px; border-color: red;");
@@ -392,6 +396,11 @@ void MainWindow::on_select_pushButton_clicked()
         ScriptQtManager::runFeatureSelection(file_manager->getTestFilepath(), file_manager->getNFeatures(), ui->pattern_lineEdit->text());
 
         file_manager->setDatasetFilepath(file_manager->getTestFilepath() + ".fselected", file_manager->TEST);
+    }
+    if(file_manager->getNFeatures() <= 3){
+        availability_handler->visualizationTabEnabled(true);
+    }else{
+        availability_handler->visualizationTabEnabled(false);
     }
 }
 

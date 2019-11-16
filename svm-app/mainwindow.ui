@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>760</width>
-    <height>505</height>
+    <height>498</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -32,7 +32,7 @@
    <set>QMainWindow::AllowTabbedDocks|QMainWindow::AnimatedDocks</set>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QVBoxLayout" name="verticalLayout_8">
+   <layout class="QVBoxLayout" name="verticalLayout_6">
     <item>
      <widget class="QSplitter" name="splitter">
       <property name="sizePolicy">
@@ -533,7 +533,7 @@
            </sizepolicy>
           </property>
           <property name="currentIndex">
-           <number>5</number>
+           <number>2</number>
           </property>
           <widget class="QWidget" name="crossValidation_tab">
            <attribute name="title">
@@ -958,14 +958,25 @@
             <item>
              <layout class="QVBoxLayout" name="density_verticalLayout">
               <item>
-               <widget class="QCheckBox" name="densityPlot_checkBox">
-                <property name="toolTip">
-                 <string>1d and 2d only</string>
-                </property>
-                <property name="text">
-                 <string>Show Density</string>
-                </property>
-               </widget>
+               <layout class="QHBoxLayout" name="model_density_horizontalLayout">
+                <item>
+                 <widget class="QCheckBox" name="densityPlot_checkBox">
+                  <property name="toolTip">
+                   <string>1d and 2d only</string>
+                  </property>
+                  <property name="text">
+                   <string>Show Density</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="showModel_checkBox">
+                  <property name="text">
+                   <string>Show Model</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
               </item>
               <item>
                <layout class="QHBoxLayout" name="bandwidth_horizontalLayout">
@@ -985,7 +996,7 @@
                 <item>
                  <widget class="QLineEdit" name="bandwidth_lineEdit">
                   <property name="text">
-                   <string>0.1</string>
+                   <string>0.01</string>
                   </property>
                  </widget>
                 </item>
@@ -1708,7 +1719,7 @@
      <x>0</x>
      <y>0</y>
      <width>760</width>
-     <height>18</height>
+     <height>17</height>
     </rect>
    </property>
   </widget>
