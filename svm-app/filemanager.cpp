@@ -1,5 +1,6 @@
 #include <QLabel>
 #include <QLineEdit>
+#include <QFileInfo>
 #include <string>
 #include <cstring>
 #include <fstream>
@@ -11,6 +12,18 @@
 
 FileManager::FileManager()
 {
+    std::string path;
+    std::ifstream in("/tmp/svmapp-lop");
+    if(!in.fail()){
+        in>>path;
+    }
+    _lastOpenedPath = QString::fromStdString(path);
+}
+
+FileManager::~FileManager()
+{
+    std::ofstream out("/tmp/svmapp-lop");
+    out<<_lastOpenedPath.toStdString();
 }
 
 int FileManager::setDatasetFilepath(QString filepath, DATASET_TYPE type)
@@ -44,6 +57,7 @@ int FileManager::setDatasetFilepath(QString filepath, DATASET_TYPE type)
                 emit updateTestNClasses(QString::number(getNClasses()));
                 emit updateTestNFeatures(QString::number(_train_n_features));
             }
+            setLastOpenedPath(filepath);
             return 0;
         }else{
             if(type == TRAIN){
@@ -101,6 +115,11 @@ QString FileManager::getModelFilepath()
     return _model_filepath;
 }
 
+QString FileManager::getLastOpenedPath()
+{
+    return _lastOpenedPath;
+}
+
 std::vector<std::string> FileManager::getLabels()
 {
     return std::vector<std::string>(_labels.begin(), _labels.end());
@@ -118,6 +137,14 @@ int FileManager::getNFeatures()
 
 int FileManager::getNLines(){
     return _n_lines;
+}
+
+void FileManager::setLastOpenedPath(QString lop)
+{
+    QFileInfo f(lop);
+    _lastOpenedPath =  f.absolutePath();
+    std::ofstream out("/tmp/svmapp-lop");
+    out<<_lastOpenedPath.toStdString();
 }
 
 

@@ -53,6 +53,8 @@ private slots:
 
     void on_grid_pushButton_clicked();
 
+    void on_genData_toolButton_clicked();
+
 private:
     int parseParameters();
     void setDefaultSVMParams();

@@ -1,3 +1,2 @@
-gnuplot
-python3 : numpy scipy
+python3 : numpy scipy matplotlib
 qt

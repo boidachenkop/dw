@@ -225,7 +225,6 @@ DIST          = plotter.py \
 		svmcontroller.h \
 		svm.h \
 		svmscale.h \
-		gnuplot_i.hpp \
 		outputhandler.h main.cpp \
 		availabilityhandler.cpp \
 		filemanager.cpp \
@@ -522,7 +521,7 @@ distdir: FORCE
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents res.qrc $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/qt/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents mainwindow.h availabilityhandler.h filemanager.h loadingindicator.h scriptqtmanager.h svmcontroller.h svm.h svmscale.h gnuplot_i.hpp outputhandler.h $(DISTDIR)/
+	$(COPY_FILE) --parents mainwindow.h availabilityhandler.h filemanager.h loadingindicator.h scriptqtmanager.h svmcontroller.h svm.h svmscale.h outputhandler.h $(DISTDIR)/
 	$(COPY_FILE) --parents main.cpp availabilityhandler.cpp filemanager.cpp loadingindicator.cpp mainwindow.cpp scriptqtmanager.cpp svmcontroller.cpp svm.cpp svmscale.cpp outputhandler.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents mainwindow.ui $(DISTDIR)/
 
@@ -651,7 +650,6 @@ mainwindow.o: mainwindow.cpp loadingindicator.h \
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o mainwindow.cpp
 
 scriptqtmanager.o: scriptqtmanager.cpp loadingindicator.h \
-		gnuplot_i.hpp \
 		scriptqtmanager.h \
 		filemanager.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o scriptqtmanager.o scriptqtmanager.cpp

@@ -200,7 +200,7 @@ void MainWindow::setDefaultSVMParams(){
 
 void MainWindow::on_chooseDataset_toolButton_clicked()
 {
-    QString path = QFileDialog::getOpenFileName(this, "Choose train dataset", "/home/pavlo/Desktop/pr/dw/datasets");
+    QString path = QFileDialog::getOpenFileName(this, "Choose train dataset", file_manager->getLastOpenedPath());
     if(file_manager->setDatasetFilepath(path, file_manager->TRAIN) == 0){
         availability_handler->
                 trainButtonEnabled(true)
@@ -232,7 +232,7 @@ void MainWindow::on_chooseDataset_toolButton_clicked()
 
 void MainWindow::on_choose_tstFile_toolButton_clicked()
 {
-    QString path = QFileDialog::getOpenFileName(this, "Choose test dataset", "/home/pavlo/Desktop/pr/dw/datasets");
+    QString path = QFileDialog::getOpenFileName(this, "Choose test dataset", file_manager->getLastOpenedPath());
     if(file_manager->setDatasetFilepath(path, file_manager->TEST) == 0){
         availability_handler->testButtonEnabled(true)
                 .testInfoLabelsVisible(true)
@@ -246,7 +246,7 @@ void MainWindow::on_choose_tstFile_toolButton_clicked()
 
 void MainWindow::on_modelFile_toolButton_clicked()
 {
-    QString path = QFileDialog::getSaveFileName(this, "Save model", "/Users/pavlo/Desktop/pr/dw/datasets");
+    QString path = QFileDialog::getSaveFileName(this, "Save model", file_manager->getLastOpenedPath());
     if(file_manager->setModelFilepath(path) == -1){
        printf("Model file is not set!");
     }else{
@@ -551,9 +551,7 @@ void MainWindow::on_grid_pushButton_clicked()
                                    ui->grid_anim_checkBox->isChecked());
 }
 
+void MainWindow::on_genData_toolButton_clicked()
+{
 
-
-
-
-
-
+}

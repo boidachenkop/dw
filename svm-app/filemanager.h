@@ -12,7 +12,7 @@ class FileManager : public QObject
     Q_OBJECT
 public:
     FileManager();
-    virtual ~FileManager(){}
+    virtual ~FileManager();
 
     enum DATASET_TYPE{TRAIN, TEST};
 
@@ -22,15 +22,15 @@ public:
     QString getTrainFilepath();
     QString getTestFilepath();
     QString getModelFilepath();
+    QString getLastOpenedPath();
     std::vector<std::string> getLabels();
     int getNClasses();
     int getNFeatures();
     int getNLines();
     bool isTrainOK(){ return _trainFileOK; }
     bool isTestOK(){ return _testFileOK; }
-    bool isModelFileReady(){ return _modelFileReady; }
 
-    void setModelFileReady(bool ready){ _modelFileReady = ready; }
+    void setLastOpenedPath(QString lop);
 signals:
     void updateTrainNFeatures(QString);
     void updateTrainNClasses(QString);
@@ -50,11 +50,11 @@ private:
 
     bool _trainFileOK{true};
     bool _testFileOK{true};
-    bool _modelFileReady{false};
 
     QString _train_input_filepath{};
     QString _test_input_filepath{};
     QString _model_filepath{};
+    QString _lastOpenedPath;
 
     int _train_n_features{-1};
     int _test_n_features{-1};
