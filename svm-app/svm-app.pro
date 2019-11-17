@@ -55,6 +55,7 @@ OTHER_FILES += \
 
 DISTFILES += \
     plotter.py \
+    pointsgen.py \
     svm-train.c \
     svm-predict.c \
     checkdata.py \
@@ -65,7 +66,7 @@ DISTFILES += \
     convert2svm.py
 
 #copy python scripts
-copydata.commands = $(COPY_DIR) $$PWD/checkdata.py $$PWD/f_select.py $$PWD/h4c.py $$PWD/h4r.py $$PWD/convert2svm.py $$PWD/grid.py $$PWD/svm-train.c $$PWD/svm-predict.c $$PWD/$$OUT_PWD
+copydata.commands = $(COPY_DIR) $$PWD/checkdata.py $$PWD/f_select.py $$PWD/h4c.py $$PWD/h4r.py $$PWD/convert2svm.py $$PWD/grid.py $$PWD/svm-train.c $$PWD/svm-predict.c $$PWD/pointsgen.py $$PWD/$$OUT_PWD
 #first.depends = $(first) copydata
 #export(first.depends)
 #export(copydata.commands)

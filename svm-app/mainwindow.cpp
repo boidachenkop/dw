@@ -553,5 +553,31 @@ void MainWindow::on_grid_pushButton_clicked()
 
 void MainWindow::on_genData_toolButton_clicked()
 {
-
+    QString path = QFileDialog::getSaveFileName(this, "Save data", file_manager->getLastOpenedPath());
+    if(!path.isEmpty()){
+        int exitCode = ScriptQtManager::runGenerateData(path);
+        if(exitCode == 0){
+            file_manager->setDatasetFilepath(path, FileManager::TRAIN);
+            availability_handler->
+                    trainButtonEnabled(true)
+                    .scalingTabEnabled(true)
+                    .featureSelectionTabEnabled(true)
+                    .cvTabEnabled(true)
+                    .gridSearchTabEnabled(true)
+                    .trainInfoLabelsVisible(true)
+                    .convertTabEnabled(file_manager->isTestOK() ? false : true);
+            if(file_manager->getNFeatures() <= 3){
+                availability_handler->visualizationTabEnabled(true);
+            }else{
+                availability_handler->visualizationTabEnabled(false);
+            }
+            svm->setModelFilePath(file_manager->getModelFilepath().toStdString());
+        }else{
+            availability_handler->trainButtonEnabled(false)
+                    .testButtonEnabled(false);
+        }
+    }
 }
+
+
+

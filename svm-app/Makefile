@@ -82,6 +82,7 @@ OBJECTS       = main.o \
 		moc_filemanager.o \
 		moc_outputhandler.o
 DIST          = plotter.py \
+		pointsgen.py \
 		svm-train.c \
 		svm-predict.c \
 		checkdata.py \

@@ -115,6 +115,19 @@ void ScriptQtManager::runGridSearch(QString filepath, QString log2c, QString log
     py_script.waitForFinished(60000);
 }
 
+int ScriptQtManager::runGenerateData(QString filepath)
+{
+    QStringList args;
+    args<<QCoreApplication::applicationDirPath()+"/pointsgen.py"<<filepath;
+    QProcess py_script;
+    py_script.start("python3", args);
+    py_script.waitForFinished();
+    QString py_script_out(py_script.readAllStandardError()+py_script.readAllStandardOutput());
+    printf("%s", py_script_out.toLatin1().data());
+    fflush(stdout);
+    return py_script.exitCode();
+}
+
 
 
 

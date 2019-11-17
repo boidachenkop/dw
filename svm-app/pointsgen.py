@@ -28,10 +28,10 @@ class PointGen:
         if not (self.__xmc<event.x<self.__xMc and self.__ymc<event.y<self.__yMc): 
                 # and not (self.__xms<event.x<self.__xMs and self.__yms<event.y<self.__yMs):
             if self.__first_group:
-                self.__ax_plot.plot(event.xdata, event.ydata, '.', markersize=14, color="red")
+                self.__ax_plot.plot(event.xdata, event.ydata, '.', markersize=9, color="red")
                 self.__points["-1"].append([event.xdata, event.ydata])
             else:
-                self.__ax_plot.plot(event.xdata, event.ydata, '.', markersize=14, color="blue")
+                self.__ax_plot.plot(event.xdata, event.ydata, '.', markersize=9, color="blue")
                 self.__points["1"].append([event.xdata, event.ydata])
             self.__fig.canvas.draw()
 
@@ -39,7 +39,7 @@ class PointGen:
         with open(self.__filename, "w") as output:
             for key in self.__points.keys():
                 for item in self.__points[key]:
-                    output.write(key + "," + str(item[0]) + "," + str(item[1]) + '\n')
+                    output.write(key + " 1:" + str(item[0]) + " 2:" + str(item[1]) + '\n')
 
     def changeGroup(self, event):
         self.__first_group = not self.__first_group
