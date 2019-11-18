@@ -14,6 +14,7 @@
 \usepackage{graphicx}
 \usepackage{caption}
 \usepackage{flafter}
+\usepackage{flexisym}
 
 
 \def \thesis {Aplikacja uczenia maszynowego metodą SVM}
@@ -55,6 +56,8 @@
     Źródło: #2%
   %
 }
+
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
 
 %Other packages
 \usepackage{multirow}
@@ -310,8 +313,41 @@
         \end{tabular}
     \end{center}
 
+
 \subsection{Jądra}
-    \par 
+    \par W przypadku kiedy klasy nierozdzielne liniowo to jest używany trik z zastosowaniem
+    funkcji jądrowych(ang. Kernel Trick). Funkcję jądrowe pozwalają odwzorować zbiór danych
+    w przestrzeń z większą liczbą wymiarów, w której klasy danego zbioru będzie można rozdzielić
+    hiperpłaszczyzną. 
+
+    \begin{figure}[h]
+        \begin{center}
+            \includegraphics[scale=0.2]{./img/kernel_trick.png}
+        \captionsource{Przykład stosowania funkcji jądrowej dla nierozdzielnego liniowo zbioru
+        danych}{Wikipedia}
+            \label{fig:param_c}
+        \end{center}
+    \end{figure}
+
+    \newpage 
+
+    \par W bibliotece LIBSVM są zaimplementowane następne funkcje jądrowe:
+
+    \begin{center}
+        \begin{tabular}{rl}
+            Liniowa & $K(x,x') = x\cdot x'$\\
+            Wielomianowa & $K(x,x') = (\gamma*x \cdot x'+coef0)^{degree})$\\
+            RBF & $K(x,x') =  -\gamma * (\sqrt{x}+\sqrt{x'}-2 * x\cdot x')$ \\
+            Sigmoidalna & $K(x,x') = tanh(\gamma*x \cdot x'+coef0)$
+        \end{tabular}
+    \end{center}
+
+    \par Autorzy biblioteki LIBSVM polecają \ref{hsu2003practical} że pierwsza funkcja jądrowa którą
+    warto spróbować to RBF.  Jak pokazują \ref{keerthi2003asymptotic} jeśli używać RBF z optymalizacją
+    hiperparametrów to nie ma potrzeby rozważać liniową funkcję jądrową. W sigmoidalnej funkcji jądrowej
+    macierz jądrowa może nie być pozytywnie określona i generalnie dokładność modelu nie jest lepsza od RBF
+    \ref{lin2003study}. 
+
 \newpage
 \section{Projekt aplikacji} % SECTION
 \subsection{Opis}
