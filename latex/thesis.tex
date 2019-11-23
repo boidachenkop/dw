@@ -15,6 +15,8 @@
 \usepackage{caption}
 \usepackage{flafter}
 \usepackage{flexisym}
+\usepackage{listings}
+\usepackage{color}
 
 
 \def \thesis {Aplikacja uczenia maszynowego metodą SVM}
@@ -37,8 +39,50 @@
 \setlength{\headheight}{14.06pt} % Customize the height of the header
 
 % bibliography
-\usepackage[style=alphabetic,sorting=nyt,sortcites=true,autopunct=true,babel=hyphen,hyperref=true,abbreviate=false,backref=true,backend=biber]{biblatex}
+\usepackage[style=alphabetic,sorting=nyt,sortcites=true,autopunct=true,babel=hyphen,hyperref=true,abbreviate=false,backref=true,backend=biber,citestyle=numeric]{biblatex}
 \addbibresource{ref.bib}
+\defbibenvironment{bibliography}
+  {\list
+     {\printtext[labelnumberwidth]{%
+      \printfield{labelprefix}%
+      \printfield{labelnumber}}}
+     {\setlength{\labelwidth}{\labelnumberwidth}%
+      \setlength{\leftmargin}{\labelwidth}%
+      \setlength{\labelsep}{\biblabelsep}%
+      \addtolength{\leftmargin}{\labelsep}%
+      \setlength{\itemsep}{\bibitemsep}%
+      \setlength{\parsep}{\bibparsep}}%
+      \renewcommand*{\makelabel}[1]{\hss##1}}
+  {\endlist}
+  {\item}
+
+% listing settings
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+
+\lstset{ 
+  backgroundcolor=\color{white},   % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}; should come as last argument
+  basicstyle=\footnotesize,        % the size of the fonts that are used for the code
+  breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
+  breaklines=true,                 % sets automatic line breaking
+  captionpos=b,                    % sets the caption-position to bottom
+  commentstyle=\color{mygreen},    % comment style
+  extendedchars=true,              % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
+  frame=single,	                   % adds a frame around the code
+  keepspaces=true,                 % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
+  keywordstyle=\color{blue},       % keyword style
+  language=C++,                 % the language of the code
+  morekeywords={*,...},            % if you want to add more keywords to the set
+  rulecolor=\color{black},         % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
+  showspaces=false,                % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
+  showstringspaces=false,          % underline spaces within strings only
+  showtabs=false,                  % show tabs within strings adding particular underscores
+  stepnumber=2,                    % the step between two line-numbers. If it's 1, each line will be numbered
+  stringstyle=\color{mymauve},     % string literal style
+  tabsize=2,	                   % sets default tabsize to 2 spaces
+  title=\lstname                   % show the filename of files included with \lstinputlisting; also try caption instead of title
+}
 
 \numberwithin{equation}{section} % Number equations within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
 \numberwithin{figure}{section} % Number figures within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
@@ -253,9 +297,9 @@
     \begin{figure}[h]
         \begin{center}
             \includegraphics[scale=0.4]{./img/one-class-circle.png}
-        \captionsource{Hipersfera zawierająca punkty danych. Ma środek c i promień R.
-                        Punkty na krawędzi są wektorami wspierającymi.}{Wikipedia}
-            \label{fig:param_c}
+            \captionsource{Hipersfera zawierająca punkty danych. Ma środek c i promień R.
+                            Punkty na krawędzi są wektorami wspierającymi.}{Wikipedia}
+            \label{fig:one_class}
         \end{center}
     \end{figure}
 
@@ -300,7 +344,6 @@
     dla kontroli liczby wektorów wspierających. Również używa parametru $\epsilon$. Z parametrami
     $(C,\nu)$ $\nu$-SVR rozwiązuję:
     
-
     \begin{center}
         \begin{tabular}{rl}
             $\min\limits_{\pmb{\omega},b,\pmb{\epsilon},\pmb{\epsilon}^*,\epsilon}$ &
@@ -313,7 +356,6 @@
         \end{tabular}
     \end{center}
 
-
 \subsection{Jądra}
     \par W przypadku kiedy klasy nierozdzielne liniowo to jest używany trik z zastosowaniem
     funkcji jądrowych(ang. Kernel Trick). Funkcję jądrowe pozwalają odwzorować zbiór danych
@@ -325,7 +367,7 @@
             \includegraphics[scale=0.2]{./img/kernel_trick.png}
         \captionsource{Przykład stosowania funkcji jądrowej dla nierozdzielnego liniowo zbioru
         danych}{Wikipedia}
-            \label{fig:param_c}
+        \label{fig:kernel_trick}
         \end{center}
     \end{figure}
 
@@ -342,16 +384,171 @@
         \end{tabular}
     \end{center}
 
-    \par Autorzy biblioteki LIBSVM polecają \ref{hsu2003practical} że pierwsza funkcja jądrowa którą
-    warto spróbować to RBF.  Jak pokazują \ref{keerthi2003asymptotic} jeśli używać RBF z optymalizacją
-    hiperparametrów to nie ma potrzeby rozważać liniową funkcję jądrową. W sigmoidalnej funkcji jądrowej
-    macierz jądrowa może nie być pozytywnie określona i generalnie dokładność modelu nie jest lepsza od RBF
-    \ref{lin2003study}. 
+    \par Autorzy biblioteki LIBSVM polecają \cite{hsu2003practical} że pierwsza funkcja jądrowa
+    którą warto spróbować to RBF.  Jak pokazują \cite{keerthi2003asymptotic} jeśli używać RBF z
+    optymalizacją hiperparametrów to nie ma potrzeby rozważać liniową funkcję jądrową. W sigmoidalnej
+    funkcji jądrowej macierz jądrowa może nie być pozytywnie określona i generalnie dokładność modelu
+    nie jest lepsza od RBF \cite{lin2003study}. 
 
 \newpage
 \section{Projekt aplikacji} % SECTION
+    \par W tym paragrafie są opisane użyte technologie przy napisaniu aplikacji i interfejs
+    użytkownika.
+
 \subsection{Opis}
 \subsection{Technologie}
+    \par W roli jądra mojej aplikacji występuję biblioteka \textit{LIBSVM} napisana w 2011 roku
+    przez Chih-Chung Chang i Chih-Jen Lin w Państwowym Uniwersytecie Tajwańskim. Celem autorów
+    było zrobienie narzędzia z prostym interfejsem umożliwiające używanie Maszyny Wektorów
+    Wspierajacych użytkownikom które nie zajmują się zawodowo nauczaniem maszynowym. Domyślnie
+    użycie biblioteki \textit{LIBSVM} polega na skompilowaniu i używaniu dwóch programów:
+    \textit{svm-train} i \textit{svm-predict}. \textit{svm-train} służy do trenowania modelu, 
+    a \textit{svm-predict} do testowania, chociaż również może być używany do klasyfikacji
+    nowych niegrupowanych danych. 
+
+    \begin{figure}[h]
+        \begin{center}
+            \includegraphics[scale=0.6]{./img/svm_train_usage.png}
+            \caption{Użycie programu svm-train}
+            \label{fig:train_usage}
+        \end{center}
+    \end{figure}
+
+    \begin{figure}[h]
+        \begin{center}
+            \includegraphics[scale=0.6]{./img/svm_predict_usage.png}
+            \caption{Użycie programu svm-predict}
+            \label{fig:predict_usage}
+        \end{center}
+    \end{figure}
+
+    \par Aplikacja głównie jest napisana w języku \textit{C++}. Wybrałem ten język
+    programowania przez jego wydajność mimo to że jest on językiem wysokiego poziomu. Na wybór
+    \textit{C++} również wpłynęła moja sympatia do tego języka programowania, a napisanie
+    dużego projektu w nim było dla mnie prawdziwym wyzwaniem, które pozwoliło pogłębić swoją
+    wiedze w programowaniu i używaniu języka \textit{C++}.  Niektóre części aplikacji są
+    napisane w języku Python, w szczególności te, które dotyczą rysowania wykresów, pracy z
+    plikami i zmiennymi typu \textit{string}. Standardowa biblioteka Python przedstawia sporo
+    narzędzi dla pracy z plikami i zmiennymi typu \textit{string}, co pozwala oszczędzać czas
+    programisty w porównaniu do C++, w którym napisanie podobnej funkcjonalności zajęłoby o
+    wiele więcej czasu. Dla rysowania wykresów użyłem biblioteki \textit{matplotlib}
+    \cite{matplotlib} która pozwala stosunkowo łatwo rysować jedno, dwu i trzy-wymiarowe
+    wykresy, a w kombinacji z \textit{numpy} i \textit{scipy} generować wykresy gęstości.
+    \par Interfejs graficzny był pisany za pomocą biblioteki \textit{Qt}
+    \cite{qtlibrary} napisanej w C++.  Twórcy biblioteki \textit{Qt} stworzyli IDE dedykowane
+    do pracy z biblioteką - \textit{Qt Creator}. Jest ono wyposażone w szczegółową dokumentacje
+    do biblioteki, wbudowany program \textit{Qt Designer} pozwala projektować interfejs
+    graficzny metodą przeciągnij i upuść(ang. drag and drop), automatyczne uzupełnienie kodu,
+    prowadzi analizę semantyczną kodu, wskazuje na błędy do kompilacji.  
+
+\subsection{Interfejs użytkownika i realizacja funkcjonalności}
+    \par Po uruchomieniu programu pierwsze co zobaczy użytkownik to okno główne. Po lewej
+    stronie jest pole tekstowe w którym pojawiają się komunikaty o wynikach trenowania lub
+    testowania modelu. W prawej górnej części okna są kontrolki do wybierania plików z danymi
+    lub zapisywania pliku modelu. Żeby rozdzielić główną funkcjonalność od pobocznej i zrobić
+    okno główne programu bardziej kompaktowym niektóre elementy są zrealizowane w postaci kart,
+    natomiast funkcjonalność która dotyczy trenowania i testowania modelu jest
+    dostępna bezpośrednio z okna głównego.
+
+    \begin{figure}[h]
+        \begin{center}
+            \includegraphics[scale=0.7]{./img/svm_app_main_window.png}
+            \caption{Okno główne programu}
+            \label{fig:main_window}
+        \end{center}
+    \end{figure}
+
+\newpage % for better look
+\subsubsection{Realizacja funkcjonalności głównej}
+    \begin{enumerate}   
+
+    \item Pole tekstowe dla komunikatów.
+
+    \begin{figure}[h]
+        \begin{center}
+            \includegraphics[scale=0.7]{./img/svm_app_mainw_textedit.png}
+            \caption{Pole dla komunikatów}
+            \label{fig:text_edit}
+        \end{center}
+    \end{figure}
+
+    \par Dane pole tekstowe przyznaczone dla wypisywania komunikatów z biblioteki
+    \textit{LIBSVM} lub używanych skryptów Python. W zasadzie opisywana kontrolka jest
+    widżetem biblioteki \textit{Qt} \textit{TextEdit} w którym jest wyłączona możliwość
+    edytowania zawartości. Dla tego żeby nie przerabiać kodu żródłowego biblioteki
+    \textit{LIBSVM} zamieniając każde wywołanie funkcji \textit{printf} na odpowiednią funkcje,
+    któraby dodawała tekst na \textit{TextEdit}, szukałem sposobu na przekierowanie całego
+    wyjścia aplikacji na widżet w interfejsie graficznym. Niestety biblioteka \textit{Qt} nie
+    przedstawia prostej możliwości na zrobienie tego, więc musiałem zraimplementować podobną
+    funkcjonalność samodzielnie. Za tą funkcjonalność odpowiada klasa \textit{OutputHandler},
+    która w swoim konstruktorze tworzy potok do którego przekierowuje \textit{stdout}.
+
+    \begin{lstlisting}
+    OutputHandler::OutputHandler()
+    {
+        _saved_stdout = dup(STDOUT_FILENO);
+        pipe(_stdout_pipe);
+        dup2(_stdout_pipe[1], STDOUT_FILENO);
+        close(_stdout_pipe[1]);
+    }
+    \end{lstlisting}
+
+    \par Za tym uruchamia wątek który ciągle sprawdza czy coś było zapisane do potoku i jeśli
+    tak to wywołuje sygnał który dopisuje te dane do \textit{TextEdit} na interfejsie graficznym.
+
+    \newpage
+    \begin{lstlisting}
+    void OutputHandler::handleOutput()
+    {
+        int bytes_read;
+        char buf[1024];
+        while((bytes_read = (int)read(_stdout_pipe[0], buf, sizeof(buf))))
+        {
+            emit updateOutput(QString::fromLatin1(buf, bytes_read));
+            if(_cmd_out)
+            {
+                write(_saved_stdout, buf, bytes_read);
+            }
+        }
+    }
+    \end{lstlisting}
+
+    \par Takie podejście pozwala używać standardowe sposoby na wypisywanie komunikatów i nie
+    myśleć o tym czy wypisywany komunikat zostanie wyświetlony na interfejsie użytkownika.
+    \par Pod omawianym polem tekstowym znajduje się przycisk \textit{Clean}, który usuwa
+    wszystkie wcześniej wypisane komunikaty z pola \textit{TextEdit}. 
+
+    \item Zarządzanie plikami z danymi
+
+    \par Pierwszym krokiem który będzie musiał zrobić użytkownik po uruchamianiu aplikacji -
+    wybrać plik z danymi dla trenowania. Dla tego celu na ekranie głównym są odpowiednie
+    kontrolki które pozwalają wybrać plik z danymi do trenowania lub testowania i wybrać
+    katalog w którym należy zapisać plik z wygenerowanym modelem. Domyślnie plik modelu ma
+    nazwę [nazwa pliku z danymi do trenowania + .model]. Przycisk \textit{Gen Data} pozwala
+    wygenerować plik z danymi samodzielnie, jego funkcjonalność będzie omówiona później.
+
+    \begin{figure}[h]
+        \begin{center}
+            \includegraphics[scale=0.7]{./img/svm_app_mainw_filehandler.png}
+            \caption{Zarządzanie plikami}
+            \label{fig:file_handler}
+        \end{center}
+    \end{figure}
+
+    \par Po wybraniu pliku z danymi program sprawdza czy dane są zapisane w formacie
+    \textit{LIBSVM}. W przypadku poprawności danych program parsuje plik wypisując liczbę
+    rekordów, liczbę klas i liczbę cech jak dla danych trenujących tak i dla danych testowych.
+
+    \begin{figure}[h]
+        \begin{center}
+            \includegraphics[scale=0.7]{./img/svm_app_mainw_filehandler_ex.png}
+            \caption{Przykład wczytanych danych}
+            \label{fig:files_example1}
+        \end{center}
+    \end{figure}
+
+    \end{enumerate}
+
 \newpage
 \section{Podsumowanie} % SECTION
 \subsection{Odniesienie do celu pracy}
