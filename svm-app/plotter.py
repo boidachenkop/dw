@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
+from matplotlib.ticker import MaxNLocator
 import numpy as np
 from scipy.stats import gaussian_kde
 import argparse
@@ -13,6 +14,8 @@ class LibsvmPlot:
         self.__filename = filename
         self.__nfeatures = nfeatures
         self.__bandwidth = bandwidth
+        self.__cmap = plt.get_cmap('PiYG')
+        self.__levels = MaxNLocator(nbins=2).tick_values(-1, 1)
         if len(model_filename) != 0:
             self.__show_model = True
         else:
@@ -109,7 +112,8 @@ class LibsvmPlot:
                 with open("/tmp/svmapp_plot_pred_out") as pred_out:
                     for line in pred_out:
                         zi.append(int(line.strip())) 
-                plt.pcolormesh(xi, yi, np.array(zi).reshape(xi.shape), shading="gouraud", cmap=plt.cm.BuGn_r)
+                # plt.pcolormesh(xi, yi, np.array(zi).reshape(xi.shape), shading="gouraud", cmap=plt.cm.BuGn_r)
+                plt.contourf(xi, yi, np.array(zi).reshape(xi.shape), levels=self.__levels, cmap=self.__cmap)
             if self.__density:
                 k = gaussian_kde([x_all,y_all])
                 xi, yi = np.mgrid[x_min:x_max:nbins*1j,
@@ -127,6 +131,7 @@ class LibsvmPlot:
                 y = [item[1] for item in self.__points[key]]
                 z = [item[2] for item in self.__points[key]]
                 ax.scatter(x, y, z, s=2)
+                colorn+=1
         else:
             print("Unsupported number of features");
             sys.exit(1)

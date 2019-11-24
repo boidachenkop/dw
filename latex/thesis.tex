@@ -17,6 +17,7 @@
 \usepackage{flexisym}
 \usepackage{listings}
 \usepackage{color}
+\usepackage{subcaption}
 
 
 \def \thesis {Aplikacja uczenia maszynowego metodą SVM}
@@ -67,8 +68,9 @@
   breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
   breaklines=true,                 % sets automatic line breaking
   captionpos=b,                    % sets the caption-position to bottom
+  escapeinside={\%*}{*)},
   commentstyle=\color{mygreen},    % comment style
-  extendedchars=true,              % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
+  extendedchars=false,              % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
   frame=single,	                   % adds a frame around the code
   keepspaces=true,                 % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
   keywordstyle=\color{blue},       % keyword style
@@ -459,10 +461,7 @@
     \end{figure}
 
 \newpage % for better look
-\subsubsection{Realizacja funkcjonalności głównej}
-    \begin{enumerate}   
-
-    \item Pole tekstowe dla komunikatów.
+\subsubsection{Pole tekstowe dla komunikatów.}
 
     \begin{figure}[h]
         \begin{center}
@@ -483,7 +482,7 @@
     funkcjonalność samodzielnie. Za tą funkcjonalność odpowiada klasa \textit{OutputHandler},
     która w swoim konstruktorze tworzy potok do którego przekierowuje \textit{stdout}.
 
-    \begin{lstlisting}
+    \begin{lstlisting}[caption={Konstruktor klasy \textit{OutputHandler}},captionpos=b]
     OutputHandler::OutputHandler()
     {
         _saved_stdout = dup(STDOUT_FILENO);
@@ -497,7 +496,7 @@
     tak to wywołuje sygnał który dopisuje te dane do \textit{TextEdit} na interfejsie graficznym.
 
     \newpage
-    \begin{lstlisting}
+    \begin{lstlisting}[caption={Funkcja uruchamiana w wątku},captionpos=b]
     void OutputHandler::handleOutput()
     {
         int bytes_read;
@@ -518,7 +517,7 @@
     \par Pod omawianym polem tekstowym znajduje się przycisk \textit{Clean}, który usuwa
     wszystkie wcześniej wypisane komunikaty z pola \textit{TextEdit}. 
 
-    \item Zarządzanie plikami z danymi
+\subsubsection{Zarządzanie plikami z danymi}
 
     \par Pierwszym krokiem który będzie musiał zrobić użytkownik po uruchamianiu aplikacji -
     wybrać plik z danymi dla trenowania. Dla tego celu na ekranie głównym są odpowiednie
@@ -541,13 +540,148 @@
 
     \begin{figure}[h]
         \begin{center}
-            \includegraphics[scale=0.7]{./img/svm_app_mainw_filehandler_ex.png}
+            \includegraphics[scale=0.8]{./img/svm_app_mainw_filehandler_ex.png}
             \caption{Przykład wczytanych danych}
             \label{fig:files_example1}
         \end{center}
     \end{figure}
 
-    \end{enumerate}
+    Format danych \textit{LIBSVM} przewiduję klasę na skrajnej lewej pozycji w linii, cechy są
+    indeksowane, jeśli cecha równa się 0 to informacja o nich jest zbędna:
+
+    \begin{verbatim}
+        1 1:3.5 2:2.25 3:1.17 # komentarz
+        -1 2:3  # pierwsza i trzecia cechy są 0
+    \end{verbatim}
+
+    \par Poprawność danych wejściowych sprawdza skrypt w języku Python udostępniany w ramach
+    biblioteki \textit{LIBSVM}. Jeśli plik mieści niepoprawne dane to ścieżka do wybranego
+    pliku jest farbowana na czerwono i jest wypisywany odpowiedni komunikat. W przypadku
+    \ref{fig:files_example1} w pliku z danymi linia 19 mieści cechę wartość której ma liczbę
+    rzeczywistą z przecinkiem, a w formacie danych \textit{LIBSVM} są dopuszczane tylko kropki.
+
+    \begin{figure}[h]
+        \begin{center}
+            \includegraphics[scale=0.8]{./img/svm_app_mainw_filehandler_ex_wrong.png}
+            \caption{Przykład wczytanych niepoprawnych danych}
+            \label{fig:files_example1}
+        \end{center}
+    \end{figure}
+
+    \par Jeśli dane do testowania nie zgadzają się z danymi do trenowania(np. liczbą cech lub
+    liczbą klas) to zbiór do testowania nie jest akceptowany: 
+
+    \begin{figure}[h]
+        \begin{center}
+            \includegraphics[scale=1.0]{./img/svm_app_mainw_filehandler_ex_wrong2.png}
+            \caption{Przykład niezgodności pomiędzy danymi do treningu a danymi do testowania}
+            \label{fig:files_example2}
+        \end{center}
+    \end{figure}
+
+    \par Dzięki bibliotece \textit{Qt}, która w miarę możliwości używa natywnych do systemu
+    operacyjnego kontrolek, wygląd selektora plików zależy od systemu operacyjnego. Domyślnie
+    selektor plików otwiera katalog \textit{/home/[username]}, ale w przypadku kiedy pliki z
+    danymi znajdują się głęboko w systemie plików to może być niewygodne, przez to aplikacja
+    przechowuję ostatnio odwiedzony katalog w pliku \textit{/tmp/svmapp-lop} i zawsze otwiera w
+    nim nowy selektor plików.
+
+    \par Niektóre akcje użytkownika mogą nie mieć sensu: zacząć proces trenowania bez wybrania
+    pliku z danymi, zmieniać parametry modelu które nie dotyczą wybranego typu SVM lub
+    wybranej funkcji jądrowej itp. Żeby zapobiec bezsensownym akcjom była zaimplementowana
+    klasa \textit{AvailabilityHandler}. Klasa odpowiada za deaktywacje kontrolek funkcjonalność
+    których jest bezsensowna lub niebezpieczna \ref{fig:availability_ex} 
+
+    %\newpage % or figure below brakes order
+
+    \begin{figure}[h!]
+        \begin{subfigure}{.5\textwidth}
+            \centering
+            \includegraphics[width=.95\linewidth]{img/svm_app_param_ex1.png}
+            \label{fig:availability_ex1}
+        \end{subfigure}%
+        \begin{subfigure}{.5\textwidth}
+            \centering
+            \includegraphics[width=.95\linewidth]{img/svm_app_param_ex2.png}
+            \label{fig:availability_ex2}
+        \end{subfigure}
+        \caption{Przykład zmiany dostępności parametrów w zależności od wybranego typu SVM i
+        funkcji jądra}
+        \label{fig:availability_ex}
+    \end{figure}
+
+\subsubsection{Parametry SVM i funkcji jądrowych}
+
+    \par Wszystkie parametry oprócz \textit{degree} są w postaci kontrolki \textit{LineEdit} ze
+    względu na to że są one liczbami rzeczywistymi, \textit{degree} z kolei jest liczbą
+    naturalną a więc używana jest kontrolka \textit{SpinBox}. Po uruchamianiu trenowania
+    program parsuje pola z parametrami i sprawdza czy są poprawne. W pola typu
+    \textit{LineEdit} można wprowadzać litery(ponieważ jest dozwolony zapis liczb w notacji
+    naukowej: \textit{1e-3}). Jeśli wprowadzoną liczba nie jest w formacie naukowym lub nie
+    jest liczbą rzeczywistą z separatorem kropką, to pole z błędnymi danymi jest obramiane na
+    czerwono a proces treningu jest powstrzymywany.
+
+    \begin{figure}[h]
+        \begin{center}
+            \includegraphics[scale=1.0]{./img/svm_app_param_wrong.png}
+            \caption{Przykład niepoprawnych danych w polu parametru C}
+            \label{fig:param_wrong}
+        \end{center}
+    \end{figure}
+
+\subsubsection{Przyciski trenowania i testowania}
+
+    \begin{figure}[h]
+        \begin{center}
+            \includegraphics[scale=1.0]{./img/train_test_buttons.png}
+            \caption{Przyciski do trenowania i testowania modelu}
+            \label{fig:train_test_buttons}
+        \end{center}
+    \end{figure}
+
+    \par Przyciski trenowania i testowania są umieszczone w dolnej części okna głównego
+    programu. Po wciśnięciu przycisku \textit{Train Model} aplikacja, jak opisano wyżej,
+    parsuje i sprawdza pola z parametrami i uruchamia proces trenowania dokładnie ten który
+    oferuję program \textit{svm-train} z biblioteki \textit{LIBSVM}. Żeby ściślej powiązać
+    aplikację z biblioteką \textit{LIBSVM} przerobiłem biblioteczne plik źródłowe
+    \textit{svm-train.c} i \textit{svm-predict.c} na klasę \textit{SVMController}, pozwoliło to
+    zapobiec używaniu polecenia \textit{system()} które służy do uruchamiania programów
+    zewnętrznych. Nie udało się jednak całkiem uniknąć tego - skrypty w języku Python używają
+    \textit{system()}.
+
+    \newpage
+    Przykład wyjścia algorytmu trenującego LIBSVM C-SVC z funkcją jądrową RBF i parametrami
+    $C=1$, $gamma=0$:
+
+    \begin{verbatim}
+        *
+        optimization finished, #iter = 318
+        nu = 0.469505
+        obj = -383.582676, rho = 0.903354
+        nSV = 408, nBSV = 401
+        Total nSV = 408
+    \end{verbatim}
+
+    \par Gdzie \textit{obj} oznacza wartość optymalną dla problemu podwójnego SVM, \textit{rho}
+    jest błędem systematycznym w funkcji decyzyjnej $sgn(w^{T}x - rho)$, \textit{nSV} jest
+    liczbą wektorów wspierających, \textit{nBSV} - liczba ograniczonych  wektorów
+    wspierających. $\nu$-SVC równoważną formą do C-SVC, nu - jest odpowiednikiem podanego
+    parametru C tylko w $\nu$-SVC, czyli jeśli użyć $\nu$-SVC i podać jako parametr $\nu$
+    liczbę $0.469505$ to wygenerowany model będzie miał bardzo podobne charakterystyki.
+
+    \par Za przyciskiem \textit{Test Model} poza funkcjonalnością programu \textit{svm-predict}
+    stoi jeszcze jedna - walidacja. Klasa \textit{SVMController} wczytuje plik z danymi do
+    testowania i wypisuje procent dobrych zgadnięć wygenerowanego modelu, po tym w zależności
+    od wartości w polu \textit{Validation} program wyciąga odpowiedni procent danych ze zbioru
+    do trenowania i przeprowadza testowanie na nim. Na ogół testowanie modelu na danych
+    trenujących nie ma sensu ale taka operacja pozwala zidentyfikować czy dany model nie jest
+    przeuczony(np. wynikiem walidacji jest 100\%). \\
+
+    Przykład wyjścia algorytmu testującego:
+    \begin{verbatim}
+        Accuracy = 66.925% (2677/4000) (classification)
+        Validation Accuracy = 99.6769% (617/619) (classification)
+    \end{verbatim}
 
 \newpage
 \section{Podsumowanie} % SECTION

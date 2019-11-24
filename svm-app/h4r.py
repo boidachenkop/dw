@@ -21,11 +21,9 @@ def holdout(dataset, test_percent, train_part, test_part):
                 test_part.write( line )
 
     if train_part != None:
-        print("Train part will be ready")
         train_part.close()
 
     if test_part != None:
-        print("Test part will be ready")
         test_part.close()
 
 

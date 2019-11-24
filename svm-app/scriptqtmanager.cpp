@@ -79,7 +79,7 @@ int ScriptQtManager::runHoldout(int type, QString dataset_filepath, int test_par
     }
     QProcess py_script;
     py_script.start("python3", args);
-    py_script.waitForFinished();
+    py_script.waitForFinished(-1);
     QString py_script_out(py_script.readAllStandardError()+py_script.readAllStandardOutput());
     printf("%s", py_script_out.toLatin1().data());
     fflush(stdout);
@@ -93,7 +93,7 @@ int ScriptQtManager::runConvert2SvmFormat(QString filepath, QString outfilepath,
           sep<<dec_sep<<(label_first ? "1" : "0");
     QProcess py_script;
     py_script.start("python3", args);
-    py_script.waitForFinished();
+    py_script.waitForFinished(-1);
     QString py_script_out(py_script.readAllStandardError()+py_script.readAllStandardOutput());
     printf("%s", py_script_out.toLatin1().data());
     fflush(stdout);
@@ -121,7 +121,7 @@ int ScriptQtManager::runGenerateData(QString filepath)
     args<<QCoreApplication::applicationDirPath()+"/pointsgen.py"<<filepath;
     QProcess py_script;
     py_script.start("python3", args);
-    py_script.waitForFinished();
+    py_script.waitForFinished(-1);
     QString py_script_out(py_script.readAllStandardError()+py_script.readAllStandardOutput());
     printf("%s", py_script_out.toLatin1().data());
     fflush(stdout);
