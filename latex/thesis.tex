@@ -471,16 +471,17 @@
         \end{center}
     \end{figure}
 
-    \par Dane pole tekstowe przyznaczone dla wypisywania komunikatów z biblioteki
-    \textit{LIBSVM} lub używanych skryptów Python. W zasadzie opisywana kontrolka jest
-    widżetem biblioteki \textit{Qt} \textit{TextEdit} w którym jest wyłączona możliwość
-    edytowania zawartości. Dla tego żeby nie przerabiać kodu żródłowego biblioteki
-    \textit{LIBSVM} zamieniając każde wywołanie funkcji \textit{printf} na odpowiednią funkcje,
-    któraby dodawała tekst na \textit{TextEdit}, szukałem sposobu na przekierowanie całego
-    wyjścia aplikacji na widżet w interfejsie graficznym. Niestety biblioteka \textit{Qt} nie
-    przedstawia prostej możliwości na zrobienie tego, więc musiałem zraimplementować podobną
-    funkcjonalność samodzielnie. Za tą funkcjonalność odpowiada klasa \textit{OutputHandler},
-    która w swoim konstruktorze tworzy potok do którego przekierowuje \textit{stdout}.
+    \par Pole tekstowe \ref{fig:text_edit} w lewej części okna głównego programu przyznaczone
+    dla wypisywania komunikatów z biblioteki \textit{LIBSVM} lub używanych skryptów Python. W
+    zasadzie opisywana kontrolka jest widżetem biblioteki \textit{Qt} \textit{TextEdit} w
+    którym jest wyłączona możliwość edytowania zawartości. Dla tego żeby nie przerabiać kodu
+    żródłowego biblioteki \textit{LIBSVM} zamieniając każde wywołanie funkcji \textit{printf}
+    na odpowiednią funkcje, któraby dodawała tekst na \textit{TextEdit}, szukałem sposobu na
+    przekierowanie całego wyjścia aplikacji na widżet w interfejsie graficznym. Niestety
+    biblioteka \textit{Qt} nie przedstawia prostej możliwości na zrobienie tego, więc musiałem
+    zraimplementować podobną funkcjonalność samodzielnie. Za tą funkcjonalność odpowiada klasa
+    \textit{OutputHandler}, która w swoim konstruktorze tworzy potok do którego przekierowuje
+    \textit{stdout}.
 
     \begin{lstlisting}[caption={Konstruktor klasy \textit{OutputHandler}},captionpos=b]
     OutputHandler::OutputHandler()
@@ -521,10 +522,11 @@
 
     \par Pierwszym krokiem który będzie musiał zrobić użytkownik po uruchamianiu aplikacji -
     wybrać plik z danymi dla trenowania. Dla tego celu na ekranie głównym są odpowiednie
-    kontrolki które pozwalają wybrać plik z danymi do trenowania lub testowania i wybrać
-    katalog w którym należy zapisać plik z wygenerowanym modelem. Domyślnie plik modelu ma
-    nazwę [nazwa pliku z danymi do trenowania + .model]. Przycisk \textit{Gen Data} pozwala
-    wygenerować plik z danymi samodzielnie, jego funkcjonalność będzie omówiona później.
+    kontrolki \ref{fig:file_handler} które pozwalają wybrać plik z danymi do trenowania lub
+    testowania i wybrać katalog w którym należy zapisać plik z wygenerowanym modelem. Domyślnie
+    plik modelu ma nazwę [nazwa pliku z danymi do trenowania + .model]. Przycisk \textit{Gen
+    Data} pozwala wygenerować plik z danymi samodzielnie, jego funkcjonalność będzie omówiona
+    później.
 
     \begin{figure}[h]
         \begin{center}
@@ -546,8 +548,9 @@
         \end{center}
     \end{figure}
 
-    Format danych \textit{LIBSVM} przewiduję klasę na skrajnej lewej pozycji w linii, cechy są
-    indeksowane, jeśli cecha równa się 0 to informacja o nich jest zbędna:
+    \par Format danych \textit{LIBSVM} przewiduję klasę na skrajnej lewej pozycji w linii, cechy są
+    indeksowane, jeśli cecha równa się 0 to informacja o nich jest zbędna. Warto wspomnieć, że
+    wybrana wersja biblioteki \textit{LIBSVM} nie przewiduje użycia danych tekstowych:
 
     \begin{verbatim}
         1 1:3.5 2:2.25 3:1.17 # komentarz
@@ -631,6 +634,10 @@
 
 \subsubsection{Przyciski trenowania i testowania}
 
+
+    \par Przyciski trenowania i testowania \ref{fig:train_test_buttons} są umieszczone w dolnej
+    części okna głównego programu.
+
     \begin{figure}[h]
         \begin{center}
             \includegraphics[scale=1.0]{./img/train_test_buttons.png}
@@ -639,8 +646,7 @@
         \end{center}
     \end{figure}
 
-    \par Przyciski trenowania i testowania są umieszczone w dolnej części okna głównego
-    programu. Po wciśnięciu przycisku \textit{Train Model} aplikacja, jak opisano wyżej,
+    \par Po wciśnięciu przycisku \textit{Train Model} aplikacja, jak opisano wyżej,
     parsuje i sprawdza pola z parametrami i uruchamia proces trenowania dokładnie ten który
     oferuję program \textit{svm-train} z biblioteki \textit{LIBSVM}. Żeby ściślej powiązać
     aplikację z biblioteką \textit{LIBSVM} przerobiłem biblioteczne plik źródłowe
@@ -649,7 +655,6 @@
     zewnętrznych. Nie udało się jednak całkiem uniknąć tego - skrypty w języku Python używają
     \textit{system()}.
 
-    \newpage
     Przykład wyjścia algorytmu trenującego LIBSVM C-SVC z funkcją jądrową RBF i parametrami
     $C=1$, $gamma=0$:
 
@@ -684,9 +689,308 @@
     \end{verbatim}
 
 \newpage
+\subsubsection{Walidacja krzyżowa i holdout}
+    \par Walidacja krzyżowa(ang. Cross-Validation) i holdout były umieszczone na jednej karcie
+    \ref{fig:cv_holdout} dla zachowania ścisłości interfejsu graficznego, mimo to że ich
+    funkcjonalność nie jest połączona.
+
+    \begin{figure}[h!]
+        \begin{center}
+            \includegraphics[scale=0.7]{./img/svm_app_cv_holdout.png}
+            \caption{Karta z kontrolkami do walidacji krzyżowej i holdout}
+            \label{fig:cv_holdout}
+        \end{center}
+    \end{figure}
+
+    \par Holdout polega na rozdzielaniu zbioru na dane trenujące i dane testujące. Najczęściej
+    zbiór danych jest w jednym pliku, natomiast biblioteka \textit{LIBSVM} jest zorganizowana
+    tak, że potrzebuje plik z danymi trenującymi i plik z danymi testującymi. Za poprawne
+    rozdzielenie danych odpowiadają dwa skrypty w języku Python: h4c.py i h4r.py. Pierwszy
+    służy do klasyfikacji i stara się zachować stosunek klas w zbiorze testującym, drugi, z
+    kolei, służy do regresji i po prostu wybiera podany procent rekordów tworząc plik z danymi
+    do testowania. Na karcie jest umieszczona kontrolka \textit{Combo Box} która pozwala wybrać
+    pierwsze(\textit{Classification}) lub drugie(\textit{Regression}) podejścia.
+
+    \begin{figure}[h!]
+        \begin{center}
+            \includegraphics[scale=0.5]{./img/train_validation_holdout.png}
+            \captionsource{Przykład podziału zbioru danych. \textit{Train} i \textit{Validation} są
+            danymi do trenowania, a \textit{Holdout} do testowania modelu}
+            {\url{https://www.datarobot.com/wiki/training-validation-holdout/}}
+            \label{fig:tr_val_hl}
+        \end{center}
+    \end{figure}
+
+    \par Skrypt holdout dla regresji jest również używany w opisanej wyżej walidacji: on
+    wybiera losowe rekordy z danych trenujących i tworzy z nich tymczasowy plik testujący na
+    którym dalej działa algorytm testowania z biblioteki \textit{LIBSVM}, przez to wynik
+    walidacji może się różnić przy takich samych parametrach modelu.
+
+    \par Walidacja krzyżowa jest bardzo ważnym narzędziem w nauczaniu maszynowym. Jeśli danych
+    jest mało to rozdzielanie zbioru na dane trenujące i testujące może spowodować
+    niedostateczne nauczanie się modelu, w takim przypadku używamy walidacji krzyżowej.
+    N-krotna walidacja krzyżowa polega na rozdzielaniu zbioru na N równych części jedna z
+    których służy to testowania a wszystkie inne do trenowania. Proces jest iteratywny, więc
+    każda część w którejś iteracji będzie służyć do testowania. 
+
+    \begin{figure}[h!]
+        \begin{center}
+            \includegraphics[scale=0.3]{./img/cv_ilustration.png}
+            \captionsource{Ilustracja procesu 5-krotnej walidacji krzyżowej}
+            {\url{https://towardsdatascience.com/cross-validation-explained-
+            evaluating-estimator-performance-e51e5430ff85}}
+            \label{fig:cv_ilustr}
+        \end{center}
+    \end{figure}
+
+    \par Warto wspomnieć, że walidacja krzyżowa nie generuje modelu, a służy tylko do
+    określania jak dobry jest model z podanymi parametrami. Kiedy użytkownik uzna dokładność
+    modelu akceptującą on wyłączy walidacje krzyżową i wygeneruje model na całym zbiorze
+    trenującym.
+
+\newpage
+\subsubsection{Skalowanie danych}
+    \par Karta \textit{Scaling} \ref{fig:scaling} służy do skalowania danych. Główną zaletą
+    skalowania danych jest unikanie dominacji cech z większych zakresów liczbowych nad cechami
+    z mniejszych zakresów liczbowych. Skalowanie również zmniejsza obciążenie numeryczne dla
+    algorytmu, ponieważ funkcje jądrowe często zależą od iloczynu wektorowego lub skalarnego
+    cech np.  liniowa i wielomianowa funkcje jądrowe, dla których duże wartości w wektorach
+    cech mogą powodować problemy numeryczne.
+
+    \begin{figure}[h!]
+        \begin{center}
+            \includegraphics[scale=0.7]{./img/svm_app_scaling.png}
+            \caption{Karta z kontrolkami dla skalowania danych}
+            \label{fig:scaling}
+        \end{center}
+    \end{figure}
+
+    \par Twórcy biblioteki \textit{LIBSVM} proponują wszystkim początkującym zaczynać swoją
+    pracę z generacją modelu właśnie od skalowania, ponieważ tak prosty krok może mieć bardzo
+    wysoki wpływ na dokładność modelu. \\
+
+    \par Przykład wyjścia algorytmu trenującego na tym samym zbiorze danych z takimi samymi
+    parametrami do i po skalowaniu danych:
+    
+    \begin{verbatim}
+        ...*..*
+        optimization finished, #iter = 5371
+        nu = 0.606150
+        obj = -1061.528918, rho = -0.495266
+        nSV = 3053, nBSV = 722
+        Total nSV = 3053
+        Accuracy = 66.925% (2677/4000) (classification)
+        Validation Accuracy = 99.6769% (617/619) (classification)
+
+            /* moment w którym było przeprowadzone skalowanie danych */
+
+        *
+        optimization finished, #iter = 496
+        nu = 0.202599
+        obj = -507.307046, rho = 2.627039
+        nSV = 630, nBSV = 621
+        Total nSV = 630
+        Accuracy = 96.15% (3846/4000) (classification)
+        Validation Accuracy = 95.7997% (593/619) (classification)
+    \end{verbatim}
+    \par Na tym przykładzie widać, że dokładność modelu wzrosła na 30\% przy dziesięciokrotnym
+    zmniejszeniu liczby iteracji algorytmu.\\
+
+    \par Biblioteka \textit{LIBSVM} zawiera w sobie program \textit{svm-scale} który służy do
+    poprawnego skalowania danych. W ramach projektu aplikacji kod tego programu został
+    przerobiony i zawarty w klasie \textit{svmscale}. Po wybraniu zbioru trenującego kontrolki
+    skalowania danych robią się aktywne. Po skalowaniu aplikacja tworzy nowe pliki z danymi
+    które kończą się na \textit{.scale}. Warto zauważyć że zbiór trenujący i testujący muszą
+    być skalowane razem, a więc przypadek w którym użytkownik wybiera zbiór trenujący, skaluję
+    go, wybiera zbiór testujący i przeprowadza skalowanie ponownie może powodować
+    nieprzewidywalne konsekwencje. Jeśli użytkownik planuje skalować dane i testować swój model
+    to poprawnym podejściem jest wybranie zbiorów danych, a już za tym skalowanie danych.
+
+\subsubsection{Wizualizacja danych}
+    \par Karta \textit{Visualization} \ref{fig:visualization} służy do wizualizacji jedno-,
+    dwu- i trzy-wymiarowych danych. 
+
+    \begin{figure}[h!]
+        \begin{center}
+            \includegraphics[scale=0.7]{./img/svm_app_visualization.png}
+            \caption{Karta z kontrolkami dla wizualizacji danych}
+            \label{fig:visualization}
+        \end{center}
+    \end{figure}
+
+    \par Kontrolki na karcie są dostępne tylko wtedy gdy jest wybrany zbiór trenujący z liczbą
+    cech od 1 do 3. 
+
+    \begin{figure}[h!]
+        \begin{center}
+            \includegraphics[scale=0.7]{./img/2dplot_ex1.png}
+            \caption{Przykład wizualizacji dwuwymiarowych danych}
+            \label{fig:visualization}
+        \end{center}
+    \end{figure}
+
+    \par Dla jedno- i dwu-wymiarowych danych jest dostępne rysowanie gęstości danych. Algorytm
+    rysujący dzieli pole wykresu na kwadraty i zlicza liczbę punktów w każdym z nich. Na
+    podstawie tego jest generowany konturowy wykres gęstości. Za liczbę kwadratów odpowiada
+    wartość \textit{Bandwidth}, która może być ustawiana przez użytkownika na interfejsie
+    graficznym. Im mniejszy jest \textit{Bandwidth} tym bardziej gładki wychodzi wykres, ale
+    razem z tym zwiększa się obciążenie algorytmu rysującego. 
+
+    \begin{figure}[h!]
+        \begin{subfigure}{.5\textwidth}
+            \centering
+            \includegraphics[width=.95\linewidth]{img/1dplot_density.png}
+            \label{fig:1dplot_density}
+        \end{subfigure}%
+        \begin{subfigure}{.5\textwidth}
+            \centering
+            \includegraphics[width=.95\linewidth]{img/2dplot_density.png}
+            \label{fig:2dplot_density}
+        \end{subfigure}
+        \caption{Przykład rysowania gęstości jedno- i dwu-wymiarowych danych}
+        \label{fig:density_ex}
+    \end{figure}
+    
+    \newpage
+    \par Dla dwuwymiarowych danych jest dostępne rysowanie modelu.
+
+    \begin{figure}[h!]
+        \begin{center}
+            \includegraphics[scale=0.65]{./img/2dplot_model1.png}
+            \caption{Przykład rysowania modelu}
+            \label{fig:bad_model_visualization}
+        \end{center}
+    \end{figure}
+
+    \par Dla wyżej narysowanego modelu \ref{fig:bad_model_visualization} już z wykresu widać że
+    parametry dobrane kiepsko.  Dobierając odpowiednie parametry i skalując dane można osiągnąć
+    lepsze wyniki:
+
+    \begin{figure}[h!]
+        \begin{center}
+            \includegraphics[scale=0.65]{./img/2dplot_model2.png}
+            \caption{Przykład rysowania modelu}
+            \label{fig:good_model_visualization}
+        \end{center}
+    \end{figure}
+
+    \newpage
+    \par Przycisk \textit{Gen Points} obok kontrolek do wybierania plików z danymi pozwala
+    samodzielnie generować zbiór danych. Najpierw trzeba będzie wybrać nazwę pliku i katalog w
+    którym należy go umieścić. Za tym pojawi się okno z pustym wykresem, klikając po nim
+    użytkownik będzie generował punkty na tej płaszczyźnie, przycisk \textit{Change Group}
+
+    \begin{figure}[h!]
+        \begin{center}
+            \includegraphics[scale=0.65]{./img/gen_plot.png}
+            \caption{Przykład ręcznego generowania danych}
+            \label{fig:gen_plot}
+        \end{center}
+    \end{figure}
+
+    \par Wygenerowany model z liniową funkcją jądrową:
+
+    \begin{figure}[h!]
+        \begin{center}
+            \includegraphics[scale=0.65]{./img/gen_plot_model.png}
+            \caption{Model z ręcznie wygenerowanych danych}
+            \label{fig:gen_plot_model}
+        \end{center}
+    \end{figure}
+
+    \par Dla rysowania wykresów był napisany skrypt w języku Python \textit{plotter.py}.
+    Wykresy gęstości pomaga rysować funkcja \textit{gaussian\_kde} z biblioteki \textit{scipy}.
+    Żeby narysować model skrypt generuje siatkę punktów na całym wykresie zapisuję ich do
+    tymczasowego pliku i przekazuje go do programu \textit{svm-predict} z biblioteki
+    \textit{LIBSVM}, który w wyniku swojego działania zwraca swoje zgadnięcia odnośnie podanych
+    punktów, co pozwala kolorować tło wykresu. Skutkiem takiego podejścia jest 'kąciastość'
+    linii rozdzielającej klasy. Wartość \textit{Bandwidth} pozwala kontrolować liczbę punktów w
+    generowanej siatce i robić bardziej gładką linie.
+
+\subsubsection{Wybór cech}
+    \par Czasami jest potrzeba wybrać tylko niektóre cechy z zbioru danych. Dla takich potrzeb
+    w aplikacji istnieje funkcjonalność wyboru cech na karcie \textit{Feature Selection}
+    \ref{fig:feature_selection}.
+
+    \begin{figure}[h!]
+        \begin{center}
+            \includegraphics[scale=0.7]{./img/svm_app_fs.png}
+            \caption{Karta z kontrolkami do wyboru cech}
+            \label{fig:feature_selection}
+        \end{center}
+    \end{figure}
+
+    \par Na karcie jest umieszczone pole typu \textit{Text Edit}, w które użytkownik musi
+    wprowadzić które cechy on chce wybrać. Domyślnie w polu jest wpisany przedział cech w
+    wczytanym pliku. Użytkownik może zmienić ten przedział lub wskazać konkretne cechy do
+    wyboru, załóżmy że wczytany zbiór danych ma 30 cech, wtedy:
+
+    \begin{verbatim}
+    1-10                # wybór cech od 1 do 10
+    1-5,10-25           # wybór cech od 1 do 5 i od 10 do 25
+    1-5,7,10,15-20,25   # wybór cech od 1 do 5, 7 i 10, od 15 do 20 i 25
+    \end{verbatim}
+
+    \par Przycisk \textit{Select Features} uruchamia skrypt w języku Python
+    \textit{f\_select.py} który z wybranych zbiorów danych wybiera cechy i zapisuję ich w
+    formacie \textit{LIBSVM} do plików z nazwą kończąca się na \textit{.fseleced}. Analogicznie
+    do skalowania jeśli użytkownik chce swoje dane testować to przy wyborze cech musi być
+    wybrany odpowiedni plik z danymi testującymi.
+
+\subsubsection{Zmiana formatu danych na \textit{LIBSVM}}
+    \par W Internecie trudno znaleźć dane przygotowane w formacie \textit{LIBSVM}, większość z
+    nich jest w formacie CSV. Natomiast algorytm trenujący biblioteki \textit{LIBSVM} nie
+    przyjmuje danych w innych formatach. Żeby dać swobodę użytkownikom i pozbawić ich od
+    potrzeby pisania własnych programów dla konwersji została dodana prosta funkcjonalność
+    umieszczona na karcie \textit{Format} \ref{fig:format} pozwalająca konwertować dane do
+    formatu \textit{LIBSVM}. Użytkownik musi podać separator pomiędzy cechami i określić czy
+    cecha jest na początku lub końcu rekordu. Niestety nie ma opcji żeby liczba określająca
+    klasę znajdywała się pomiędzy liczbami oznaczające cechy. Również trzeba określić separator
+    dziesiętny liczb rzeczywistych(kropka lub przecinek).
+
+    \begin{figure}[h!]
+        \begin{center}
+            \includegraphics[scale=0.7]{./img/svm_app_format.png}
+            \caption{Karta z kontrolkami do formatowania danych}
+            \label{fig:format}
+        \end{center}
+    \end{figure}
+
+    \par Po ustawieniu wszystkich parametrów formatowania i kliknięciu przycisku
+    \textit{Convert} aplikacja uruchamia skrypt w języku Python \textit{convert2svm.py} który
+    dzięki podanemu separatorowi analizuje podany plik u układa dane w formacie
+    \textit{LIBSVM}.
+
+    \par Na przykład to są 5 pierwszych linijek ze zbioru danych w formacie CSV:
+
+    \begin{verbatim}
+63,1,3,145,233,1,0,150,0,2.3,0,0,1,1
+37,1,2,130,250,0,1,187,0,3.5,0,0,2,1
+41,0,1,130,204,0,0,172,0,1.4,2,0,2,1
+56,1,1,120,236,0,1,178,0,0.8,2,0,2,1
+57,0,0,120,354,0,1,163,1,0.6,2,0,2,1
+    \end{verbatim}
+
+    \par Te same dane po formatowaniu(ustawiono flagę że liczby określające klasy są na końcach
+    linii):
+
+    \begin{verbatim}
+1 1:63 2:1 3:3 4:145 5:233 6:1 7:0 8:150 9:0 10:2.3 11:0 12:0 13:1
+1 1:37 2:1 3:2 4:130 5:250 6:0 7:1 8:187 9:0 10:3.5 11:0 12:0 13:2
+1 1:41 2:0 3:1 4:130 5:204 6:0 7:0 8:172 9:0 10:1.4 11:2 12:0 13:2
+1 1:56 2:1 3:1 4:120 5:236 6:0 7:1 8:178 9:0 10:0.8 11:2 12:0 13:2
+1 1:57 2:0 3:0 4:120 5:354 6:0 7:1 8:163 9:1 10:0.6 11:2 12:0 13:2
+    \end{verbatim}
+
+\subsubsection{Optymalizacja parametrów}
+    \par Przeszukiwanie siatką(ang. grid search) jest algorytmem pozwalającym na dobór
+    parametrów modelu.
+
+\newpage
+\section{Przykłady działania aplikacji}
 \section{Podsumowanie} % SECTION
 \subsection{Odniesienie do celu pracy}
-\subsection{Co można dodać}
+\subsection{Rozwój aplikacji}
 
 \newpage
 \nocite{*}
