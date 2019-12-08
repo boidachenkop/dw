@@ -75,6 +75,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(availability_handler, &AvailabilityHandler::cvSBEnabled, ui->cv_spinBox, &QSpinBox::setEnabled);
     connect(availability_handler, &AvailabilityHandler::convertEnabled, ui->format_tab, &QSpinBox::setEnabled);
     connect(availability_handler, &AvailabilityHandler::gridSearchEnabled, ui->gridSearch_tab, &QSpinBox::setEnabled);
+    //type and kernel
     connect(ui->svmType_comboBox, SIGNAL(currentIndexChanged(int)), availability_handler, SLOT(filterSVMTypeParams(int)));
     connect(ui->kernel_comboBox, SIGNAL(currentIndexChanged(int)), availability_handler,SLOT(filterKernelParams(int)));
     //info labels visibility

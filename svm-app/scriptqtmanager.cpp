@@ -112,7 +112,7 @@ void ScriptQtManager::runGridSearch(QString filepath, QString log2c, QString log
     py_script.setProcessChannelMode(QProcess::ForwardedOutputChannel);
 //    py_script.startDetached("python3", args);
     py_script.start("python3", args);
-    py_script.waitForFinished(60000);
+    py_script.waitForFinished(-1);
 }
 
 int ScriptQtManager::runGenerateData(QString filepath)
