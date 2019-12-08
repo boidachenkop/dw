@@ -18,6 +18,7 @@
 \usepackage{listings}
 \usepackage{color}
 \usepackage{subcaption}
+\usepackage{enumitem}
 
 
 \def \thesis {Aplikacja uczenia maszynowego metodą SVM}
@@ -68,7 +69,7 @@
   breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
   breaklines=true,                 % sets automatic line breaking
   captionpos=b,                    % sets the caption-position to bottom
-  escapeinside={\%*}{*)},
+  escapeinside={(*@}{@*)},
   commentstyle=\color{mygreen},    % comment style
   extendedchars=false,              % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
   frame=single,	                   % adds a frame around the code
@@ -613,13 +614,55 @@
         \label{fig:availability_ex}
     \end{figure}
 
+    \par Realizacją funkcjonalności dostępności parametrów jest ściśle związana z systemem
+    sygnałów i gniazd w bibliotece \textit{Qt}. Sygnały najczęściej są wywoływane przez
+    kontrolki na interfejsie graficznym gniazdem natomiast jest funkcja do której są
+    przekazywane odpowiednie parametry.
+
+    \begin{figure}[h]
+        \begin{center}
+            \includegraphics[scale=0.6]{./img/signal_slots.png}
+            \captionsource{Wizualizacja systemu sygnałów i
+            gniazd}{https://doc.qt.io/qt-5/signalsandslots.html}
+            \label{fig:signal_slots}
+        \end{center}
+    \end{figure}
+
+\newpage 
+
+    \par Przykład kodu w którym sygnały wywoływane w klasie \textit{AvailabilityHandler} są łączone
+    z gniazdami w kontrolkach z polami do wpisywania parametrów.
+
+    \begin{lstlisting}
+connect(availability_handler, &AvailabilityHandler::degreeEnabled, ui(*@-@*)>degree_spinBox, &QSpinBox::setEnabled);
+connect(availability_handler, &AvailabilityHandler::gammaEnabled, ui(*@-@*)>gamma_lineEdit, &QLineEdit::setEnabled);
+connect(availability_handler, &AvailabilityHandler::coef0Enabled, ui(*@-@*)>coef0_lineEdit, &QLineEdit::setEnabled);
+connect(availability_handler, &AvailabilityHandler::cEnabled, ui(*@-@*)>C_lineEdit, &QLineEdit::setEnabled);
+connect(availability_handler, &AvailabilityHandler::nuEnabled, ui(*@-@*)>nu_lineEdit, &QLineEdit::setEnabled);
+connect(availability_handler, &AvailabilityHandler::pEnabled, ui(*@-@*)>P_lineEdit, &QLineEdit::setEnabled);
+    \end{lstlisting}
+
+    \par Żeby wyżej wymienione sygnały wywoływały się automatycznie sygnały kontrolek
+    \textit{Combo Box} zmieniających typ SVM lub funkcje jądrową są łączone z gniazdami w
+    klasie \textit{AvailabilityHandler}:
+
+    \begin{lstlisting}
+connect(ui->svmType_comboBox, SIGNAL(currentIndexChanged(int)), availability_handler, SLOT(filterSVMTypeParams(int)));
+connect(ui->kernel_comboBox, SIGNAL(currentIndexChanged(int)), availability_handler,SLOT(filterKernelParams(int)));
+    \end{lstlisting}
+
+    \par Z sygnału \textit{currentIndexChanged} jest przekazywany indeks wybranego elementu do
+    gniazda \textit{filterSVMTypeParams} w którym są wywoływany odpowiednie sygnały
+    zarządzające dostępnością parametrów.
+
+
 \subsubsection{Parametry SVM i funkcji jądrowych}
 
-    \par Wszystkie parametry oprócz \textit{degree} są w postaci kontrolki \textit{LineEdit} ze
+    \par Wszystkie parametry oprócz \textit{degree} są w postaci kontrolki \textit{Line Edit} ze
     względu na to że są one liczbami rzeczywistymi, \textit{degree} z kolei jest liczbą
-    naturalną a więc używana jest kontrolka \textit{SpinBox}. Po uruchamianiu trenowania
-    program parsuje pola z parametrami i sprawdza czy są poprawne. W pola typu
-    \textit{LineEdit} można wprowadzać litery(ponieważ jest dozwolony zapis liczb w notacji
+    naturalną a więc używana jest kontrolka \textit{Spin Box}. Po uruchamianiu trenowania
+    program czyta pola z parametrami i sprawdza czy są poprawne. W pola typu
+    \textit{Line Edit} można wprowadzać litery(ponieważ jest dozwolony zapis liczb w notacji
     naukowej: \textit{1e-3}). Jeśli wprowadzoną liczba nie jest w formacie naukowym lub nie
     jest liczbą rzeczywistą z separatorem kropką, to pole z błędnymi danymi jest obramiane na
     czerwono a proces treningu jest powstrzymywany.
@@ -743,6 +786,9 @@
         \end{center}
     \end{figure}
 
+    \par Również jest dostępna walidacja krzyżowa typu \textit{Leave-one-out}, która jest
+    rodzajem N-krotnej walidacji, tylko zbiór testujący zawsze jest jednoelementowy, czyli jest
+    to równoważne podaniu jako N liczby $rozmiar\_zbioru - 1$.
     \par Warto wspomnieć, że walidacja krzyżowa nie generuje modelu, a służy tylko do
     określania jak dobry jest model z podanymi parametrami. Kiedy użytkownik uzna dokładność
     modelu akceptującą on wyłączy walidacje krzyżową i wygeneruje model na całym zbiorze
@@ -984,10 +1030,53 @@
 
 \subsubsection{Optymalizacja parametrów}
     \par Przeszukiwanie siatką(ang. grid search) jest algorytmem pozwalającym na dobór
-    parametrów modelu.
+    parametrów modelu. Biblioteka \textit{LIBSVM} dostarcza skrypt w języku Python
+    \textit{grid-search} dla parametrów C i \textit{gamma} który był zintegrowany z aplikacją.
+    Probuje on różne kombinacje $(C, \gamma)$(działa w oparciu o funkcje jądrową RBF) i
+    wypisuje tą dla której walidacja krzyżowa dała najlepszy wynik. 
+
+    \begin{figure}[h!]
+        \begin{center}
+            \includegraphics[scale=0.7]{./img/svm_app_grid_search.png}
+            \caption{Karta z kontrolkami do przeszukiwania siatką}
+            \label{fig:grid_search}
+        \end{center}
+    \end{figure}
+
+    \par Na karcie \textit{Grid Search} znajdują się dwa pola tekstowych pozwalających na ustawienie
+    zakresów parametrów i kroków algorytmu. W pole należy wpisać trzy liczby: początek, koniec
+    i krok. Zakres próbowanych parametrów więc będzie wyglądał tak:
+    $2^{begin,...,begin+k*step,...end}$. Przeszukiwanie siatką pomaga wybrać potrzebne
+    parametry nie zgadując i nie wprowadzając ręcznie każdej pary, wadą jednak jest że proces
+    jest dość wolny. 
+    \par Na karcie \textit{Grid Search} znajduje się kontrolka typu \textit{Check Box}
+    pozwalająca włączyć animacje procesu przeszukiwania jeśli na używanym systemie jest
+    skonfigurowana aplikacja \textit{gnuplot}. Również można wybrać krotność walidacji
+    krzyżowej używanej dla testowania każdej pary parametrów. 
 
 \newpage
 \section{Przykłady działania aplikacji}
+    \par W tym paragrafie będą przedstawione przykłady użycia aplikacji. 
+
+\subsection{Przykład 1}
+    \par Przykład pokazujący pracę z plikiem z nieprzeskalowanymi danymi w formacie
+    \textit{LIBSVM}
+
+\begin{enumerate}[label={\textbf{Krok \theenumi :}},leftmargin=*]
+    \item Wczytać plik z danymi
+
+    % \begin{figure}[h!]
+    %     \begin{center}
+    %         \includegraphics[scale=0.7]{./img/svm_app_grid_search.png}
+    %         \caption{Karta z kontrolkami do przeszukiwania siatką}
+    %         \label{fig:grid_search}
+    %     \end{center}
+    % \end{figure}
+
+\end{enumerate}
+
+    
+\newpage
 \section{Podsumowanie} % SECTION
 \subsection{Odniesienie do celu pracy}
 \subsection{Rozwój aplikacji}
