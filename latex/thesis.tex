@@ -19,6 +19,7 @@
 \usepackage{color}
 \usepackage{subcaption}
 \usepackage{enumitem}
+\usepackage{float}
 
 
 \def \thesis {Aplikacja uczenia maszynowego metodą SVM}
@@ -598,7 +599,7 @@
 
     %\newpage % or figure below brakes order
 
-    \begin{figure}[h!]
+    \begin{figure}[H]
         \begin{subfigure}{.5\textwidth}
             \centering
             \includegraphics[width=.95\linewidth]{img/svm_app_param_ex1.png}
@@ -616,7 +617,7 @@
 
     \par Realizacją funkcjonalności dostępności parametrów jest ściśle związana z systemem
     sygnałów i gniazd w bibliotece \textit{Qt}. Sygnały najczęściej są wywoływane przez
-    kontrolki na interfejsie graficznym gniazdem natomiast jest funkcja do której są
+    kontrolki na interfejsie graficznym, a gniazdem jest funkcja do której są
     przekazywane odpowiednie parametry.
 
     \begin{figure}[h]
@@ -737,7 +738,7 @@ connect(ui->kernel_comboBox, SIGNAL(currentIndexChanged(int)), availability_hand
     \ref{fig:cv_holdout} dla zachowania ścisłości interfejsu graficznego, mimo to że ich
     funkcjonalność nie jest połączona.
 
-    \begin{figure}[h!]
+    \begin{figure}[H]
         \begin{center}
             \includegraphics[scale=0.7]{./img/svm_app_cv_holdout.png}
             \caption{Karta z kontrolkami do walidacji krzyżowej i holdout}
@@ -754,11 +755,11 @@ connect(ui->kernel_comboBox, SIGNAL(currentIndexChanged(int)), availability_hand
     do testowania. Na karcie jest umieszczona kontrolka \textit{Combo Box} która pozwala wybrać
     pierwsze(\textit{Classification}) lub drugie(\textit{Regression}) podejścia.
 
-    \begin{figure}[h!]
+    \begin{figure}[H]
         \begin{center}
             \includegraphics[scale=0.5]{./img/train_validation_holdout.png}
-            \captionsource{Przykład podziału zbioru danych. \textit{Train} i \textit{Validation} są
-            danymi do trenowania, a \textit{Holdout} do testowania modelu}
+            \captionsource{Przykład podziału zbioru danych. \textit{Train} jest do trenowania,
+            a \textit{Holdout} i \textit{Validation} służą do testowania modelu}
             {\url{https://www.datarobot.com/wiki/training-validation-holdout/}}
             \label{fig:tr_val_hl}
         \end{center}
@@ -776,7 +777,7 @@ connect(ui->kernel_comboBox, SIGNAL(currentIndexChanged(int)), availability_hand
     których służy to testowania a wszystkie inne do trenowania. Proces jest iteratywny, więc
     każda część w którejś iteracji będzie służyć do testowania. 
 
-    \begin{figure}[h!]
+    \begin{figure}[H]
         \begin{center}
             \includegraphics[scale=0.3]{./img/cv_ilustration.png}
             \captionsource{Ilustracja procesu 5-krotnej walidacji krzyżowej}
@@ -803,7 +804,7 @@ connect(ui->kernel_comboBox, SIGNAL(currentIndexChanged(int)), availability_hand
     cech np.  liniowa i wielomianowa funkcje jądrowe, dla których duże wartości w wektorach
     cech mogą powodować problemy numeryczne.
 
-    \begin{figure}[h!]
+    \begin{figure}[H]
         \begin{center}
             \includegraphics[scale=0.7]{./img/svm_app_scaling.png}
             \caption{Karta z kontrolkami dla skalowania danych}
@@ -852,13 +853,19 @@ connect(ui->kernel_comboBox, SIGNAL(currentIndexChanged(int)), availability_hand
     nieprzewidywalne konsekwencje. Jeśli użytkownik planuje skalować dane i testować swój model
     to poprawnym podejściem jest wybranie zbiorów danych, a już za tym skalowanie danych.
 
+    \par Również jest dostępne skalowanie klas, które aktywuje się ptaszkiem w polu
+    \textit{Scale y}. Może to być przydatne w regresji, kiedy liczby w kolumnie $Y$(kolumna
+    klas) nie są dyskretne. Za realizacją skalowania klas stoi wyżej wymieniony program
+    \textit{svm-scale}.
+
+\newpage
 \subsubsection{Wizualizacja danych}
     \par Karta \textit{Visualization} \ref{fig:visualization} służy do wizualizacji jedno-,
     dwu- i trzy-wymiarowych danych. 
 
-    \begin{figure}[h!]
+    \begin{figure}[H]
         \begin{center}
-            \includegraphics[scale=0.7]{./img/svm_app_visualization.png}
+            \includegraphics[scale=0.65]{./img/svm_app_visualization.png}
             \caption{Karta z kontrolkami dla wizualizacji danych}
             \label{fig:visualization}
         \end{center}
@@ -867,9 +874,9 @@ connect(ui->kernel_comboBox, SIGNAL(currentIndexChanged(int)), availability_hand
     \par Kontrolki na karcie są dostępne tylko wtedy gdy jest wybrany zbiór trenujący z liczbą
     cech od 1 do 3. 
 
-    \begin{figure}[h!]
+    \begin{figure}[H]
         \begin{center}
-            \includegraphics[scale=0.7]{./img/2dplot_ex1.png}
+            \includegraphics[scale=0.65]{./img/2dplot_ex1.png}
             \caption{Przykład wizualizacji dwuwymiarowych danych}
             \label{fig:visualization}
         \end{center}
@@ -882,7 +889,7 @@ connect(ui->kernel_comboBox, SIGNAL(currentIndexChanged(int)), availability_hand
     graficznym. Im mniejszy jest \textit{Bandwidth} tym bardziej gładki wychodzi wykres, ale
     razem z tym zwiększa się obciążenie algorytmu rysującego. 
 
-    \begin{figure}[h!]
+    \begin{figure}[H]
         \begin{subfigure}{.5\textwidth}
             \centering
             \includegraphics[width=.95\linewidth]{img/1dplot_density.png}
@@ -897,10 +904,9 @@ connect(ui->kernel_comboBox, SIGNAL(currentIndexChanged(int)), availability_hand
         \label{fig:density_ex}
     \end{figure}
     
-    \newpage
     \par Dla dwuwymiarowych danych jest dostępne rysowanie modelu.
 
-    \begin{figure}[h!]
+    \begin{figure}[H]
         \begin{center}
             \includegraphics[scale=0.65]{./img/2dplot_model1.png}
             \caption{Przykład rysowania modelu}
@@ -908,11 +914,12 @@ connect(ui->kernel_comboBox, SIGNAL(currentIndexChanged(int)), availability_hand
         \end{center}
     \end{figure}
 
+    \newpage
     \par Dla wyżej narysowanego modelu \ref{fig:bad_model_visualization} już z wykresu widać że
     parametry dobrane kiepsko.  Dobierając odpowiednie parametry i skalując dane można osiągnąć
     lepsze wyniki:
 
-    \begin{figure}[h!]
+    \begin{figure}[H]
         \begin{center}
             \includegraphics[scale=0.65]{./img/2dplot_model2.png}
             \caption{Przykład rysowania modelu}
@@ -920,15 +927,15 @@ connect(ui->kernel_comboBox, SIGNAL(currentIndexChanged(int)), availability_hand
         \end{center}
     \end{figure}
 
-    \newpage
     \par Przycisk \textit{Gen Points} obok kontrolek do wybierania plików z danymi pozwala
     samodzielnie generować zbiór danych. Najpierw trzeba będzie wybrać nazwę pliku i katalog w
     którym należy go umieścić. Za tym pojawi się okno z pustym wykresem, klikając po nim
     użytkownik będzie generował punkty na tej płaszczyźnie, przycisk \textit{Change Group}
+    pozwala zmienić klasę aktualnie umieszczanych punktów.
 
-    \begin{figure}[h!]
+    \begin{figure}[H]
         \begin{center}
-            \includegraphics[scale=0.65]{./img/gen_plot.png}
+            \includegraphics[scale=0.55]{./img/gen_plot.png}
             \caption{Przykład ręcznego generowania danych}
             \label{fig:gen_plot}
         \end{center}
@@ -936,7 +943,7 @@ connect(ui->kernel_comboBox, SIGNAL(currentIndexChanged(int)), availability_hand
 
     \par Wygenerowany model z liniową funkcją jądrową:
 
-    \begin{figure}[h!]
+    \begin{figure}[H]
         \begin{center}
             \includegraphics[scale=0.65]{./img/gen_plot_model.png}
             \caption{Model z ręcznie wygenerowanych danych}
@@ -953,12 +960,13 @@ connect(ui->kernel_comboBox, SIGNAL(currentIndexChanged(int)), availability_hand
     linii rozdzielającej klasy. Wartość \textit{Bandwidth} pozwala kontrolować liczbę punktów w
     generowanej siatce i robić bardziej gładką linie.
 
+\newpage
 \subsubsection{Wybór cech}
     \par Czasami jest potrzeba wybrać tylko niektóre cechy z zbioru danych. Dla takich potrzeb
     w aplikacji istnieje funkcjonalność wyboru cech na karcie \textit{Feature Selection}
     \ref{fig:feature_selection}.
 
-    \begin{figure}[h!]
+    \begin{figure}[H]
         \begin{center}
             \includegraphics[scale=0.7]{./img/svm_app_fs.png}
             \caption{Karta z kontrolkami do wyboru cech}
@@ -994,7 +1002,7 @@ connect(ui->kernel_comboBox, SIGNAL(currentIndexChanged(int)), availability_hand
     klasę znajdywała się pomiędzy liczbami oznaczające cechy. Również trzeba określić separator
     dziesiętny liczb rzeczywistych(kropka lub przecinek).
 
-    \begin{figure}[h!]
+    \begin{figure}[H]
         \begin{center}
             \includegraphics[scale=0.7]{./img/svm_app_format.png}
             \caption{Karta z kontrolkami do formatowania danych}
@@ -1035,7 +1043,7 @@ connect(ui->kernel_comboBox, SIGNAL(currentIndexChanged(int)), availability_hand
     Probuje on różne kombinacje $(C, \gamma)$(działa w oparciu o funkcje jądrową RBF) i
     wypisuje tą dla której walidacja krzyżowa dała najlepszy wynik. 
 
-    \begin{figure}[h!]
+    \begin{figure}[H]
         \begin{center}
             \includegraphics[scale=0.7]{./img/svm_app_grid_search.png}
             \caption{Karta z kontrolkami do przeszukiwania siatką}
@@ -1065,16 +1073,198 @@ connect(ui->kernel_comboBox, SIGNAL(currentIndexChanged(int)), availability_hand
 \begin{enumerate}[label={\textbf{Krok \theenumi :}},leftmargin=*]
     \item Wczytać plik z danymi
 
-    % \begin{figure}[h!]
-    %     \begin{center}
-    %         \includegraphics[scale=0.7]{./img/svm_app_grid_search.png}
-    %         \caption{Karta z kontrolkami do przeszukiwania siatką}
-    %         \label{fig:grid_search}
-    %     \end{center}
-    % \end{figure}
+    \begin{figure}[H]
+        \begin{center}
+            \includegraphics[scale=0.7]{./img/ex1_st1.png}
+        \end{center}
+    \end{figure}
+
+    Pojawiły się ścieżki z plikami, a pod nimi informacje o wczytanych zbiorach danych,
+    więc dane wczytane poprawnie.
+
+    \newpage
+    \item Wyskalować dane do przedziału $[-1,1]$
+
+    \begin{figure}[H]
+        \begin{center}
+            \includegraphics[scale=0.7]{./img/ex1_st2.png}
+        \end{center}
+    \end{figure}
+
+    Do nazw plików z danymi dodano rozszerzenie \textit{.scale}, więc dane są wyskalowane.
+
+    \item Przeprowadzić przeszukiwanie siatką, żeby dobrać pasujące parametry.
+
+    \begin{figure}[H]
+        \begin{center}
+            \includegraphics[scale=0.7]{./img/ex1_st3.png}
+        \end{center}
+    \end{figure}
+
+    Algorytm przeszukiwania siatką zwrócił że przy parametrach $C=2$, $gamma=2$ precyzja modelu
+    będzie około 96\%.
+
+    \item Wytrenować i przetestować model dla parametrów zwróconych algorytmem optymalizującym.
+
+    \begin{figure}[H]
+        \begin{center}
+            \includegraphics[scale=0.7]{./img/ex1_st4.png}
+        \end{center}
+    \end{figure}
+
+    Wytrenowany model znajduje się w ścieżce podanej naprzeciwko przycisku \textit{Model File
+    Save as}. 
+\end{enumerate}
+
+\newpage
+\subsection{Przykład 2}
+    \par Przykład z danymi w formacie \textit{CSV}. 
+\begin{enumerate}[label={\textbf{Krok \theenumi :}},leftmargin=*]
+
+    \item Wczytać plik z danymi.
+    \begin{figure}[H]
+        \begin{center}
+            \includegraphics[scale=0.7]{./img/ex2_st1.png}
+        \end{center}
+    \end{figure}
+
+    Ścieżka do wczytanego pliku jest czerwonego koloru, co sygnalizuje o błędzie, komunikat w
+    polu tekstowym mówi że wczytane dane nie są w formacie \textit{LIBSVM}.
+
+    \item Skonwertować dane do formatu \textit{LIBSVM}.
+
+    \begin{figure}[H]
+        \begin{center}
+            \includegraphics[scale=0.7]{./img/ex2_st2.png}
+        \end{center}
+    \end{figure}
+
+    Należy wprowadzić separator danych i zaznaczyć ptaszkiem czy liczba wskazująca klasę jest
+    na początku lub końcu linii. W danym przypadku separatorem jest przecinek, a kolumna klas
+    jest na końcu. Po kliknięciu na przycisk \textit{Convert} program automatycznie wczyta plik
+    z skonwertowanymi danymi i wypisze informację o nich.
+    
+    \item Wyskalować dane do przedziału $[-1, 1]$.
+
+    \begin{figure}[H]
+        \begin{center}
+            \includegraphics[scale=0.7]{./img/ex2_st3.png}
+        \end{center}
+    \end{figure}
+
+    Skoro w danym zbiorze jest tylko 303 rekordy nie będziemy dzielić go na zbiór testujący i
+    trenujący, a użyjemy walidacji krzyżowej. Do nazwy pliku z danymi było dodane
+    \textit{.scale}, więc dane są wyskalowane.
+
+\newpage
+    \item Uruchomić przeszukiwanie siatką, żeby dobrać odpowiednie parametry.
+
+    \begin{figure}[H]
+        \begin{center}
+            \includegraphics[scale=0.7]{./img/ex2_st4.png}
+        \end{center}
+    \end{figure}
+
+    Algorytm zwrócił parametry $C=32$, $gamma=0.001953$ na których 5-krotna walidacja
+    krzyżowa pokazuje precyzje modelu w 83\%. Mając bardziej szczegółową wiedze o tym zbiorze
+    danych np. co reprezentują cechy można było by spróbować wyrzucić te które nie dotyczą
+    rozwiązywanego zadania i uzyskać większą dokładność modelu.
+
+    \item Wygenerować model.
+
+    \begin{figure}[H]
+        \begin{center}
+            \includegraphics[scale=0.7]{./img/ex2_st5.png}
+        \end{center}
+    \end{figure}
 
 \end{enumerate}
 
+\subsection{Przykład 3}
+    \par Przykład reprezentujący pracę z ręcznie wygenerowanymi danymi.
+
+\begin{enumerate}[label={\textbf{Krok \theenumi :}},leftmargin=*]
+    \item Wcisnąć przycisk \textit{Gen Data} i wybrać lokalizację i nazwę dla pliku z ręcznie
+        wygenerowanymi danymi.
+
+    \begin{figure}[H]
+        \begin{center}
+            \includegraphics[scale=0.7]{./img/ex3_st1.png}
+        \end{center}
+    \end{figure}
+
+    \newpage
+    \item Klikając na płaszczyźnie generować punkty. Dla zmiany klasy należy kliknąć w przycisk
+        \textit{Change Group}.
+
+    \begin{figure}[H]
+        \begin{center}
+            \includegraphics[scale=0.6]{./img/ex3_st2.png}
+        \end{center}
+    \end{figure}
+
+    Staram się imitować klasyczny przykład na którym jest pokazywane działanie funkcji
+    jądrowych. W kolejnym kroku nie ma potrzeby skalować dane skoro granice płaszczyzny na
+    której generujemy dane są w przedziałach $x\in [-1, 1]$ i $y\in [-1, 1]$
+
+    \item W celu zadowolenia interesu użyjmy liniowej funkcji jądrowej z domyślnymi
+        parametrami.
+
+    \begin{figure}[H]
+        \begin{center}
+            \includegraphics[scale=0.7]{./img/ex3_st3.png}
+        \end{center}
+    \end{figure}
+
+    \newpage
+    \item Po wygenerowania modelu można zwizualizować go.
+
+    \begin{figure}[H]
+        \begin{center}
+            \includegraphics[scale=0.7]{./img/ex3_st4.png}
+        \end{center}
+    \end{figure}
+
+    Algorytm \textit{SVM} przydzielił wszystkie punkty do jednej klasy i według 5-krotnej
+    walidacji krzyżowej uzyskał precyzje 65.84\%. Jest to, oczywiście, kiepski model.
+    
+    \item Wróćmy do funkcji jądrowej RBF i spróbujmy uruchomić przeszukiwanie siatką.
+
+    \begin{figure}[H]
+        \begin{center}
+            \includegraphics[scale=0.66]{./img/ex3_st5.png}
+        \end{center}
+    \end{figure}
+
+    Algorytm proponuje użyć parametrów $C=0.125$ i $gamma=8$ dzięki którym potrafimy uzyskać
+    znacznie lepszą precyzje: 98.76\%!
+
+    \newpage
+    \item Po wygenerowaniu modelu można go zwizualizować.
+
+    \begin{figure}[H]
+        \begin{center}
+            \includegraphics[scale=0.69]{./img/ex3_st6.png}
+        \end{center}
+    \end{figure}
+
+    Z wykresu widać że ten model jest znacznie lepszy. Algorytm poprawnie zidentyfikował
+    szumy(punkty znajdujące się pomiędzy punktami z innej klasy) i nie widać przeuczania. 
+
+\item W celach zadowolenia interesu sprobujmy sztucznie wywołać zjawisko przeuczania, np.
+    podając jako parametry $C=500$ i $gamma=20$. Po wygenerowaniu modelu będzie on miał
+    następujący wygląd.
+
+    \begin{figure}[H]
+        \begin{center}
+            \includegraphics[scale=0.69]{./img/ex3_st7.png}
+        \end{center}
+    \end{figure}
+
+    W tym przypadku model bierze pod uwagę punkty które były wprowadzone specjalnie w roli
+    szumów, 5-krotna walidacja krzyżowa zwraca gorszy wynik: 95.69\%
+
+\end{enumerate}
     
 \newpage
 \section{Podsumowanie} % SECTION

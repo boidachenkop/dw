@@ -525,7 +525,8 @@ void MainWindow::on_convert_pushButton_clicked()
                     .featureSelectionTabEnabled(true)
                     .cvTabEnabled(true)
                     .trainInfoLabelsVisible(true)
-                    .convertTabEnabled(file_manager->isTestOK() ? false : true);
+                    .convertTabEnabled(file_manager->isTestOK() ? false : true)
+                    .gridSearchTabEnabled(true);
         }
     }
     if(!file_manager->isTestOK()){
