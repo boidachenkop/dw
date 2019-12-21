@@ -1253,7 +1253,7 @@ connect(ui->kernel_comboBox, SIGNAL(currentIndexChanged(int)), availability_hand
 
 \item W celach zadowolenia interesu sprobujmy sztucznie wywołać zjawisko przeuczania, np.
     podając jako parametry $C=500$ i $gamma=20$. Po wygenerowaniu modelu będzie on miał
-    następujący wygląd.
+    taki wygląd.
 
     \begin{figure}[H]
         \begin{center}
@@ -1268,8 +1268,67 @@ connect(ui->kernel_comboBox, SIGNAL(currentIndexChanged(int)), availability_hand
     
 \newpage
 \section{Podsumowanie} % SECTION
+    \par W tym paragrafie będą podsumowane dokonane prace i opisany dalszy możliwy rozwój
+    aplikacji.
 \subsection{Odniesienie do celu pracy}
+    \par W ramach pracy udało się stworzyć aplikację z interfejsem graficznym, która potrafi
+    trenować i testować modeli, wizualizować dane i wytrenowany model, skalować i przekształcać
+    dane. Program może być przydatny dla osób chcących szybko przetestować kilka modeli z
+    różnymi parametrami. Przez możliwość wizualizacji modelu aplikacja może być szczególnie
+    przydatna w celach dydaktycznych.
+
 \subsection{Rozwój aplikacji}
+    \par Jeśli do aplikacji w przyszłości będzie dodawana nowa funkcjonalność to w każdym
+    przypadku będzie konieczna zmiana schematu interfejsu graficznego. W trakcie pracy dodając
+    nową funkcjonalność tworzyłem nową kartę na której umieszczałem odpowiednie kontrolki,
+    kontynuacja tego może spowodować zaśmiecanie interfejsu przez co użytkownikom będzie trudno
+    znaleźć kontrolki i meni których potrzebują. Obecnie aplikacja używa jednego okna za
+    wyjątkiem okien systemowych dla wyboru plików i okien do wizualizacji danych, rozwiązaniem
+    zaśmiecania interfejsu może być użycie wielu okien. Na przykład osobne okno do wizualizacji
+    danych, okno dla pracy z plikami i danymi, okno do trenowania i testowania modelu itp. Innym
+    podejściem które wydaje się sensownym - praca w jednym oknie, ale zmiana jego treści w
+    zależności od akcji użytkownika. Wadą, oczywiście, będzie to że użytkownik zobaczy dostępne
+    kontrolki dopiero po akcji(np kontrolki do wizualizacji nie są umieszczane na ekranie do
+    wczytania plików z danymi), przez co trudno będzie planować swoją prace. 
+
+    \par W przyszłości warto dodać wstępnie obliczone funkcje jądrowe(ang. \textit{Precomputed
+    kernel}). Biblioteka \textit{LIBSVM} ma taką funkcjonalność, natomiast nie została ona
+    zaimplementowana w obecnej wersji aplikacji. Polega ona na tym, że wartości funkcji jądrowej
+    znajdują się w pliku trenującym.
+
+    \par W nauczaniu maszynowym dane często nie są zbalansowane czyli jedna klasa występuje
+    częściej od innej. W przyszłości warto dodać funkcjonalność którą oferuje \textit{LIBSVM}:
+    ustawianie wag dla poszczególnych klas, co pozwala walczyć z niezbalansowanymi danymi. 
+
+    \par Podział na pliki trenujące i testujące był zaimplementowany żeby odwzorować działanie
+    biblioteki \textit{LIBSVM}, natomiast w rzeczywistości użytkownik najczęściej ma jeden
+    plik z danymi. Aplikacja może działać z jednym plikiem, używając walidacji krzyżowej lub
+    wyboru danych do testowania z pliku trenującego(ang. \textit{Holdout}), ale wydaje się
+    sensowniejszym zrezygnować z założenia że użytkownik ma dwa pliki(testujący i trenujący) na
+    korzyść założenia że użytkownik po prostu ma jakiś zbiór danych, nie koniecznie w formacie
+    \textit{LIBSVM}.
+
+    \par Istniejący konwerter danych do formatu \textit{LIBSVM} jest bardzo naiwny, i zakłada
+    że dane mają separator, a liczba oznaczająca klasę jest na początku lib końcu linii. W
+    przyszłości warto zbadać najpopularniejsze formaty do zapisu danych i upewnić się że
+    zaimplementowany konwerter sobie z nimi poradzi.
+
+    \par Na obecną chwile aplikacja nie umie pracować z danymi w tekstowej postaci, w
+    przyszłości warto to dodać. 
+
+    \par Warto przerobić system wątków i uruchamiania skryptów. Teraz jest tak, że skrypty w
+    języku \textit{Python} uruchamiają się na tym samym wątku na którym jest obliczany
+    interfejs graficzny, czyli w trakcie działania skryptu interfejs jest zamrażany. W
+    przypadku skryptów które działają szybko(np. sprawdzenie poprawności danych) to nie ma
+    znaczenia, użytkownik po prostu nie zauważy tego, natomiast skrypt przeszukiwania siatką
+    może trwać dość długo(około 30-40 sekund). Tak długa nieaktywność interfejsu może
+    naprowadzić użytkownika na myśl, że program się zawiesił i przestał działać. Rozwiązaniem
+    może być uruchamianie skryptów w osobnych wątkach, a na interfejsie graficznym umieszczenie
+    animacji oznaczającej że program coś liczy i nie trzeba go przerywać. 
+    
+    \par Można pomyśleć nad dodaniem innych bibliotek w oparciu o które może działać aplikacja,
+    pozwoliło by to użytkownikom porównywanie wydajności różnych implementacji \textit{SVM}.
+     
 
 \newpage
 \nocite{*}
