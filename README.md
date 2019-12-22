@@ -1,6 +1,6 @@
 # svm-app
 Machine learning application. Uses SVM method from LIBSVM library.
-# Installation on Debian 9
+# Installation on Debian 10
 # Install dependencies:
 	apt-get install git qt5-default gnuplot
 # Install Python 3 dependencies:
