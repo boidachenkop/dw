@@ -421,6 +421,140 @@ i~kwalifikuje się do przedstawienia jej w postępowaniu o nadanie tytułu zawod
     rozkładu. Dla celów dydaktycznych aplikacja musi umieć wizualizować wytrenowany model.
 
 \subsection{Przypadki użycia}
+\subsubsection{Przypadek użycia 1. Trenowanie modelu}
+
+\begin{tabular}{|l|l|}  \hline
+    \textbf{Nazwa} & Wytrenuj model \\\hline
+    \textbf{Inicjator} & Użytkownik \\\hline
+    \textbf{Cel} & Wygenerowanie pliku modelu \\\hline
+    \textbf{Warunki wstępne} & brak\\\hline
+    \textbf{Główny scenariusz} & 
+    \begin{minipage}{5in}
+        \vskip 4pt
+        \begin{enumerate}
+            \item Użytkownik ładuje plik z danymi do trenowania do aplikacji.
+            \item Aplikacja sprawdza czy format danych jest poprawny.
+            \item Użytkownik wprowadza odpowiednie parametry modelu.
+            \item Użytkownik uruchamia trenowanie.
+            \item Aplikacja generuje trenuje model i zapisuje do pliku.
+        \end{enumerate}
+        \vskip 4pt
+    \end{minipage}
+    \\\hline
+
+    \textbf{Rozszerzenia} & 
+    \begin{minipage}{5in}
+        \vskip 4pt
+        \begin{itemize}
+            \item[2a.] Wgrany zbiór danych nie jest w formacie \textit{LIBSVM}.
+                \begin{itemize}
+                    \item[a.] Użytkownik konwertuje swój zbiór danych do formatu \textit{LIBSVM}.
+                    \item[c.] Użytkownik kontynuuje scenariusz główny z p.3.
+                \end{itemize}
+            \item[3a.] Użytkownik wprowadził tekstowy symbol w pole z liczbami.
+                \begin{itemize}
+                    \item[a.] Aplikacja podświetla niepoprawny parametr na czerwono.
+                    \item[b.] Użytkownik robi korektę błędnego parametru.
+                    \item[c.] Użytkownik kontynuuje scenariusz główny z p.4.
+                \end{itemize}
+        \end{itemize}
+        \vskip 4pt
+    \end{minipage}
+    \\\hline
+\end{tabular}
+
+\subsubsection{Przypadek użycia 2. Testowanie modelu}
+\begin{tabular}{|l|l|}  \hline
+    \textbf{Nazwa} & Testuj model \\\hline
+    \textbf{Inicjator} & Użytkownik \\\hline
+    \textbf{Cel} & Otrzymać informacje o precyzji modelu \\\hline
+    \textbf{Warunki wstępne} & Użytkownik wytrenował model.\\\hline
+    \textbf{Główny scenariusz} & 
+    \begin{minipage}{5in}
+        \vskip 4pt
+        \begin{enumerate}
+            \item Użytkownik ładuje plik z testującym zbiorem danych do aplikacji.
+            \item Użytkownik wprowadza procent walidacji(ile rekordów z zbioru trenującego
+                wybrać do testowania)
+            \item Użytkownik uruchamia testowanie.
+            \item Aplikacja przeprowadza testowanie i walidacje modelu.
+            \item Aplikacja wypisuje wyniki testowania i walidacji w polu tekstowym.
+        \end{enumerate}
+        \vskip 4pt
+    \end{minipage}
+    \\\hline
+
+    \textbf{Rozszerzenia} & 
+    \begin{minipage}{5in}
+        \vskip 4pt
+        \begin{itemize}
+            \item[2a.] Załadowany plik jest niepoprawny(inna liczba cech/klas niż w pliku
+                trenującym)
+                \begin{itemize}
+                    \item[a.] Aplikacja podświetla ścieżkę do pliku na czerwono.
+                    \item[b.] Użytkownik ładuje poprawny plik.
+                    \item[c.] Użytkownik kontynuuje główny scenariusz z p.3.
+                \end{itemize}
+        \end{itemize}
+        \vskip 4pt
+    \end{minipage}
+    \\\hline
+\end{tabular}
+
+\subsubsection{Przypadek użycia 3. Wizualizacja danych}
+\begin{tabular}{|l|l|}  \hline
+    \textbf{Nazwa} & Wizualizuj dane \\\hline
+    \textbf{Inicjator} & Użytkownik \\\hline
+    \textbf{Cel} & Przedstawić dane w postaci graficznej \\\hline
+    \textbf{Warunki wstępne} & Użytkownik załadował plik z danymi do trenowania\\\hline
+    \textbf{Główny scenariusz} & 
+    \begin{minipage}{5in}
+        \vskip 4pt
+        \begin{enumerate}
+            \item Użytkownik uruchamia wizualizacje danych.
+            \item Aplikacja wczytuje dane z pliku trenującego.
+            \item Aplikacja rysuje punkty na płaszczyźnie w nowym oknie.
+        \end{enumerate}
+        \vskip 4pt
+    \end{minipage}
+    \\\hline
+
+    \textbf{Rozszerzenia} & 
+    \begin{minipage}{5in}
+        \vskip 4pt
+        \begin{itemize}
+            \item[1a.] Przycisk wizualizacji jest nieaktywny.
+                \begin{itemize}
+                    \item[a.] Użytkownik sprawdza liczbę cech w podanym pliku trenującym.
+                    \item[b.] Użytkownik ładuje plik z danymi, w którym liczba cech jest
+                        mniejsza lub równa 3.
+                    \item[c.] Użytkownik kontynuuje główny scenariusz z p.1.
+                \end{itemize}
+        \end{itemize}
+        \vskip 4pt
+    \end{minipage}
+    \\\hline
+\end{tabular}
+
+\subsection{Obsługa błędów}
+    \par Informacja o błędach występujących w trakcie działania aplikacji będzie przekazywana
+    do użytkownika w polu tekstowym lub w postaci podświetlenia na czerwono elementu interfejsu
+    w którym jest błąd. 
+    \par Informacja o błędach wewnętrznych(Maszyna wirtualna Python, system operacyjny zamknął
+    aplikacje z powodu naruszenia ochrony pamięci) będą od użytkownika ukryte. Zaawansowane
+    użytkowniki będą mogli uruchomić aplikacje z konsoli, w której takie błędy będą wypisywane,
+    by naprawić środowisko w którym uruchamiają aplikacje.
+
+\subsection{Środowisko wywołania}
+    \par Aplikacja jest tworzona dla systemu operacyjnego Linux. Użytkownicy systemu operacyjnego
+    OS X(wcześniej macOS) będą mogli skompilować i uruchomić aplikacje po instalacji wszystkich
+    zależności. Kompilacja i uruchomienie aplikacji na systemie operacyjnym Windows nie są
+    wspierane, chociaż może to być możliwe, ze względu na to, że użyte technologie są
+    wieloplatformowe(ang. cross platform).
+
+\newpage
+\section{Analiza wymagań} %SECTION
+
 
 \newpage
 \section{Projekt aplikacji} % SECTION
