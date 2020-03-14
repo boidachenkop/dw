@@ -182,7 +182,8 @@
     \large \textbf{Oświadczenie kierującego pracą}
 \end{flushleft}
 
-\noindent Potwierdzam, że niniejsza praca została przygotowana pod moim kierunkiem i~kwalifikuje się do przedstawienia jej w postępowaniu o nadanie tytułu zawodowego.
+\noindent Potwierdzam, że niniejsza praca została przygotowana pod moim kierunkiem
+i~kwalifikuje się do przedstawienia jej w postępowaniu o nadanie tytułu zawodowego.
 \vspace{2cm}
 \begin{center}
     \begin{tabular}{lr}
@@ -199,9 +200,9 @@
 \newpage
 \section{Wstęp} % SECTION
 \subsection{Motywacja}
-    \par W aktualne czasy temat Uczenia Maszynowego jest popularny\ref{fig:google-trends-ml} jak nigdy do tego. 
-    Projekty z użyciem Uczenia Maszynowego pozwalają na tworzenie aplikacji które
-    jeszcze 10 lat temu trudno było wyobrazić.
+    \par W aktualne czasy temat Uczenia Maszynowego jest popularny\ref{fig:google-trends-ml}
+    jak nigdy do tego.  Projekty z użyciem Uczenia Maszynowego pozwalają na tworzenie aplikacji
+    które jeszcze 10 lat temu trudno było wyobrazić.
 
     \begin{figure}[h]
         \begin{center}
@@ -211,18 +212,23 @@
         \end{center}
     \end{figure}
 
-    \par Rozpowszechnienie Uczenia Maszynowego również spowodowało i moje zainteresowanie tematem.
-    Z tego powodu dla swojej pracy licencjackiej wybrałem temat: Aplikacja uczenia maszynowego 
-    metodą SVM.  Po zakończeniu pracy spodziewam się podwyższyć swoją kompetencje w dziale 
-    Uczenia Maszynowego.
+    \par Rozpowszechnienie Uczenia Maszynowego również spowodowało i moje zainteresowanie
+    tematem.  Z tego powodu dla swojej pracy licencjackiej wybrałem temat: Aplikacja uczenia
+    maszynowego metodą SVM. Po zakończeniu pracy spodziewam się podwyższyć swoją kompetencje w
+    dziale Uczenia Maszynowego.
+    \par SVM jest atrakcyjną metodą nienadzorowanego Uczenia Maszynowego, specjalną własnością
+    której jest ciągłe zmniejszenie błędu i maksymalizacja marginesu, co pozwala nie tylko
+    odseparować klasy, a odseparować ich z maksymalnym marginesem. Z czego wynika większa
+    dokładność modelu na nowych danych.
 
 \subsection{Cel}
-    \par Celem mojej pracy licencjackiej jest stworzenie oprogramowania pozwalającego na generowanie
-    modeli używając Maszyny wektorów wspierających\textit{(ang. Support Vector Machine, SVM)} z graficznym 
-    interfejsem użytkownika.  Program będą mogli użyć osoby potrzebujące szybko przetrenować kilka 
-    modeli, przetestować ich dla różnych parametrów, zwizualizować dane. Program ma na celu ułatwienie
-    pracę z Maszyną wektorów wspierających poprzez graficzny interfejs użytkownika
-    oparty na bibliotekę QT. Część funkcjonalna programu jest oparta o bibliotekę LIBSVM\cite{CC01a}.
+    \par Celem mojej pracy licencjackiej jest stworzenie oprogramowania pozwalającego na
+    generowanie modeli używając Maszyny wektorów wspierających\textit{(ang. Support Vector
+    Machine, SVM)} z graficznym interfejsem użytkownika.  Program będą mogli użyć osoby
+    potrzebujące szybko przetrenować kilka modeli, przetestować ich dla różnych parametrów,
+    zwizualizować dane. Program ma na celu ułatwienie pracę z Maszyną wektorów wspierających
+    poprzez graficzny interfejs użytkownika oparty na bibliotekę QT. Część funkcjonalna
+    programu jest oparta o bibliotekę LIBSVM\cite{CC01a}.
 
 \subsection{Zakres}
     Program powinien móc ustawiać parametry dla wybranej metody oraz jądra\textit(ang. kernel), 
@@ -232,9 +238,6 @@
 \newpage
 
 \section{Metoda klasyfikacji SVM} % SECTION
-    \par W tym paragrafie w ogólnych zarysach jest opisana Maszyna Wektorów Wspierających
-    oraz jej typy zaimplementowane w LIBSVM. Również będą krótkie opisy zaimplementowanych
-    jąder.
 \subsection{Opis}
     \par Swój program napisałem w oparciu o bibliotekę LIBSVM\cite{CC01a}. Maszyna Wektorów
     Wspierajacych(ang. Support Vector Machine. SVM) - klasyfikator, nauka którego ma na celu 
@@ -395,10 +398,32 @@
     nie jest lepsza od RBF \cite{lin2003study}. 
 
 \newpage
-\section{Projekt aplikacji} % SECTION
-    \par W tym paragrafie są opisane użyte technologie przy napisaniu aplikacji i interfejs
-    użytkownika.
+\section{Wymagania} % SECTION
+\subsection{Wymagania ogólne}
+    \par Aplikacja ma implementować uczenie maszynowe metodą SVM. Uczenie ma być dwufazowe:
+    trenowanie i testowanie. Pod czas trenowania aplikacja ma generować model w postaci pliku.
+    Na etapie testowania aplikacja ma mieć możliwość załadowania dowolnego pliku z modelem.
 
+\subsection{Sterowanie aplikacją \textbf{\textcolor{red}{LEPSZA NAZWA?}}} % TODO: remove
+    \par Sterowanie aplikacją musi odbywać się wyłącznie przez Interfejs graficzny. Interfejs
+    graficzny użytkownika ma być zorganizowany w sposób podkreślający to że nauczanie jest
+    dwufazowe. Akcje które użytkownik nie może zrobić przez ich bezsensowność lub
+    niedostępność na danym etapie muszą być zablokowane w sposób oczywisty dla użytkownika.
+
+\subsection{Wejście/Wyjście}
+    \par Program na wejściu otrzymuje co najmniej jeden plik z danymi zawierający cechy i
+    etykiety. Wyjściem jest plik z modelem i wypisywana na interfejsie graficznym precyzja
+    modelu w przypadku testowania. 
+
+\subsection{Wizualizacja}
+    \par Aplikacja musi umieć wizualizować dane wejściowe jedno, dwu i trzy wymiarowe. Dla
+    jedno i dwu wymiarowych danych program musi mieć możliwość generowania wykresu gęstości
+    rozkładu. Dla celów dydaktycznych aplikacja musi umieć wizualizować wytrenowany model.
+
+\subsection{Przypadki użycia}
+
+\newpage
+\section{Projekt aplikacji} % SECTION
 \subsection{Opis}
 \subsection{Technologie}
     \par W roli jądra mojej aplikacji występuję biblioteka \textit{LIBSVM} napisana w 2011 roku
@@ -1064,8 +1089,6 @@ connect(ui->kernel_comboBox, SIGNAL(currentIndexChanged(int)), availability_hand
 
 \newpage
 \section{Przykłady działania aplikacji}
-    \par W tym paragrafie będą przedstawione przykłady użycia aplikacji. 
-
 \subsection{Przykład 1}
     \par Przykład pokazujący pracę z plikiem z nieprzeskalowanymi danymi w formacie
     \textit{LIBSVM}
@@ -1268,8 +1291,6 @@ connect(ui->kernel_comboBox, SIGNAL(currentIndexChanged(int)), availability_hand
     
 \newpage
 \section{Podsumowanie} % SECTION
-    \par W tym paragrafie będą podsumowane dokonane prace i opisany dalszy możliwy rozwój
-    aplikacji.
 \subsection{Odniesienie do celu pracy}
     \par W ramach pracy udało się stworzyć aplikację z interfejsem graficznym, która potrafi
     trenować i testować modeli, wizualizować dane i wytrenowany model, skalować i przekształcać
