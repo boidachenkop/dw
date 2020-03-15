@@ -45,7 +45,7 @@
 \usepackage[style=alphabetic,sorting=nyt,sortcites=true,autopunct=true,babel=hyphen,hyperref=true,abbreviate=false,backref=true,backend=biber,citestyle=numeric]{biblatex}
 \addbibresource{ref.bib}
 \defbibenvironment{bibliography}
-  {\list
+{\list
      {\printtext[labelnumberwidth]{%
       \printfield{labelprefix}%
       \printfield{labelnumber}}}
@@ -58,6 +58,8 @@
       \renewcommand*{\makelabel}[1]{\hss##1}}
   {\endlist}
   {\item}
+
+
 
 % listing settings
 \definecolor{mygreen}{rgb}{0,0.6,0}
@@ -554,20 +556,53 @@ i~kwalifikuje się do przedstawienia jej w postępowaniu o nadanie tytułu zawod
 
 \newpage
 \section{Analiza wymagań} %SECTION
+\subsection{Języki programowania}
+    \par Dla napisania aplikacji wybrałem język programowania \textit{C++}. Wybrałem ten język
+    programowania przez jego wydajność mimo to że jest on językiem wysokiego poziomu. Na wybór
+    \textit{C++} również wpłynęła moja sympatia do tego języka programowania, a napisanie
+    dużego projektu w nim było dla mnie prawdziwym wyzwaniem, które pozwoliło pogłębić swoją
+    wiedze w programowaniu i używaniu języka \textit{C++}. 
 
+    \par Dla niektórych części programu będzie użyty język \textit{Python}, w szczególności dla
+    tych, które dotyczą rysowania wykresów, pracy z plikami i zmiennymi typu \textit{string}.
+    Standardowa biblioteka Python przedstawia sporo narzędzi dla pracy z plikami i zmiennymi
+    typu \textit{string}, co pozwala oszczędzać czas programisty w porównaniu do C++, w którym
+    napisanie podobnej funkcjonalności zajęłoby o wiele więcej czasu. 
 
-\newpage
-\section{Projekt aplikacji} % SECTION
-\subsection{Opis}
-\subsection{Technologie}
-    \par W roli jądra mojej aplikacji występuję biblioteka \textit{LIBSVM} napisana w 2011 roku
-    przez Chih-Chung Chang i Chih-Jen Lin w Państwowym Uniwersytecie Tajwańskim. Celem autorów
-    było zrobienie narzędzia z prostym interfejsem umożliwiające używanie Maszyny Wektorów
-    Wspierajacych użytkownikom które nie zajmują się zawodowo nauczaniem maszynowym. Domyślnie
-    użycie biblioteki \textit{LIBSVM} polega na skompilowaniu i używaniu dwóch programów:
-    \textit{svm-train} i \textit{svm-predict}. \textit{svm-train} służy do trenowania modelu, 
-    a \textit{svm-predict} do testowania, chociaż również może być używany do klasyfikacji
-    nowych niegrupowanych danych. 
+\subsection{Rysowanie wykresów}
+    \par Dla rysowania wykresów wybrałem bibliotekę \textit{matplotlib} \cite{matplotlib} która
+    pozwala stosunkowo łatwo rysować jedno, dwu i trzy-wymiarowe wykresy, a w kombinacji z
+    \textit{numpy} i \textit{scipy} generować wykresy gęstości.  
+
+\subsection{Interfejs graficzny}
+    \par Dla implementacji interfejsu graficznego wybrałem wieloplatformową bibliotekę
+    \textit{Qt} \cite{qtlibrary} napisanej w C++.  Twórcy biblioteki \textit{Qt} stworzyli IDE
+    dedykowane do pracy z biblioteką - \textit{Qt Creator}. Jest ono wyposażone w szczegółową
+    dokumentacje do biblioteki, wbudowany program \textit{Qt Designer} pozwala projektować
+    interfejs graficzny metodą przeciągnij i upuść(ang. drag and drop), automatyczne
+    uzupełnienie kodu, prowadzi analizę semantyczną kodu i wskazuje na błędy jeszcze przed
+    kompilacją.
+
+\subsection{Biblioteki implementujące metodę uczenia SVM}
+    \par Istnieje mnóstwo implementacji metody uczenia SVM. Autorzy strony \textit{SVM -
+    Support Vector Machines}\cite{svm_soft} zebrali listę oprogramowania implementującego
+    metodę uczenia SVM. Z tej listy, ze względu na to żę jako główny język programowania dla
+    swojej aplikacji wybrałem \textit{C++}, pasowali mi tylko te biblioteki: \textit{SVMLight},
+    \textit{mySVM}, \textit{LIBSVM}, \textit{SVMTorch}. 
+
+    \par Przewagę oddałem \textit{LIBSVM} z uwagi na dobrą dokumentację, obecność instrukcji
+    dla nowicjuszy i dobry rozdział FAQ, który wytłumaczył mi wiele pytań o działaniu tej
+    biblioteki.
+
+\subsection{\textit{LIBSVM}} 
+    \par \textit{LIBSVM} napisana w 2011 roku przez Chih-Chung Chang i Chih-Jen Lin w
+    Państwowym Uniwersytecie Tajwańskim. Celem autorów było zrobienie narzędzia z prostym
+    interfejsem umożliwiające używanie Maszyny Wektorów Wspierajacych użytkownikom które nie
+    zajmują się zawodowo nauczaniem maszynowym. Domyślnie użycie biblioteki \textit{LIBSVM}
+    polega na skompilowaniu i używaniu dwóch programów: \textit{svm-train} i
+    \textit{svm-predict}. \textit{svm-train} służy do trenowania modelu, a \textit{svm-predict}
+    do testowania, chociaż również może być używany do klasyfikacji nowych niegrupowanych
+    danych. 
 
     \begin{figure}[h]
         \begin{center}
@@ -585,25 +620,9 @@ i~kwalifikuje się do przedstawienia jej w postępowaniu o nadanie tytułu zawod
         \end{center}
     \end{figure}
 
-    \par Aplikacja głównie jest napisana w języku \textit{C++}. Wybrałem ten język
-    programowania przez jego wydajność mimo to że jest on językiem wysokiego poziomu. Na wybór
-    \textit{C++} również wpłynęła moja sympatia do tego języka programowania, a napisanie
-    dużego projektu w nim było dla mnie prawdziwym wyzwaniem, które pozwoliło pogłębić swoją
-    wiedze w programowaniu i używaniu języka \textit{C++}.  Niektóre części aplikacji są
-    napisane w języku Python, w szczególności te, które dotyczą rysowania wykresów, pracy z
-    plikami i zmiennymi typu \textit{string}. Standardowa biblioteka Python przedstawia sporo
-    narzędzi dla pracy z plikami i zmiennymi typu \textit{string}, co pozwala oszczędzać czas
-    programisty w porównaniu do C++, w którym napisanie podobnej funkcjonalności zajęłoby o
-    wiele więcej czasu. Dla rysowania wykresów użyłem biblioteki \textit{matplotlib}
-    \cite{matplotlib} która pozwala stosunkowo łatwo rysować jedno, dwu i trzy-wymiarowe
-    wykresy, a w kombinacji z \textit{numpy} i \textit{scipy} generować wykresy gęstości.
-    \par Interfejs graficzny był pisany za pomocą biblioteki \textit{Qt}
-    \cite{qtlibrary} napisanej w C++.  Twórcy biblioteki \textit{Qt} stworzyli IDE dedykowane
-    do pracy z biblioteką - \textit{Qt Creator}. Jest ono wyposażone w szczegółową dokumentacje
-    do biblioteki, wbudowany program \textit{Qt Designer} pozwala projektować interfejs
-    graficzny metodą przeciągnij i upuść(ang. drag and drop), automatyczne uzupełnienie kodu,
-    prowadzi analizę semantyczną kodu, wskazuje na błędy do kompilacji.  
 
+\newpage
+\section{Projekt aplikacji} % SECTION
 \subsection{Interfejs użytkownika i realizacja funkcjonalności}
     \par Po uruchomieniu programu pierwsze co zobaczy użytkownik to okno główne. Po lewej
     stronie jest pole tekstowe w którym pojawiają się komunikaty o wynikach trenowania lub
@@ -1491,6 +1510,6 @@ connect(ui->kernel_comboBox, SIGNAL(currentIndexChanged(int)), availability_hand
 
 \newpage
 \nocite{*}
-\printbibliography
+\printbibliography[title={Źródła}]
 
 \end{document}
