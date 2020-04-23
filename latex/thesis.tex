@@ -20,6 +20,7 @@
 \usepackage{subcaption}
 \usepackage{enumitem}
 \usepackage{float}
+\usepackage{tabularx}
 
 
 \def \thesis {Aplikacja uczenia maszynowego metodą SVM}
@@ -206,7 +207,7 @@ i~kwalifikuje się do przedstawienia jej w postępowaniu o nadanie tytułu zawod
     jak nigdy do tego.  Projekty z użyciem Uczenia Maszynowego pozwalają na tworzenie aplikacji
     które jeszcze 10 lat temu trudno było wyobrazić.
 
-    \begin{figure}[h]
+    \begin{figure}[H]
         \begin{center}
             \includegraphics[scale=0.5]{./img/google-trends-ml.png}
             \captionsource{Machine Learning trends}{Google Trends}
@@ -265,7 +266,7 @@ i~kwalifikuje się do przedstawienia jej w postępowaniu o nadanie tytułu zawod
     \par Parametr $C$ służy do ustawienia marginesu: duży C $\rightarrow$ mały margines,
     mały C $\rightarrow$ duży margines.
 
-    \begin{figure}[h]
+    \begin{figure}[H]
         \begin{center}
             \includegraphics[scale=0.8]{./img/param_c.png}
             \captionsource{Zależność marginesu od parametru C}{\url{https://medium.com/@pushkarmandot}}
@@ -303,7 +304,7 @@ i~kwalifikuje się do przedstawienia jej w postępowaniu o nadanie tytułu zawod
     nienadzorowanego, które zakłada brak etykiet w danych uczących. Ma na celu
     znalezienie niewiadomych wzorców/anomalii(klastrów) w danych wejściowych.  
 
-    \begin{figure}[h]
+    \begin{figure}[H]
         \begin{center}
             \includegraphics[scale=0.4]{./img/one-class-circle.png}
             \captionsource{Hipersfera zawierająca punkty danych. Ma środek c i promień R.
@@ -371,7 +372,7 @@ i~kwalifikuje się do przedstawienia jej w postępowaniu o nadanie tytułu zawod
     w przestrzeń z większą liczbą wymiarów, w której klasy danego zbioru będzie można rozdzielić
     hiperpłaszczyzną. 
 
-    \begin{figure}[h]
+    \begin{figure}[H]
         \begin{center}
             \includegraphics[scale=0.2]{./img/kernel_trick.png}
         \captionsource{Przykład stosowania funkcji jądrowej dla nierozdzielnego liniowo zbioru
@@ -604,7 +605,7 @@ i~kwalifikuje się do przedstawienia jej w postępowaniu o nadanie tytułu zawod
     do testowania, chociaż również może być używany do klasyfikacji nowych niegrupowanych
     danych. 
 
-    \begin{figure}[h]
+    \begin{figure}[H]
         \begin{center}
             \includegraphics[scale=0.6]{./img/svm_train_usage.png}
             \caption{Użycie programu svm-train}
@@ -612,7 +613,7 @@ i~kwalifikuje się do przedstawienia jej w postępowaniu o nadanie tytułu zawod
         \end{center}
     \end{figure}
 
-    \begin{figure}[h]
+    \begin{figure}[H]
         \begin{center}
             \includegraphics[scale=0.6]{./img/svm_predict_usage.png}
             \caption{Użycie programu svm-predict}
@@ -620,11 +621,187 @@ i~kwalifikuje się do przedstawienia jej w postępowaniu o nadanie tytułu zawod
         \end{center}
     \end{figure}
 
+\newpage 
+\section{Projekt} % SECTION
+\subsection{Model danych}
+    \par \textit{LIBSVM} domyślnie używa tak zwany "rzadki" format danych z etykietowanymi
+    wektorami. Format danych do trenowania i testowania jest taki:
+
+    \begin{verbatim}
+    <label> <index1>:<value1> <index2>:<value2> ...
+    .
+    .
+    .
+    \end{verbatim}
+
+    \par Każda linia jest osobną instancją i kończy się znakiem '\textbackslash n'. Etykiety(ang. label) są używane na
+    różne sposoby: \cite{CC01a}
+    \begin{itemize}
+        \item Dla klasyfikacji: etykieta jest liczbą naturalną określającą klasę.
+        \item Dla regresji: etykieta jest wartością docelową i może być dowolną liczbą
+            rzeczywistą.
+        \item Dla jednoklasowego SVM(ang. one-class SVM) etykiety nie są używane i mogą być
+            dowolne.
+    \end{itemize}
+
+    Jeśli w danym wektorze wartość cechy jest 0 to można ją pominąć, np. wektor $[1, 0, 3, 0]$
+    w formacie \textit{LIBSVM} można zapisać tak:
+    \begin{verbatim}
+    1:1 3:3
+    \end{verbatim}
+
+    Aplikacja zachowuję intencję twórców biblioteki \textit{LIBSVM}: rozdzielić uczenie na fazy
+    trenowania i testowania, a więc użycia dwóch plików z danymi. Pliki z danymi są zapisywane
+    w takim samym formacie i różnią się tylko celem do którego będą użyte.
+
+    \subsection{Szkielet kodu}
+    \par W projekcie aplikacji starałem się napisać kod w kształcie modułów, każdy z których
+    odpowiada za swoją część funkcjonalności.
+
+    \subsubsection{Sygnały i gniazda Qt}
+    \par Mechanizm sygnałów i gniazd biblioteki \textit{Qt} jest powszechnie używany w projekcie
+    aplikacji. Sygnały najczęściej są wywoływane przez kontrolki na interfejsie graficznym, a
+    gniazdem jest funkcja do której są przekazywane odpowiednie parametry.
+
+    \begin{figure}[H]
+        \begin{center}
+            \includegraphics[scale=0.6]{./img/signal_slots.png}
+            \captionsource{Wizualizacja systemu sygnałów i
+            gniazd}{https://doc.qt.io/qt-5/signalsandslots.html}
+            \label{fig:signal_slots}
+        \end{center}
+    \end{figure}
+
+\newpage 
+
+    \par Przykład kodu w którym sygnały wywoływane w klasie \textit{AvailabilityHandler} są łączone
+    z gniazdami w kontrolkach z polami do wpisywania parametrów.
+
+    \begin{lstlisting}
+connect(availability_handler, &AvailabilityHandler::degreeEnabled, ui(*@-@*)>degree_spinBox, &QSpinBox::setEnabled);
+connect(availability_handler, &AvailabilityHandler::gammaEnabled, ui(*@-@*)>gamma_lineEdit, &QLineEdit::setEnabled);
+connect(availability_handler, &AvailabilityHandler::coef0Enabled, ui(*@-@*)>coef0_lineEdit, &QLineEdit::setEnabled);
+connect(availability_handler, &AvailabilityHandler::cEnabled, ui(*@-@*)>C_lineEdit, &QLineEdit::setEnabled);
+connect(availability_handler, &AvailabilityHandler::nuEnabled, ui(*@-@*)>nu_lineEdit, &QLineEdit::setEnabled);
+connect(availability_handler, &AvailabilityHandler::pEnabled, ui(*@-@*)>P_lineEdit, &QLineEdit::setEnabled);
+    \end{lstlisting}
+
+    \par Żeby wyżej wymienione sygnały wywoływały się automatycznie sygnały kontrolek
+    \textit{Combo Box} zmieniających typ SVM lub funkcje jądrową są łączone z gniazdami w
+    klasie \textit{AvailabilityHandler}:
+
+    \begin{lstlisting}
+connect(ui->svmType_comboBox, SIGNAL(currentIndexChanged(int)), availability_handler, SLOT(filterSVMTypeParams(int)));
+connect(ui->kernel_comboBox, SIGNAL(currentIndexChanged(int)), availability_handler,SLOT(filterKernelParams(int)));
+    \end{lstlisting}
+
+    \par Z sygnału \textit{currentIndexChanged} jest przekazywany indeks wybranego elementu do
+    gniazda \textit{filterSVMTypeParams} w którym są wywoływany odpowiednie sygnały
+    zarządzające dostępnością parametrów.
+
+    \newpage
+    \subsubsection{Klasy C++}
+    Krótkie opisy najważniejszych klas:\\
+
+    \begingroup
+    \setlength{\tabcolsep}{10pt} % Default value: 6pt
+    \renewcommand{\arraystretch}{1.5}
+    \begin{tabular}{p{0.2\textwidth}p{0.7\textwidth}} % \hline
+        \textbf{Nazwa klasy} & \textbf{Opis funkcjonalności} \\ % \hline
+        AvailabilityHandler &  
+        Klasa sterująca dostępnością elementów interfejsu użytkownika. Używa mechanizmu
+        sygnałów i gniazd biblioteki \textit{Qt}, co pozwala na to, żeby wywołanie metody np.
+        \textit{trainButtonEnabled} powodowało zmianę stanu na interfejsie graficznym. 
+        \\ % \hline
+        FileManager & 
+        Klasa zarządza ładowaniem plików do aplikacji, odświeżaniem ścieżek plików i informacji
+        o pliku(takich jak liczba cech, rekordów i klas).
+        \\ % \hline
+        OutputHandler &
+        Klasa odpowiada za wypisywanie tekstu w polu tekstowym. Tworzy potok do którego
+        przekierowuje \textit{stdout} i uruchamia wątek który czyta z potoku i wszystko co
+        przychodzi na standardowe wyjście wypisuje do interfejsu użytkownika.
+        \\ % \hline
+        ScriptQtManager & 
+        Klasa odpowiada za uruchamianie skryptów w języku \textit{Python}. Przekazuje
+        właściwe parametry do skryptów i zwraca wyjście skryptu do kodu w C++.
+        \\ % \hline
+        SVMController &
+        Klasa pomaga zminimalizować użycie polecenia \textit{system()}(uruchamia komendę z
+        powłoki sh). Faktycznie klasa opakowuje funkcje biblioteki \textit{LIBSVM}, żeby
+        wygodnie ich można było używać z kodu C++.
+        \\ % \hline
+        svmscale &
+        Klasa opakowuje funkcjonalność programu \textit{svm-scale} dostarczanego z biblioteką
+        \textit{LIBSVM}, pozwala zminimalizować użycie polecenia \textit{system()} i uruchamiać
+        skalowanie danych bezpośrednio z kodu C++.
+        \\ % \hline
+        MainWindow & 
+        Jest jądrem aplikacji, ustawia wszystkie sygnały. Reakcje na kliknięcia w przyciski są
+        zdefiniowane w tej klasie. 
+        \\ % \hline
+    \end{tabular}
+    \endgroup
+
+    \newpage
+    \subsubsection{Skrypty Python}
+    Krótkie opisy skryptów w języku \textit{Python}: \\
+
+    \begingroup
+    \setlength{\tabcolsep}{10pt} % Default value: 6pt
+    \renewcommand{\arraystretch}{1.5}
+    \begin{tabular}{p{0.2\textwidth}p{0.7\textwidth}} % \hline
+        \textbf{Nazwa pliku} & \textbf{Opis funkcjonalności} \\ % \hline
+        checkdata.py & 
+        Skrypt dostarczany z biblioteką \textit{LIBSVM}, sprawdza czy dane w pliku mają format
+        \textit{LIBSVM}. Na podstawie wyniku działania tego skryptu aplikacja decyduje czy plik
+        z danymi może być użyty do trenowania lub testowania.
+        \\ % \hline
+        convert2svm.py &
+        Skrypt który stara się skonwertować plik z danymi do formatu \textit{LIBSVM}. Na
+        wejściu wymaga podania ścieżki do pliku z danymi w formacie innym niż \textit{LIBSVM},
+        nazwa pliku wyjściowego z danymi w formacie \textit{LIBSVM}, separator cech, separator
+        dziesiętny(przecinek lub kropka) i ostatni parametr 1 - jeśli etykieta jest na początku
+        linii i 0 - na końcu linii. Plik wynikowy jest sprawdzany skryptem
+        \textit{checkdata.py} żeby zapobiec trenowaniu przy pomocy błędnego pliku który może
+        powstać przez błąd użytkownika(np. podanie niepoprawnego separatora cech).
+        \\ % \hline
+        f\_select.py &
+        Skrypt pozwala wybrać które cechy są potrzebne w procesie nauczania modelu. Na wejściu
+        wymaga podania pliku z danymi, liczbę cech i jakie cechy należy wybrać. Wyjściem
+        skryptu jest plik z danymi z rozszerzeniem \textit{.fselected}.
+        \\ % \hline
+        grid.py & 
+        Skrypt dostarczany z biblioteką \textit{LIBSVM} służy do dobierania najlepszych
+        parametrów dla trenowania modelu. Na wejściu wymaga podania początkowych i końcowych
+        wartości dla poszczególnych parametrów oraz krok z którym algorytm "idzie" parametrem.
+        \\ % \hline
+        h4c.py i h4r.py &
+        Holdout dla klasyfikacji i holdout dla regresji. Skrypty pozwalające na podział jednego
+        pliku z danymi na zbiory trenujący i testujący. Skrypty wymagają na wejściu ścieżkę do
+        pliku z danymi oraz procent danych który ma być wybrany dla testowania. \textit{h4c.py}
+        stara się zachować stosunek klas w zbiorze testującym taki sam jak w pierwotnym pliku,
+        a \textit{h4r.py} losowo wybiera wskazany procent rekordów. \textit{h4r.py} jest
+        również używany do walidacji.
+        \\ % \hline 
+        plotter.py & 
+        Skrypt służy do wizualizacji danych za pomocą biblioteki \textit{matplotlib}. Umie
+        rysować jedno- dwu- i trzy-wymiarowe wykresy, dla jednego i dwóch wymiarów są również
+        dostępne wykresy gęstości.
+        \\ % \hline
+        pointsgen.py & 
+        Skrypt pozwala użytkownikom na ręczne generowanie danych. Po uruchamianiu skryptu
+        otwiera się okno w którym są rejestrowane kliknięcia myszą i na ich miejscu są rysowane
+        punkty. Po zamknięciu okna jest generowany plik z wygenerowanymi danymi.
+        \\ % \hline
+    \end{tabular}
+    \endgroup
 
 \newpage
-\section{Projekt aplikacji} % SECTION
-\subsection{Interfejs użytkownika i realizacja funkcjonalności}
-    \par Po uruchomieniu programu pierwsze co zobaczy użytkownik to okno główne. Po lewej
+\section{Implementacja}
+
+\subsection{Interfejs użytkownika}
+    \par Po uruchomieniu programu pierwsze co zobaczy użytkownik - okno główne. Po lewej
     stronie jest pole tekstowe w którym pojawiają się komunikaty o wynikach trenowania lub
     testowania modelu. W prawej górnej części okna są kontrolki do wybierania plików z danymi
     lub zapisywania pliku modelu. Żeby rozdzielić główną funkcjonalność od pobocznej i zrobić
@@ -632,7 +809,7 @@ i~kwalifikuje się do przedstawienia jej w postępowaniu o nadanie tytułu zawod
     natomiast funkcjonalność która dotyczy trenowania i testowania modelu jest
     dostępna bezpośrednio z okna głównego.
 
-    \begin{figure}[h]
+    \begin{figure}[H]
         \begin{center}
             \includegraphics[scale=0.7]{./img/svm_app_main_window.png}
             \caption{Okno główne programu}
@@ -643,7 +820,7 @@ i~kwalifikuje się do przedstawienia jej w postępowaniu o nadanie tytułu zawod
 \newpage % for better look
 \subsubsection{Pole tekstowe dla komunikatów.}
 
-    \begin{figure}[h]
+    \begin{figure}[H]
         \begin{center}
             \includegraphics[scale=0.7]{./img/svm_app_mainw_textedit.png}
             \caption{Pole dla komunikatów}
@@ -708,7 +885,7 @@ i~kwalifikuje się do przedstawienia jej w postępowaniu o nadanie tytułu zawod
     Data} pozwala wygenerować plik z danymi samodzielnie, jego funkcjonalność będzie omówiona
     później.
 
-    \begin{figure}[h]
+    \begin{figure}[H]
         \begin{center}
             \includegraphics[scale=0.7]{./img/svm_app_mainw_filehandler.png}
             \caption{Zarządzanie plikami}
@@ -720,7 +897,7 @@ i~kwalifikuje się do przedstawienia jej w postępowaniu o nadanie tytułu zawod
     \textit{LIBSVM}. W przypadku poprawności danych program parsuje plik wypisując liczbę
     rekordów, liczbę klas i liczbę cech jak dla danych trenujących tak i dla danych testowych.
 
-    \begin{figure}[h]
+    \begin{figure}[H]
         \begin{center}
             \includegraphics[scale=0.8]{./img/svm_app_mainw_filehandler_ex.png}
             \caption{Przykład wczytanych danych}
@@ -743,7 +920,7 @@ i~kwalifikuje się do przedstawienia jej w postępowaniu o nadanie tytułu zawod
     \ref{fig:files_example1} w pliku z danymi linia 19 mieści cechę wartość której ma liczbę
     rzeczywistą z przecinkiem, a w formacie danych \textit{LIBSVM} są dopuszczane tylko kropki.
 
-    \begin{figure}[h]
+    \begin{figure}[H]
         \begin{center}
             \includegraphics[scale=0.8]{./img/svm_app_mainw_filehandler_ex_wrong.png}
             \caption{Przykład wczytanych niepoprawnych danych}
@@ -754,7 +931,7 @@ i~kwalifikuje się do przedstawienia jej w postępowaniu o nadanie tytułu zawod
     \par Jeśli dane do testowania nie zgadzają się z danymi do trenowania(np. liczbą cech lub
     liczbą klas) to zbiór do testowania nie jest akceptowany: 
 
-    \begin{figure}[h]
+    \begin{figure}[H]
         \begin{center}
             \includegraphics[scale=1.0]{./img/svm_app_mainw_filehandler_ex_wrong2.png}
             \caption{Przykład niezgodności pomiędzy danymi do treningu a danymi do testowania}
@@ -793,46 +970,6 @@ i~kwalifikuje się do przedstawienia jej w postępowaniu o nadanie tytułu zawod
         \label{fig:availability_ex}
     \end{figure}
 
-    \par Realizacją funkcjonalności dostępności parametrów jest ściśle związana z systemem
-    sygnałów i gniazd w bibliotece \textit{Qt}. Sygnały najczęściej są wywoływane przez
-    kontrolki na interfejsie graficznym, a gniazdem jest funkcja do której są
-    przekazywane odpowiednie parametry.
-
-    \begin{figure}[h]
-        \begin{center}
-            \includegraphics[scale=0.6]{./img/signal_slots.png}
-            \captionsource{Wizualizacja systemu sygnałów i
-            gniazd}{https://doc.qt.io/qt-5/signalsandslots.html}
-            \label{fig:signal_slots}
-        \end{center}
-    \end{figure}
-
-\newpage 
-
-    \par Przykład kodu w którym sygnały wywoływane w klasie \textit{AvailabilityHandler} są łączone
-    z gniazdami w kontrolkach z polami do wpisywania parametrów.
-
-    \begin{lstlisting}
-connect(availability_handler, &AvailabilityHandler::degreeEnabled, ui(*@-@*)>degree_spinBox, &QSpinBox::setEnabled);
-connect(availability_handler, &AvailabilityHandler::gammaEnabled, ui(*@-@*)>gamma_lineEdit, &QLineEdit::setEnabled);
-connect(availability_handler, &AvailabilityHandler::coef0Enabled, ui(*@-@*)>coef0_lineEdit, &QLineEdit::setEnabled);
-connect(availability_handler, &AvailabilityHandler::cEnabled, ui(*@-@*)>C_lineEdit, &QLineEdit::setEnabled);
-connect(availability_handler, &AvailabilityHandler::nuEnabled, ui(*@-@*)>nu_lineEdit, &QLineEdit::setEnabled);
-connect(availability_handler, &AvailabilityHandler::pEnabled, ui(*@-@*)>P_lineEdit, &QLineEdit::setEnabled);
-    \end{lstlisting}
-
-    \par Żeby wyżej wymienione sygnały wywoływały się automatycznie sygnały kontrolek
-    \textit{Combo Box} zmieniających typ SVM lub funkcje jądrową są łączone z gniazdami w
-    klasie \textit{AvailabilityHandler}:
-
-    \begin{lstlisting}
-connect(ui->svmType_comboBox, SIGNAL(currentIndexChanged(int)), availability_handler, SLOT(filterSVMTypeParams(int)));
-connect(ui->kernel_comboBox, SIGNAL(currentIndexChanged(int)), availability_handler,SLOT(filterKernelParams(int)));
-    \end{lstlisting}
-
-    \par Z sygnału \textit{currentIndexChanged} jest przekazywany indeks wybranego elementu do
-    gniazda \textit{filterSVMTypeParams} w którym są wywoływany odpowiednie sygnały
-    zarządzające dostępnością parametrów.
 
 
 \subsubsection{Parametry SVM i funkcji jądrowych}
@@ -846,7 +983,7 @@ connect(ui->kernel_comboBox, SIGNAL(currentIndexChanged(int)), availability_hand
     jest liczbą rzeczywistą z separatorem kropką, to pole z błędnymi danymi jest obramiane na
     czerwono a proces treningu jest powstrzymywany.
 
-    \begin{figure}[h]
+    \begin{figure}[H]
         \begin{center}
             \includegraphics[scale=1.0]{./img/svm_app_param_wrong.png}
             \caption{Przykład niepoprawnych danych w polu parametru C}
@@ -860,7 +997,7 @@ connect(ui->kernel_comboBox, SIGNAL(currentIndexChanged(int)), availability_hand
     \par Przyciski trenowania i testowania \ref{fig:train_test_buttons} są umieszczone w dolnej
     części okna głównego programu.
 
-    \begin{figure}[h]
+    \begin{figure}[H]
         \begin{center}
             \includegraphics[scale=1.0]{./img/train_test_buttons.png}
             \caption{Przyciski do trenowania i testowania modelu}
