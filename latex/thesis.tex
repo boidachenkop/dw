@@ -308,7 +308,7 @@ i~kwalifikuje się do przedstawienia jej w postępowaniu o nadanie tytułu zawod
         \begin{center}
             \includegraphics[scale=0.4]{./img/one-class-circle.png}
             \captionsource{Hipersfera zawierająca punkty danych. Ma środek c i promień R.
-                            Punkty na krawędzi są wektorami wspierającymi.}{Wikipedia}
+            Punkty na krawędzi są wektorami wspierającymi.}{Wikipedia. \url{https://en.wikipedia.org/wiki/One-class_classification}}
             \label{fig:one_class}
         \end{center}
     \end{figure}
@@ -376,7 +376,7 @@ i~kwalifikuje się do przedstawienia jej w postępowaniu o nadanie tytułu zawod
         \begin{center}
             \includegraphics[scale=0.2]{./img/kernel_trick.png}
         \captionsource{Przykład stosowania funkcji jądrowej dla nierozdzielnego liniowo zbioru
-        danych}{Wikipedia}
+        danych}{Wikipedia. \url{https://en.wikipedia.org/wiki/Kernel_method}}
         \label{fig:kernel_trick}
         \end{center}
     \end{figure}
@@ -634,8 +634,8 @@ i~kwalifikuje się do przedstawienia jej w postępowaniu o nadanie tytułu zawod
     .
     \end{verbatim}
 
-    \par Każda linia jest osobną instancją i kończy się znakiem '\textbackslash n'. Etykiety(ang. label) są używane na
-    różne sposoby: \cite{CC01a}
+    \par Każda linia jest osobną instancją i kończy się znakiem '\textbackslash n'.
+    Etykiety(ang. label) są używane na różne sposoby: \cite{CC01a}
     \begin{itemize}
         \item Dla klasyfikacji: etykieta jest liczbą naturalną określającą klasę.
         \item Dla regresji: etykieta jest wartością docelową i może być dowolną liczbą
@@ -651,23 +651,35 @@ i~kwalifikuje się do przedstawienia jej w postępowaniu o nadanie tytułu zawod
     \end{verbatim}
 
     Aplikacja zachowuję intencję twórców biblioteki \textit{LIBSVM}: rozdzielić uczenie na fazy
-    trenowania i testowania, a więc użycia dwóch plików z danymi. Pliki z danymi są zapisywane
-    w takim samym formacie i różnią się tylko celem do którego będą użyte.
+    trenowania i testowania, a więc użycia dwóch plików z danymi. Pliki trnujące i testujące są
+    zapisywane w takim samym formacie i różnią się tylko celem do którego będą użyte.
 
     \subsection{Szkielet kodu}
     \par W projekcie aplikacji starałem się napisać kod w kształcie modułów, każdy z których
     odpowiada za swoją część funkcjonalności.
 
     \subsubsection{Sygnały i gniazda Qt}
-    \par Mechanizm sygnałów i gniazd biblioteki \textit{Qt} jest powszechnie używany w projekcie
+    \par Mechanizm sygnałów i gniazd biblioteki \textit{Qt} \cite{qtsignalslot} jest powszechnie używany w projekcie
     aplikacji. Sygnały najczęściej są wywoływane przez kontrolki na interfejsie graficznym, a
-    gniazdem jest funkcja do której są przekazywane odpowiednie parametry.
+    gniazdem jest funkcja do której są przekazywane odpowiednie parametry. Na przykład sygnał
+    \textit{AvailabilityHandler::testEnabled} odpowiadający za dostępność testowania modelu
+    jest połączany z czterema gniazdami: 
+    \newpage
+    \begin{lstlisting}
+connect(availability_handler, &AvailabilityHandler::testEnabled, ui(*@-@*)>test_pushButton, &QPushButton::setEnabled);
+connect(availability_handler, &AvailabilityHandler::testEnabled, ui(*@-@*)>validation_label, &QLabel::setEnabled);
+connect(availability_handler, &AvailabilityHandler::testEnabled, ui(*@-@*)>validation_percent_label, &QLabel::setEnabled);
+connect(availability_handler, &AvailabilityHandler::testEnabled, ui(*@-@*)>validation_lineEdit, &QLineEdit::setEnabled);
+    \end{lstlisting}
+
+    \par Co pozwala za pomocą wywołania jednej funkcji
+    \textit{AvailabilityHandler::testEnabled} deaktywować cztery elementy interfejsu.
 
     \begin{figure}[H]
         \begin{center}
             \includegraphics[scale=0.6]{./img/signal_slots.png}
-            \captionsource{Wizualizacja systemu sygnałów i
-            gniazd}{https://doc.qt.io/qt-5/signalsandslots.html}
+            \caption{Wizualizacja systemu sygnałów i
+            gniazd \cite{qtsignalslot}}
             \label{fig:signal_slots}
         \end{center}
     \end{figure}
@@ -744,7 +756,7 @@ connect(ui->kernel_comboBox, SIGNAL(currentIndexChanged(int)), availability_hand
     \endgroup
 
     \newpage
-    \subsubsection{Skrypty Python}
+\subsubsection{Skrypty Python}
     Krótkie opisy skryptów w języku \textit{Python}: \\
 
     \begingroup
@@ -797,10 +809,20 @@ connect(ui->kernel_comboBox, SIGNAL(currentIndexChanged(int)), availability_hand
     \end{tabular}
     \endgroup
 
-\newpage
-\section{Implementacja}
+\subsection{Organizacja plików}
+    \par Kod aplikacji, wszystkie użyte zbiory danych i żródła biblioteki \textit{LIBSVM}
+    znajdują się na repozytorium pod adresem \url{https://github.com/boidachenkop/svm-app}.
+    Źródła aplikacji znajdują się w katalogu \textit{svm-app}, dla edycji lub przeglądu kodu
+    zaleca się używania IDE(od ang. integrated development environment) \textit{Qt Creator}
+    \cite{qtcreator}, skoro potrafi ono automatycznie posortować pliki .cpp, .h, .py oraz
+    przedstawić schemat interfejsu graficznego na podstawie pliku \textit{mainwindow.ui}.
+    \par Wszystkie zbiory danych używane dla przykładów znajdują się w katalogu
+    \textit{datasets}. Oryginalny kod żródłowy biblioteki \textit{LIBSVM} znajduje się w
+    katalogu \textit{libsvm-3.23}.
 
-\subsection{Interfejs użytkownika}
+\newpage
+\section{Implementacja} % SECTION
+
     \par Po uruchomieniu programu pierwsze co zobaczy użytkownik - okno główne. Po lewej
     stronie jest pole tekstowe w którym pojawiają się komunikaty o wynikach trenowania lub
     testowania modelu. W prawej górnej części okna są kontrolki do wybierania plików z danymi
@@ -818,7 +840,7 @@ connect(ui->kernel_comboBox, SIGNAL(currentIndexChanged(int)), availability_hand
     \end{figure}
 
 \newpage % for better look
-\subsubsection{Pole tekstowe dla komunikatów.}
+\subsection{Pole tekstowe dla komunikatów.}
 
     \begin{figure}[H]
         \begin{center}
@@ -875,7 +897,7 @@ connect(ui->kernel_comboBox, SIGNAL(currentIndexChanged(int)), availability_hand
     \par Pod omawianym polem tekstowym znajduje się przycisk \textit{Clean}, który usuwa
     wszystkie wcześniej wypisane komunikaty z pola \textit{TextEdit}. 
 
-\subsubsection{Zarządzanie plikami z danymi}
+\subsection{Zarządzanie plikami z danymi}
 
     \par Pierwszym krokiem który będzie musiał zrobić użytkownik po uruchamianiu aplikacji -
     wybrać plik z danymi dla trenowania. Dla tego celu na ekranie głównym są odpowiednie
@@ -972,7 +994,7 @@ connect(ui->kernel_comboBox, SIGNAL(currentIndexChanged(int)), availability_hand
 
 
 
-\subsubsection{Parametry SVM i funkcji jądrowych}
+\subsection{Parametry SVM i funkcji jądrowych}
 
     \par Wszystkie parametry oprócz \textit{degree} są w postaci kontrolki \textit{Line Edit} ze
     względu na to że są one liczbami rzeczywistymi, \textit{degree} z kolei jest liczbą
@@ -991,7 +1013,7 @@ connect(ui->kernel_comboBox, SIGNAL(currentIndexChanged(int)), availability_hand
         \end{center}
     \end{figure}
 
-\subsubsection{Przyciski trenowania i testowania}
+\subsection{Przyciski trenowania i testowania}
 
 
     \par Przyciski trenowania i testowania \ref{fig:train_test_buttons} są umieszczone w dolnej
@@ -1048,7 +1070,7 @@ connect(ui->kernel_comboBox, SIGNAL(currentIndexChanged(int)), availability_hand
     \end{verbatim}
 
 \newpage
-\subsubsection{Walidacja krzyżowa i holdout}
+\subsection{Walidacja krzyżowa i holdout}
     \par Walidacja krzyżowa(ang. Cross-Validation) i holdout były umieszczone na jednej karcie
     \ref{fig:cv_holdout} dla zachowania ścisłości interfejsu graficznego, mimo to że ich
     funkcjonalność nie jest połączona.
@@ -1111,7 +1133,7 @@ connect(ui->kernel_comboBox, SIGNAL(currentIndexChanged(int)), availability_hand
     trenującym.
 
 \newpage
-\subsubsection{Skalowanie danych}
+\subsection{Skalowanie danych}
     \par Karta \textit{Scaling} \ref{fig:scaling} służy do skalowania danych. Główną zaletą
     skalowania danych jest unikanie dominacji cech z większych zakresów liczbowych nad cechami
     z mniejszych zakresów liczbowych. Skalowanie również zmniejsza obciążenie numeryczne dla
@@ -1174,7 +1196,7 @@ connect(ui->kernel_comboBox, SIGNAL(currentIndexChanged(int)), availability_hand
     \textit{svm-scale}.
 
 \newpage
-\subsubsection{Wizualizacja danych}
+\subsection{Wizualizacja danych}
     \par Karta \textit{Visualization} \ref{fig:visualization} służy do wizualizacji jedno-,
     dwu- i trzy-wymiarowych danych. 
 
@@ -1276,7 +1298,7 @@ connect(ui->kernel_comboBox, SIGNAL(currentIndexChanged(int)), availability_hand
     generowanej siatce i robić bardziej gładką linie.
 
 \newpage
-\subsubsection{Wybór cech}
+\subsection{Wybór cech}
     \par Czasami jest potrzeba wybrać tylko niektóre cechy z zbioru danych. Dla takich potrzeb
     w aplikacji istnieje funkcjonalność wyboru cech na karcie \textit{Feature Selection}
     \ref{fig:feature_selection}.
@@ -1306,7 +1328,7 @@ connect(ui->kernel_comboBox, SIGNAL(currentIndexChanged(int)), availability_hand
     do skalowania jeśli użytkownik chce swoje dane testować to przy wyborze cech musi być
     wybrany odpowiedni plik z danymi testującymi.
 
-\subsubsection{Zmiana formatu danych na \textit{LIBSVM}}
+\subsection{Zmiana formatu danych na \textit{LIBSVM}}
     \par W Internecie trudno znaleźć dane przygotowane w formacie \textit{LIBSVM}, większość z
     nich jest w formacie CSV. Natomiast algorytm trenujący biblioteki \textit{LIBSVM} nie
     przyjmuje danych w innych formatach. Żeby dać swobodę użytkownikom i pozbawić ich od
@@ -1351,7 +1373,7 @@ connect(ui->kernel_comboBox, SIGNAL(currentIndexChanged(int)), availability_hand
 1 1:57 2:0 3:0 4:120 5:354 6:0 7:1 8:163 9:1 10:0.6 11:2 12:0 13:2
     \end{verbatim}
 
-\subsubsection{Optymalizacja parametrów}
+\subsection{Optymalizacja parametrów}
     \par Przeszukiwanie siatką(ang. grid search) jest algorytmem pozwalającym na dobór
     parametrów modelu. Biblioteka \textit{LIBSVM} dostarcza skrypt w języku Python
     \textit{grid-search} dla parametrów C i \textit{gamma} który był zintegrowany z aplikacją.
@@ -1377,8 +1399,68 @@ connect(ui->kernel_comboBox, SIGNAL(currentIndexChanged(int)), availability_hand
     skonfigurowana aplikacja \textit{gnuplot}. Również można wybrać krotność walidacji
     krzyżowej używanej dla testowania każdej pary parametrów. 
 
+\subsection{Shrinking \textbf{\textcolor{red}{Kurczenie się????}}}
+    \par W sekcji wyboru parametrów trenowania jest umieszczona kontrolka typu \textit{Check
+    Box} która pozwala włączyć kurczenie się(ang. shrinking) \textbf{\textcolor{red}{dobre
+    tłumaczenie na polski?}} dla algorytmu trenującego. Metoda polega na wyeliminowaniu
+    elementów ograniczonych(np. $\alpha_i = 0$ lub $C$) dla zmniejszenia rozwiązywanego
+    problemu \cite{CC01a}. 
+    \par Kurczenie się nie ma wpływu na dokładność ale pomaga zmniejszyć czas trenowania
+    modelu, efekt jest bardziej zauważalny przy dużej liczbie iteracji \cite{libsvm_faq}.
+
+\subsection{Probability estimates}
+
 \newpage
-\section{Przykłady działania aplikacji}
+\section{Kompilacja i zależności}
+\subsection{Zależności}
+
+    \par Aplikacja była testowana na trzech systemach operacyjnych: \textit{OS X},
+    \textit{Debian 10} i \textit{Manjaro Linux 19.0.2}. Lista zależności jest dla systemu
+    \textit{Debian 10} skoro jest on najbardziej dostępny i najpopularniejszy z wyżej
+    wymienionych.
+    \par Zależności systemowe: \textit{git, qt5-default, python3-pip}. Paczki można zainstalować
+    poleceniem:
+
+    \begin{verbatim}
+    apt-get install git qt5-default python3-pip
+    \end{verbatim} 
+
+    lub za pomocą wybranego managera paczek.
+
+    \par Zależności dla \textit{Python 3}: \textit{numpy, scipy, matplotlib}. Paczki można
+    zainstalować poleceniem:
+
+    \begin{verbatim}
+    pip3 install numpy scipy matplotlib
+    \end{verbatim} 
+
+\subsection{Kompilacja}
+    \begin{enumerate}
+        \item Ściągnąć kod projektu z repozytorium:
+        \begin{verbatim}
+    git clone https://github.com/boidachenkop/svm-app.git
+        \end{verbatim} 
+
+        \item Przejść do katalogu z kodem źródłowym: 
+        \begin{verbatim}
+    cd svm-app/svm-app
+        \end{verbatim} 
+
+        \item Uruchomić kompilacje:
+        \begin{verbatim}
+    make
+        \end{verbatim} 
+
+        \item Skompilawać osobno pliki \textit{svm-train.c} i \textit{svm-predict.c}:
+        \begin{verbatim}
+    g++ -Wall -Wconversion -O3 -fPIC svm-predict.c svm.o -o svm-predict -lm
+    g++ -Wall -Wconversion -O3 -fPIC svm-train.c svm.o -o svm-train -lm
+        \end{verbatim} 
+
+    \end{enumerate}
+
+\newpage
+\section{Przykłady działania aplikacji} %SECTION
 \subsection{Przykład 1}
     \par Przykład pokazujący pracę z plikiem z nieprzeskalowanymi danymi w formacie
     \textit{LIBSVM}
@@ -1564,6 +1646,7 @@ connect(ui->kernel_comboBox, SIGNAL(currentIndexChanged(int)), availability_hand
     Z wykresu widać że ten model jest znacznie lepszy. Algorytm poprawnie zidentyfikował
     szumy(punkty znajdujące się pomiędzy punktami z innej klasy) i nie widać przeuczania. 
 
+
 \item W celach zadowolenia interesu sprobujmy sztucznie wywołać zjawisko przeuczania, np.
     podając jako parametry $C=500$ i $gamma=20$. Po wygenerowaniu modelu będzie on miał
     taki wygląd.
@@ -1578,6 +1661,56 @@ connect(ui->kernel_comboBox, SIGNAL(currentIndexChanged(int)), availability_hand
     szumów, 5-krotna walidacja krzyżowa zwraca gorszy wynik: 95.69\%
 
 \end{enumerate}
+
+\subsection{Przykład 4}
+    \par Przykład opisujący prace z zbiorem danych pokazanym na rysunkach
+    \ref{fig:bad_model_visualization} i \ref{fig:good_model_visualization}.
+
+    \begin{enumerate}[label={\textbf{Krok \theenumi :}},leftmargin=*]
+
+        \item Wczytać plik \textit{fourclas\_scale.txt} i wytrenować model z domyślnymi
+            parametrami.
+
+        \begin{figure}[H]
+            \begin{center}
+                \includegraphics[scale=2.3]{./img/ex4_st1.png}
+            \end{center}
+        \end{figure}
+
+        \item Zwizualizować model.
+
+        \begin{figure}[H]
+            \begin{center}
+                \includegraphics[scale=2.3]{./img/ex4_st2.png}
+            \end{center}
+        \end{figure}
+
+        \par Widać że parametry dobrane kiepsko, trzeba znaleźć lepsze...
+
+        \newpage
+        \item Uruchomić przeszukiwanie siatką(ang. Grid Search) żeby znaleźć lepsze parametry
+            dla trenowania.
+
+        \begin{figure}[H]
+            \begin{center}
+                \includegraphics[scale=2.3]{./img/ex4_st3.png}
+            \end{center}
+        \end{figure}
+
+        Algorytm zwrócił parametry $C=32.0$, $gamma=2.0$ dla których walidacja krzyżowa dała
+        wynik w 100\%.
+
+    \item Wytrenować i zwizualizować model dla znalezionych parametrów.
+
+        \begin{figure}[H]
+            \begin{center}
+                \includegraphics[scale=2.3]{./img/ex4_st4.png}
+            \end{center}
+        \end{figure}
+
+        \par Wizualnie widać że klasy są odseparowane lepiej.
+
+    \end{enumerate}
     
 \newpage
 \section{Podsumowanie} % SECTION
