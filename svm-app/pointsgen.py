@@ -24,16 +24,17 @@ class PointGen:
         # (self.__xms,self.__yms),(self.__xMs,self.__yMs) = self.__button_save.label.clipbox.get_points()
 
     def onclick(self, event):
-        # if click not in axes, prevent capture onclick event when clicking on button
-        if not (self.__xmc<event.x<self.__xMc and self.__ymc<event.y<self.__yMc): 
-                # and not (self.__xms<event.x<self.__xMs and self.__yms<event.y<self.__yMs):
-            if self.__first_group:
-                self.__ax_plot.plot(event.xdata, event.ydata, '.', markersize=9, color="red")
-                self.__points["-1"].append([event.xdata, event.ydata])
-            else:
-                self.__ax_plot.plot(event.xdata, event.ydata, '.', markersize=9, color="blue")
-                self.__points["1"].append([event.xdata, event.ydata])
-            self.__fig.canvas.draw()
+        if event.xdata != None and event.ydata != None:
+            # if click not in axes, prevent capture onclick event when clicking on button
+            if not (self.__xmc<event.x<self.__xMc and self.__ymc<event.y<self.__yMc): 
+                    # and not (self.__xms<event.x<self.__xMs and self.__yms<event.y<self.__yMs):
+                if self.__first_group:
+                    self.__ax_plot.plot(event.xdata, event.ydata, '.', markersize=9, color="red")
+                    self.__points["-1"].append([event.xdata, event.ydata])
+                else:
+                    self.__ax_plot.plot(event.xdata, event.ydata, '.', markersize=9, color="blue")
+                    self.__points["1"].append([event.xdata, event.ydata])
+                self.__fig.canvas.draw()
 
     def save(self):
         with open(self.__filename, "w") as output:
