@@ -243,11 +243,11 @@ i~kwalifikuje się do przedstawienia jej w postępowaniu o nadanie tytułu zawod
 \section{Metoda klasyfikacji SVM} % SECTION
 \subsection{Opis}
     \par Swój program napisałem w oparciu o bibliotekę LIBSVM\cite{CC01a}. Maszyna Wektorów
-    Wspierajacych(ang. Support Vector Machine. SVM) - klasyfikator, nauka którego ma na celu 
-    wyznaczenie hiperpłaszczyzny rozdzielającej dwie klasy z maksymalnym marginesem. 
-    Zaletą takiego klasyfikatora jest to że po uczeniu margines mówi jak dobrze są 
-    odseparowane klasy. LIBSVM implementuje pięć typów Maszyny Wektorów Wspierajacych C-SVC, 
-    $\nu$-SVC, One class SVM, $\epsilon$-SVR, $\nu$-SVR.
+    Wspierajacych - klasyfikator, nauka którego ma na celu wyznaczenie hiperpłaszczyzny
+    rozdzielającej dwie klasy z maksymalnym marginesem.  Zaletą takiego klasyfikatora jest to
+    że po uczeniu margines mówi jak dobrze są odseparowane klasy. LIBSVM implementuje pięć
+    typów Maszyny Wektorów Wspierajacych C-SVC, $\nu$-SVC, One class SVM, $\epsilon$-SVR,
+    $\nu$-SVR.
 \subsection{C-SVC}
     \par C-Support Vector Classification - rodzaj klasyfikatora używający $C$ jako 
     parametr regularyzacji. Jeśli jest dany wektor $x_i \in R^n$, $i=1,...,l$ 
@@ -1408,7 +1408,46 @@ connect(ui->kernel_comboBox, SIGNAL(currentIndexChanged(int)), availability_hand
     \par Kurczenie się nie ma wpływu na dokładność ale pomaga zmniejszyć czas trenowania
     modelu, efekt jest bardziej zauważalny przy dużej liczbie iteracji \cite{libsvm_faq}.
 
-\subsection{Probability estimates}
+\subsection{Estymacja prawdopodobieństwa}
+    \par W sekcji wyboru parametrów jest umieszczona kontrolka typu \textit{Check Box} która
+    pozwala estymować prawdopodobieństwo(ang. Probability estimate) z którą dany rekord należy do
+    wybranej przez algorytm testujący klasy. Jeśli opcja była zaznaczona pod czas trenowania to
+    wytrenowany model ma możliwość estymacji wiarygodności pod czas testowania. Po testowaniu
+    aplikacja stworzy plik o nazwie \textit{[plik testujący].prob\_est} zawierający informacje
+    o przydzielonych klasach i prawdopodobieństwach.
+    \par Załóżmy że model jest już wytrenowany a plik z danymi do testów wygląda następująco:
+
+    \begin{verbatim}
+    0 1:1.474250e+01 2:3.138960e+01 3:5.913974e-01 4:1.532451e+02
+    0 1:1.683200e+01 2:2.764799e+01 3:4.166706e-01 4:4.596750e+01
+    0 1:1.653200e+01 2:4.938600e+01 3:-2.416226e-01 4:3.655207e+01
+    1 1:7.794800e+01 2:1.936780e+02 3:1.584834e-01 4:1.222632e+02
+    1 1:5.024301e+01 2:3.121110e+02 3:-1.666690e-01 4:1.799808e+02
+    1 1:3.479100e+01 2:1.253760e+02 3:1.451816e-01 4:1.062559e+02
+    \end{verbatim} 
+
+    W pierwszej kolumnie są rzeczywiste klasy dla tych rekordów, następne są cechami. Po
+    testowaniu z włączaną opcją estymacji prawdopodobieństwa plik \textit{.prob\_est} może mieć
+    taki wygląd:
+
+    \begin{verbatim}
+    labels 1 0
+    1 0.772481 0.227519
+    0 1e-07 1
+    0 0.0431718 0.956828
+    1 0.816153 0.183847
+    1 0.816032 0.183968
+    1 0.816686 0.183314
+    \end{verbatim}
+
+    \par W pierwszej kolumnie jest klasa przydzielona przez model odpowiedniemu
+    rekordowi z pliku testującego. W drugiej kolumnie jest prawdopodobieństwo tego że dany
+    rekord należy do klasy 1, a w trzeciej że do klasy 0.
+
+    \par Warto wspomnieć że opcja estymacji prawdopodobieństwa wymaga dodatkowych obliczeń,
+    \textit{LIBSVM} wewnętrznie przeprowadza walidację krzyżową, więc zaleca się unikać
+    używania estymacji prawdopodobieństwa razem z walidacją krzyżową \cite{libsvm_faq}.
+
 
 \newpage
 \section{Kompilacja i zależności}
@@ -1418,11 +1457,12 @@ connect(ui->kernel_comboBox, SIGNAL(currentIndexChanged(int)), availability_hand
     \textit{Debian 10} i \textit{Manjaro Linux 19.0.2}. Lista zależności jest dla systemu
     \textit{Debian 10} skoro jest on najbardziej dostępny i najpopularniejszy z wyżej
     wymienionych.
-    \par Zależności systemowe: \textit{git, qt5-default, python3-pip}. Paczki można zainstalować
+    \par Zależności systemowe: \textit{git, qt5-default, python3-pip} i opcjinalnie
+    \textit{gnuplot}(udostępnia animacje przy przeszukiwaniu siatką). Paczki można zainstalować
     poleceniem:
 
     \begin{verbatim}
-    apt-get install git qt5-default python3-pip
+    apt-get install git qt5-default python3-pip gnuplot
     \end{verbatim} 
 
     lub za pomocą wybranego managera paczek.
