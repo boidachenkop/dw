@@ -271,7 +271,14 @@ void MainWindow::on_test_pushButton_clicked()
     if(convert_ok){
         ui->validation_lineEdit->setStyleSheet("");
         svm->openPredictInputFile(file_manager->getTestFilepath().toStdString());
-        svm->openPredictOutputFile(svm->getPredictOutputFilePath()); //default svmcontroller path
+        if(ui->prob_checkBox->isChecked())
+        {
+            svm->setProbability(true);
+            svm->openPredictOutputFile(file_manager->getTestFilepath().toStdString() + ".prob_est");
+        }else
+        {
+            svm->openPredictOutputFile(svm->getPredictOutputFilePath()); //default svmcontroller path
+        }
         svm->predict();
 
         if(ScriptQtManager::runHoldout(1, file_manager->getTrainFilepath(), validation_percent,
@@ -281,6 +288,8 @@ void MainWindow::on_test_pushButton_clicked()
             svm->openPredictOutputFile((file_manager->getTrainFilepath()+".tmpout").toStdString());
             std::cout<<"Validation ";
             fflush(stdout);
+
+            svm->setProbability(ui->prob_checkBox->isChecked());
             svm->predict();
             system("rm -rf "+(file_manager->getTrainFilepath()+".tmp ").toLocal8Bit()+(file_manager->getTrainFilepath()+".tmpout").toLocal8Bit());
         }

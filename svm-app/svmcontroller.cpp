@@ -127,11 +127,13 @@ void SVMController::readProblem(){
         {
             idx = strtok(nullptr,":");
             val = strtok(nullptr," \t");
+            std::cerr<<"index: "<<idx<<" value: "<<val<<std::endl;
             if(val == nullptr)
             break;
 
             errno = 0;
             x_space[j].index = (int) strtol(idx,&endptr,10);
+            std::cerr<<"x_space[j].index: "<<x_space[j].index<<std::endl;
             if(endptr == idx || errno != 0 || *endptr != '\0' || x_space[j].index <= inst_max_index)
             throw input_error(i+1);
             else
@@ -139,6 +141,7 @@ void SVMController::readProblem(){
 
             errno = 0;
             x_space[j].value = strtod(val,&endptr);
+            std::cerr<<"x_space[j].value: "<<x_space[j].value<<std::endl;
             if(endptr == val || errno != 0 || (*endptr != '\0' && !isspace(*endptr)))
             throw input_error(i+1);
 

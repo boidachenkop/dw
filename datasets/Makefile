@@ -1,2 +1,2 @@
 clean:
-	rm -rf *.fselected *.model *.tmp* *.ho_train *ho_test *.libsvm *.scale
+	rm -rf *.fselected *.model *.tmp* *.ho_train *ho_test *.libsvm *.scale *.prob_est
