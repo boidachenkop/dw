@@ -345,7 +345,7 @@ i~kwalifikuje się do przedstawienia jej w postępowaniu o nadanie tytułu zawod
         \rho(\pi, C) = \min\limits_{\pmb{x} \in C} \lvert \rho(\pi, \pmb{x}) \rvert
     \end{equation}
 
-    Weźmy dwa punkty z różnych klas: $x_+$ i $x_-$ należące do klasy 1 i -1 odpowiednio. Wtedy
+    Weźmy dwa punkty z różnych klas: $x_+$ i $x_-$ należące do klas 1 i -1 odpowiednio. Wtedy
     szerokością marginesu jest \cite{woroncow2007lekcii}:
     \begin{equation}
         \bigg\langle (x_+ - x_-), \frac{\pmb{\omega}}{\norm{\pmb{\omega}}} \bigg\rangle
@@ -356,10 +356,115 @@ i~kwalifikuje się do przedstawienia jej w postępowaniu o nadanie tytułu zawod
         
     \par Z czego wynika, że margines jest maksymalny kiedy norma wektora
     $\pmb{\omega}$ jest minimalna.  
-    \par W przypadku kiedy klasy są separowalne zadanie rozdzielenia dwóch
-    zbiorów hiperpłaszczyzną sprowadza się do znalezienia takich $\pmb{\omega}$
-    i $b$ przy których norma wektora $\pmb{\omega}$ jest minimalna.
+    \par Jeśli klasy są separowalne, zadanie rozdzielenia dwóch zbiorów hiperpłaszczyzną
+    sprowadza się do znalezienia takich $\pmb{\omega}$ i $b$ przy których norma wektora
+    $\pmb{\omega}$ jest minimalna.
 
+\subsubsection{Pierwotny problem optymalizacyjny}
+    \par Parametry $\pmb{\omega}$ i $b$ dla hiperpłaszczyzny SVM są rozwiązaniem dla poniższego
+    problemu:
+    \begin{equation}
+        \begin{tabular}{rl}
+            & $\frac{1}{2}\norm{\pmb{\omega}}^2 \rightarrow \min\limits_{\pmb{\omega},b}$ \\
+            Z zastrzeżeniem że & $\langle \pmb{\omega}, \pmb{x} \rangle + b \geq 1, \forall \pmb{x} \in C_1$ \\
+                               & $\langle \pmb{\omega}, \pmb{x} \rangle + b \leq -1, \forall \pmb{x} \in C_2$
+
+        \end{tabular}
+    \end{equation}
+
+    \par Gdzie $C_1$ i $C_2$ dwa zbiory punktów należących do różnych klas
+    \cite{nefedov2016support}.
+    \par Problem można też zapisać w takiej formie:
+    \begin{equation} \label{eq:primal}
+        \begin{tabular}{rl}
+            & $\frac{1}{2} \sum\limits_{k=1}^n \omega_{k}^2 \rightarrow \min\limits_{\pmb{\omega},b}$ \\
+            Z zastrzeżeniem że & $y_i \bigg(\sum\limits_{k=1}^n \omega_k x_{ik} + b \bigg) \geq
+            1, i=1,2,...,l.$
+        \end{tabular}
+    \end{equation}
+
+    gdzie $y_i=1$ jeśli $x_i \in C_1$ i $y_i=-1$ jeśli $x_i \in C_2$.
+\subsubsection{Problem dualny}
+    \par Większość implementacji SVM rozwiązują problem dualny, a nie pierwotny, przez to że
+    warunki graniczne są łatwiejsze do obliczeń i jest możliwość użycia funkcji jądrowych.
+
+    \par Problem dualny dla \ref{eq:primal} wygląda następująco:
+
+    \begin{equation} \label{eq:dual}
+        \begin{tabular}{rl}
+            & $L_d(\pmb{\alpha}) \rightarrow \max\limits_{\pmb{\alpha}}$ \\
+            Z zastrzeżeniem że & $\alpha_i \geq 0,i=1,2,...,l$
+        \end{tabular}
+    \end{equation}
+
+    gdzie $\pmb{\alpha} = (\alpha_1,\alpha_2,...,\alpha_l)$, a $L_d(\pmb{\alpha})$ zdefiniowany jako:
+    \begin{equation}
+        L_d(\pmb{\alpha}) = \min\limits_{\pmb{\omega},b}L(\pmb{\omega},b,\pmb{\alpha})
+    \end{equation}
+
+    a $L(\pmb{\omega},b,\pmb{\alpha})$ - Lagrange'an zdefiniowany tak: 
+
+    \begin{equation} \label{eq:lagrange}
+        L(\pmb{\omega},b,\pmb{\alpha}) = \frac{1}{2}\sum\limits_{k=1}^{n}\omega_{k}^2 -
+        \sum\limits_{i=1}^{l} \alpha_i \Bigg(y_i \Bigg( \sum\limits_{k=1}^{n} \omega_k x_{ik}
+        +b \Bigg) -1 \Bigg).
+    \end{equation}
+
+    \par W tym przypadku Lagrange'an ma formę wypukłą, a więc dla każdego $\pmb{\alpha}$ para
+    $(\pmb{\omega^*},b^*)$ jest globalnym minimum dla $L(\pmb{\omega},b,\pmb{\alpha})$ wtedy i
+    tylko wtedy gdy:
+
+    \begin{equation} \label{eq:lag_minim}
+        \nabla_{\pmb{\omega},b} L(\pmb{\omega}^*,b^*,\pmb{\alpha}) = \pmb{0}
+    \end{equation}
+
+    gdzie $\nabla_{\pmb{\omega},b} L$ jest gradientem funkcji $L$, a $\pmb{0}$ jest wektorem
+    zerowym. A zatem $L_d(\pmb{\alpha}) = L(\pmb{\omega}^*,b^*,\pmb{\alpha})$ jeśli warunek
+    \ref{eq:lag_minim} jest spełniony, a więc problem \ref{eq:dual} może być zapisany następująco
+    \cite{nefedov2016support}:
+
+    \begin{equation} \label{eq:dual_final}
+        \begin{tabular}{rl}
+            & $L(\pmb{\omega},b,\pmb{\alpha}) \rightarrow
+            \max\limits_{\pmb{\omega},b,\pmb{\alpha}}$ \\
+            Z zastrzeżeniem że & $\nabla_{\pmb{\omega},b} L(\pmb{\omega}^*,b^*,\pmb{\alpha}) =
+            \pmb{0}$ \\
+                               & $\alpha_i \geq 0, i=1,2,...,l$
+        \end{tabular}
+    \end{equation}
+
+    \par Pierwszy warunek w \ref{eq:dual_final} oznacza:
+    \begin{equation}
+        \begin{split}
+            \frac{\partial L}{\partial \omega_k}=0,k=1,2,...,n \\
+            \frac{\partial L}{\partial b}=0
+        \end{split}
+    \end{equation}
+
+    co jest równoważne do:
+
+    \begin{equation} \label{eq:dual_constraint}
+        \begin{split}
+            \omega_k=\sum\limits_{i=1}^{l} \alpha_i y_i x_{ik}, k=1,2,...,n \\
+            \sum\limits_{i=1}^{l} \alpha_i y_i = 0
+        \end{split}
+    \end{equation}
+
+    \par Podstawiając \ref{eq:dual_constraint} w \ref{eq:lagrange} problem \ref{eq:dual_final}
+    można zapisać problem \label{eq:dual_final} jako:
+
+    \begin{equation} \label{eq:dual_final_coordinate}
+        \begin{tabular}{rl}
+            & $\sum\limits_{i=1}^{l}\alpha_i -
+            \frac{1}{2}\sum\limits_{i=1}^{l}\sum\limits_{j=1}^{l}\alpha_i\alpha_j y_i y_j
+            \langle \pmb{x}_i,\pmb{x}_j \rangle \rightarrow \max\limits_{\pmb{\alpha}}$ \\
+            Z zastrzeżeniem że & $\sum\limits_{i=1}^{l} \alpha_i y_i = 0$ \\
+                               & $\alpha_i \geq 0, i=1,2,...,l$
+        \end{tabular}
+    \end{equation}
+
+    % TODO work here. Something about support vectors? Or continue about non separatable
+    % datasets
 
 \subsection{Typy SVM}
 \begin{enumerate}
