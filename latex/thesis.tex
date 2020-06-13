@@ -8,7 +8,9 @@
 
 \usepackage[utf8]{inputenc}
 \addtokomafont{disposition}{\rmfamily}
+\usepackage[T1,T2A]{fontenc}
 \usepackage{polski} % Język polski/hyphenation
+\usepackage[russian,polish]{babel}
 \usepackage{amsmath,amsfonts,amsthm} % Math packages
 \usepackage{indentfirst}
 \usepackage{graphicx}
@@ -21,6 +23,7 @@
 \usepackage{enumitem}
 \usepackage{float}
 \usepackage{tabularx}
+\usepackage{csquotes}
 
 
 \def \thesis {Aplikacja uczenia maszynowego metodą SVM}
@@ -43,7 +46,7 @@
 \setlength{\headheight}{14.06pt} % Customize the height of the header
 
 % bibliography
-\usepackage[style=alphabetic,sorting=nyt,sortcites=true,autopunct=true,babel=hyphen,hyperref=true,abbreviate=false,backref=true,backend=biber,citestyle=numeric]{biblatex}
+\usepackage[style=alphabetic,sorting=nyt,sortcites=true,autopunct=true,babel=other,hyperref=true,abbreviate=false,backref=true,backend=biber,citestyle=numeric]{biblatex}
 \addbibresource{ref.bib}
 \defbibenvironment{bibliography}
 {\list
@@ -235,9 +238,9 @@ i~kwalifikuje się do przedstawienia jej w postępowaniu o nadanie tytułu zawod
     programu jest oparta o bibliotekę LIBSVM\cite{CC01a}.
 
 \subsection{Zakres}
-    Program powinien móc ustawiać parametry dla wybranej metody oraz jądra\textit(ang. kernel), 
-    generować wykresy podawanych zbiorów danych, interpretować różne formaty zbiorów danych, 
-    wykonywać Sprawdzian krzyżowy (ang. Cross validation, CV), mieć metodę do optymalizacji 
+    Program powinien móc ustawiać parametry dla wybranej metody oraz jądra\textit(ang. kernel),
+    generować wykresy podawanych zbiorów danych, interpretować różne formaty zbiorów danych,
+    wykonywać Sprawdzian krzyżowy (ang. Cross validation, CV), mieć metodę do optymalizacji
     parametrów, pokazywać wyniki trenowania oraz testowania modeli.
 \newpage
 
@@ -249,7 +252,118 @@ i~kwalifikuje się do przedstawienia jej w postępowaniu o nadanie tytułu zawod
     że po uczeniu margines mówi jak dobrze są odseparowane klasy. LIBSVM implementuje pięć
     typów Maszyny Wektorów Wspierajacych C-SVC, $\nu$-SVC, One class SVM, $\epsilon$-SVR,
     $\nu$-SVR.
-\subsection{C-SVC}
+\subsection{Formalny opis problemu}
+    \par Jest dany trenujący zbiór:
+
+    \begin{equation}
+        (x_1,y_1),(x_2,y_2),...,(x_l,y_l)
+    \end{equation}
+
+    \par Gdzie $y\in\{-1,1\}$ jest etykietą wektora $x_i$ z przestrzeni wektorowej $V$(zwykle
+    $\pmb{R}^n$), a $l$ rozmiar zbioru trenującego.
+    \par Funkcję decyzyjna algorytmu
+    klasyfikującego można przedstawić tak:
+
+    \begin{equation}
+        f(x): V \rightarrow \{-1,1\}
+    \end{equation}
+
+    $f(x)=1$ jeśli klasyfikator przepisuję $x_i$ do pierwszej klasy, a $f(x)=-1$ jeśli
+    do drugiej.
+
+\subsubsection{Równianie hiperpłaszczyzny}
+    \par W przestrzeni $\pmb{R}^n$ równanie
+    \begin{equation} \label{eq:hyperplane}
+        \langle \pmb{\omega}, \pmb{x} \rangle + b = 0
+    \end{equation}
+
+    definiuje $(n-1)$-wymiarowy zbiór wektorów nazywany hiperpłaszczyzną. Gdzie 
+    $\pmb{\omega} = (\omega_1,\omega_2,...,\omega_n) \in \pmb{R}^n$ niezerowy wektor, a $b \in
+    \pmb{R}$ jest skalarem. Zbiór wszystkich wektorów $\pmb{x}=(x_1,x_2,...,x_n) \in \pmb{R}^n$
+    spełniających równanie \ref{eq:hyperplane} formuje hiperpłaszczyznę(rysunek
+    \ref{fig:hiperplane_expl}a), dalej oznaczaną jako $\pi(\pmb{\omega}, b)$.
+
+    \par Mówimy że hiperpłaszczyzna $\pi(\pmb{\omega},b)$ rozdziela dwa zbiory(klasy) $C_1$ i
+    $C_2$ jeżeli:
+
+    \begin{equation} \label{eq:1}
+    \begin{split}
+        \langle \pmb{\omega}, \pmb{x} \rangle + b > 0, \forall \pmb{x} \in C_1 \\
+        \langle \pmb{\omega}, \pmb{x} \rangle + b < 0, \forall \pmb{x} \in C_2 
+    \end{split}
+    \end{equation}
+
+    lub 
+
+    \begin{center}
+        $\langle \pmb{\omega}, \pmb{x} \rangle + b < 0, \forall \pmb{x} \in C_1$ \\
+        $\langle \pmb{\omega}, \pmb{x} \rangle + b > 0, \forall \pmb{x} \in C_2$
+    \end{center}
+
+    \par Dwa zbiory są liniowo separowalne jeżeli istnieje hiperpłaszczyzna
+    $\pi(\pmb{\omega},b)$ która ich rozdziela \cite{nefedov2016support}. Jeśli hiperpłaszczyzna
+    rozdziela zbiory według \ref{eq:1}, to funkcja decyzyjna jest taka:
+
+    \begin{align} \label{eq:2}
+        f(x) = sign\{\langle \pmb{\omega}, \pmb{x} \rangle + b\} = 
+        \begin{cases}
+            1,  & if \quad \langle \pmb{\omega}, \pmb{x} \rangle + b \geq 0 \\
+            -1, & if \quad \langle \pmb{\omega}, \pmb{x} \rangle + b < 0
+        \end{cases}
+    \end{align}
+
+    Funkcja \ref{eq:2} potrafi poklasyfikować wszystkie wektory zbiorów $C_1$ i $C_2$.
+
+    \begin{figure}[H]
+        \begin{center}
+            \includegraphics[scale=0.4]{./img/hyperplane_expl.png}
+            \caption{(a) hiperpłaszczyzną w dwuwymiarowej przestrzeni jest linia, (b) dodatnia
+            i ujemna półprzestrzeni zdefiniowane hiperpłaszczyzną $\pi(\pmb{\omega},b)$ \cite{nefedov2016support}}
+            \label{fig:hiperplane_expl}
+        \end{center}
+    \end{figure}
+
+\subsubsection{Margines}
+    \par Odległość pomiędzy wektorem a płaszczyzną można obliczyć za pomocą tego równania:
+    \begin{equation}
+        \rho(x,\pi) = \frac{\langle \pmb{\omega}, \pmb{x} \rangle + b}{\norm{\pmb{\omega}}}
+    \end{equation}
+
+    \par Oczywistym jest fakt, że dwa separowalnych zbiory separuje nieskończona liczba
+    hiperpłaszczyzn. SVM wybiera jedną z maksymalnym marginesem. Dla hiperpłaszczyzny $\pi$
+    rozdzielającą zbiory $C_1$ i $C_2$ marginesem $m(\pi, C_1, C_2)$ jest odległość pomiędzy
+    $\pi$ i zbiorem $C_1$ plus odległość pomiędzy $\pi$ i zbiorem $C_2$.
+
+    \begin{equation}
+        m(\pi, C_1, C_2) = \rho(\pi, C_1) + \rho(\pi, C_2)
+    \end{equation}
+
+    odległość pomiędzy zbiorem $C$ a hiperpłaszczyzną $\pi$ można zdefiniować jako minimalną odległość
+    pomiędzy $\pi$ i wektorem ze zbioru $C$:
+
+    \begin{equation}
+        \rho(\pi, C) = \min\limits_{\pmb{x} \in C} \lvert \rho(\pi, \pmb{x}) \rvert
+    \end{equation}
+
+    Weźmy dwa punkty z różnych klas: $x_+$ i $x_-$ należące do klasy 1 i -1 odpowiednio. Wtedy
+    szerokością marginesu jest \cite{woroncow2007lekcii}:
+    \begin{equation}
+        \bigg\langle (x_+ - x_-), \frac{\pmb{\omega}}{\norm{\pmb{\omega}}} \bigg\rangle
+        = \frac{\langle \pmb{\omega}, x_+ \rangle - \langle \pmb{\omega}, x_-\rangle}{\norm{\pmb{\omega}}} 
+        = \frac{(b + 1) - ( b - 1)}{\norm{\pmb{\omega}}}
+        = \frac{2}{\norm{\pmb{\omega}}}
+    \end{equation}
+        
+    \par Z czego wynika, że margines jest maksymalny kiedy norma wektora
+    $\pmb{\omega}$ jest minimalna.  
+    \par W przypadku kiedy klasy są separowalne zadanie rozdzielenia dwóch
+    zbiorów hiperpłaszczyzną sprowadza się do znalezienia takich $\pmb{\omega}$
+    i $b$ przy których norma wektora $\pmb{\omega}$ jest minimalna.
+
+
+\subsection{Typy SVM}
+\begin{enumerate}
+    \item \textbf{C-SVC}
     \par C-Support Vector Classification - rodzaj klasyfikatora używający $C$ jako 
     parametr regularyzacji. Jeśli jest dany wektor $x_i \in R^n$, $i=1,...,l$ 
     w dwóch klasach i wektor etykiet $y_i \in \{1, -1\}$ to C-SVC rozwiązuję tak
@@ -281,7 +395,7 @@ i~kwalifikuje się do przedstawienia jej w postępowaniu o nadanie tytułu zawod
     skutkować tym że model jest dobry na danych treningowych ale jest zły na danych testowych.
 
 \newpage % description and equations was on different pages
-\subsection{$\nu$-SVM}
+\item \textbf{$\nu$-SVM}
     \par $\nu$-Support Vector Classification - rodzaj klasyfikatora używający $\nu$ jako
     parametr regularyzacji. Jest bardzo podobny do C-SVM, z różnicą że $\nu\in[0,1]$.
     Przyjemną właściwością $\nu$ jest to że on jest dolną granicą stosunku wektorów
@@ -300,7 +414,7 @@ i~kwalifikuje się do przedstawienia jej w postępowaniu o nadanie tytułu zawod
         \end{tabular}
     \end{center}
 
-\subsection{One-class SVM}
+\item \textbf{One-class SVM}
     \par One-class Support Vector Machine - rodzaj klasyfikatora uczenia
     nienadzorowanego, które zakłada brak etykiet w danych uczących. Ma na celu
     znalezienie niewiadomych wzorców/anomalii(klastrów) w danych wejściowych.  
@@ -327,7 +441,7 @@ i~kwalifikuje się do przedstawienia jej w postępowaniu o nadanie tytułu zawod
     \end{center}
 
 \newpage
-\subsection{$\epsilon$-SVR}
+\item \textbf{$\epsilon$-SVR}
     \par Jeśli wektor etykiet $y_i \in R$ to jest używana metoda regresji.
     $\epsilon$-Support Vector Classification -  używa $C$ i $\epsilon$ jako
     parametrów regularyzacji. Celem jest znalezienie takiej funkcji $f(x)$
@@ -350,7 +464,7 @@ i~kwalifikuje się do przedstawienia jej w postępowaniu o nadanie tytułu zawod
         \end{tabular}
     \end{center}
 
-\subsection{$\nu$-SVR}
+\item \textbf{$\nu$-SVR}
     \par $\nu$-Support Vector Regression - podobnie do $\nu$-SVC, używa parameter $\nu\in(0,1]$
     dla kontroli liczby wektorów wspierających. Również używa parametru $\epsilon$. Z parametrami
     $(C,\nu)$ $\nu$-SVR rozwiązuję:
@@ -367,6 +481,7 @@ i~kwalifikuje się do przedstawienia jej w postępowaniu o nadanie tytułu zawod
         \end{tabular}
     \end{center}
 
+\end{enumerate}
 \subsection{Jądra}
     \par W przypadku kiedy klasy nierozdzielne liniowo to jest używany trik z zastosowaniem
     funkcji jądrowych(ang. Kernel Trick). Funkcję jądrowe pozwalają odwzorować zbiór danych
@@ -1824,6 +1939,8 @@ connect(ui->kernel_comboBox, SIGNAL(currentIndexChanged(int)), availability_hand
 
 \newpage
 \nocite{*}
+\selectlanguage{polish}
 \printbibliography[title={Źródła}]
+
 
 \end{document}
