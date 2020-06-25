@@ -484,10 +484,34 @@ i~kwalifikuje się do przedstawienia jej w postępowaniu o nadanie tytułu zawod
 
 
 \subsubsection{Przypadek liniowo nieseparowalnych danych}
-    \par Najczęściej jest tak, że dane nie są liniowo separowalne, a więc musi być metoda na
-    radzenie sobie w takich przypadkach.
+    \par Najczęściej jest tak, że dane nie są liniowo separowalne, w takim przypadku wyżej
+    opisane równania nie mogą być rozwiązane, przez niemożliwość dotrzymania się warunkowi w
+    \ref{eq:primal}.
 
-    % TODO work here. Non separatable
+\myparagraph{Problem pierwotny}
+    \par Możemy rozluzować warunek w \ref{eq:primal} wprowadzając błąd $\varepsilon_i$ która 
+    jest nazywana luźną zmienną(\textit{ang. slack variable}) \cite{nefedov2016support}:
+
+    \begin{equation}
+        \begin{split}
+        y_i \bigg(\sum\limits_{k=1}^n \omega_k x_{ik} + b \bigg) \geq 1 - \varepsilon_i,
+        i=1,2,...,l \\
+        \varepsilon_i \geq 0, i=1,2,...,l
+        \end{split}
+    \end{equation}
+
+    \par Przy minimizacji funkcji
+
+    \begin{equation}
+        \frac{1}{2} \sum\limits_{k=1}^n \omega_{k}^2 \rightarrow \min\limits_{\pmb{\omega},b,
+        \pmb{\varepsilon}}
+    \end{equation}
+
+    \par wyjdzie że przez dowolność wyboru $\varepsilon_i$ każdy wektor $\pmb{\omega}$ może
+    pasować do równania. Żeby zrobić problem sensownym musimy też minimalizować błędy, co
+    zwykle jest robione przez dodawanie ich sumy.
+
+    % TODO work here. Equations with C
 
 \subsection{Typy SVM}
 \begin{enumerate}
