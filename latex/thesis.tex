@@ -509,9 +509,61 @@ i~kwalifikuje się do przedstawienia jej w postępowaniu o nadanie tytułu zawod
 
     \par wyjdzie że przez dowolność wyboru $\varepsilon_i$ każdy wektor $\pmb{\omega}$ może
     pasować do równania. Żeby zrobić problem sensownym musimy też minimalizować błędy, co
-    zwykle jest robione przez dodawanie ich sumy.
+    zwykle jest robione przez dodanie ich sum
 
-    % TODO work here. Equations with C
+    \begin{equation} \label{eq:softmargin_svm}
+        \begin{tabular}{rl}
+            & $\frac{1}{2}\sum\limits_{k=1}^{n}\omega_k^2 + C\sum\limits_{i=1}^{n}\varepsilon_i
+            \rightarrow \min\limits_{\pmb{\omega},b,\pmb{\varepsilon}}$ \\
+            Z zastrzeżeniem że 
+            & $y_i \bigg(\sum\limits_{k=1}^n \omega_k x_{ik} + b \bigg) \geq 1 - \varepsilon_i,
+            i=1,2,...,l$ \\
+            & $\varepsilon_i \geq 0, i=1,2,...,l$
+        \end{tabular}
+    \end{equation}
+
+    gdzie $C$ jest dodatnią stałą która służy dla: maksymalizacji marginesu i minimalizacji
+    liczby błędów na danych trenujących.
+    \par Problem \ref{eq:softmargin_svm} definiuje tak zwany SVM z miękkim
+    marginesem(\textit{ang. soft margin SVM}). Dla tego typu SVM chcemy znaleźć
+    hiperpłaszczyznę rozdzielającą klasy z maksymalnym marginesem, dopuszczając żeby wektory
+    trenujące leżały wewnątrz marginesu albo były błędnie sklasyfikowane.
+
+\myparagraph{Parametr C}
+    \par Jak opisano wyżej, parametr C ma dwie cele: maksymalizować margines i minimalizować
+    liczbę błędów(punkty znajdujące się wewnątrz marginesu lub błędnie sklasyfikowane). Te dwie
+    cele konfliktują między sobą. Zmieniając parametr $C$ dążymy do jednego z celów i oddalamy
+    się od innego, a więc znalezienie optymalnego $C$ jest zadaniem znalezienia 'złotego
+    środka'. Na rysunku \ref{fig:param_c_change} jest pokazana zależność marginesu od parametru
+    $C$. Kiedy $C$ jest małe suma błędów staje się zbędnie mała i głównym celem staje
+    maksymalizacja marginesu, co może powodować, że margines może zawierać wszystkie punkty ze
+    zbioru trenującego. W przeciwieństwie do tego, kiedy parametr $C$ jest duży: suma błędów
+    robi się duża i cel minimalizacji liczby błędów dominuje nad maksymalizacją marginesu. W
+    wyniku może powstać hiperpłaszczyzna margines której w ogóle nie zaeiwra punktów.
+
+    \begin{figure}[H] 
+        \begin{center}
+            \includegraphics[scale=0.8]{./img/param_c_change.png}
+            \caption{Optymalne hiperpłaszczyzny separujące dane i ich marginesy dla tego samego
+            zbioru trenującego używając różnych parametrów \cite{nefedov2016support}}
+            \label{fig:param_c_change}
+        \end{center}
+    \end{figure}
+
+\myparagraph{Problem dualny}
+    \par Wyprowadzenie problemu dualnego dla \ref{eq:softmargin_svm} jest podobne do
+    \ref{eq:primal}. Finalna forma wygląda następująco:
+
+    \begin{equation}
+        \begin{tabular}{rl}
+            & $\sum\limits_{i=1}^{l} -
+            \frac{1}{2}\sum\limits_{i=1}^{l}\sum\limits_{j=1}^{l}\alpha_i\alpha_j y_i y_j
+            \langle \pmb{x}_i, \pmb{x}_j \rangle \rightarrow \max\limits_{\pmb{\alpha}}$ \\
+            Z zastrzeżeniem że
+            & $\sum\limits_{i=1}^{l}\alpha_i y_i = 0$ \\
+            & $ 0 \leq \alpha_i \leq C, i=1,2,...,l$.
+        \end{tabular}
+    \end{equation}
 
 \subsection{Typy SVM}
 \begin{enumerate}
