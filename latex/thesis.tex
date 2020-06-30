@@ -565,13 +565,29 @@ i~kwalifikuje się do przedstawienia jej w postępowaniu o nadanie tytułu zawod
         \end{tabular}
     \end{equation}
 
+\myparagraph{Wektory wspierające}
+    \par Analogicznie do przypadku z separowalnymi danymi, jeżeli $(\pmb{\omega},b)$ jest
+    rozwiązaniem pierwotnym, a $\pmb{\alpha}$ jest rozwiązaniem pierwotnym, to:
+
+    \begin{equation} \label{eq:dual_constraint}
+        \pmb{\omega}=\sum\limits_{i=1}^{l} \alpha_i y_i \pmb{x}_i \\
+    \end{equation}
+
+    \par Wektory trenujące $\pmb{x_i}$ dla których $\alpha_i > 0$ są nazywane wektorami
+    wspierającymi hiperpłaszczyzny rozdzielającej. Wektory trenujące w SVM z miękkim marginesem
+    mogą znajdować się wewnątrz marginesu, poza nim lub w po niepoprawnej stronie
+    hiperpłaszczyzny. Również liczba wektorów wspierających zależy od parametru $C$:
+    zmniejszając $C$ margines rozszerza się i liczba wektorów wspierających może się zwiększyć
+    \cite{nefedov2016support}.
+
+\newpage
 \subsection{Typy SVM}
 \begin{enumerate}
     \item \textbf{C-SVC}
     \par C-Support Vector Classification - rodzaj klasyfikatora używający $C$ jako 
     parametr regularyzacji. Jeśli jest dany wektor $x_i \in R^n$, $i=1,...,l$ 
-    w dwóch klasach i wektor etykiet $y_i \in \{1, -1\}$ to C-SVC rozwiązuję tak
-    sformułowany problem:
+    w dwóch klasach i wektor etykiet $y_i \in \{1, -1\}$ to dla C-SVC problem pierwotny wygląda
+    tak:
 
     \begin{center}
         \begin{tabular}{rl}
@@ -582,23 +598,13 @@ i~kwalifikuje się do przedstawienia jej w postępowaniu o nadanie tytułu zawod
         \end{tabular}
     \end{center}
 
-    \par Parametr $C$ służy do ustawienia marginesu: duży C $\rightarrow$ mały margines,
-    mały C $\rightarrow$ duży margines.
-
-    \begin{figure}[H]
-        \begin{center}
-            \includegraphics[scale=0.8]{./img/param_c.png}
-            \captionsource{Zależność marginesu od parametru C}{\url{https://medium.com/@pushkarmandot}}
-            \label{fig:param_c}
-        \end{center}
-    \end{figure}
+    gdzie $\phi$ jest funkcją jądrową.
 
     \par Dobry model dobrze separuję dane i razem z tym ma duży margines. Natomiast w
     w rzeczywistości jedno wyłącza drugie: duży margines włącza punkty z dwóch klas, a
     dobre separowanie może powodować przeuczanie(ang. Overfitting). Przeuczanie może 
     skutkować tym że model jest dobry na danych treningowych ale jest zły na danych testowych.
 
-\newpage % description and equations was on different pages
 \item \textbf{$\nu$-SVM}
     \par $\nu$-Support Vector Classification - rodzaj klasyfikatora używający $\nu$ jako
     parametr regularyzacji. Jest bardzo podobny do C-SVM, z różnicą że $\nu\in[0,1]$.
@@ -644,7 +650,6 @@ i~kwalifikuje się do przedstawienia jej w postępowaniu o nadanie tytułu zawod
         \end{tabular}
     \end{center}
 
-\newpage
 \item \textbf{$\epsilon$-SVR}
     \par Jeśli wektor etykiet $y_i \in R$ to jest używana metoda regresji.
     $\epsilon$-Support Vector Classification -  używa $C$ i $\epsilon$ jako
@@ -671,7 +676,7 @@ i~kwalifikuje się do przedstawienia jej w postępowaniu o nadanie tytułu zawod
 \item \textbf{$\nu$-SVR}
     \par $\nu$-Support Vector Regression - podobnie do $\nu$-SVC, używa parameter $\nu\in(0,1]$
     dla kontroli liczby wektorów wspierających. Również używa parametru $\epsilon$. Z parametrami
-    $(C,\nu)$ $\nu$-SVR rozwiązuję:
+    $(C,\nu)$ dla $\nu$-SVR problem pierwotny to:
     
     \begin{center}
         \begin{tabular}{rl}
@@ -686,6 +691,8 @@ i~kwalifikuje się do przedstawienia jej w postępowaniu o nadanie tytułu zawod
     \end{center}
 
 \end{enumerate}
+
+\newpage
 \subsection{Jądra}
     \par W przypadku kiedy klasy nierozdzielne liniowo to jest używany trik z zastosowaniem
     funkcji jądrowych(ang. Kernel Trick). Funkcję jądrowe pozwalają odwzorować zbiór danych
@@ -700,8 +707,6 @@ i~kwalifikuje się do przedstawienia jej w postępowaniu o nadanie tytułu zawod
         \label{fig:kernel_trick}
         \end{center}
     \end{figure}
-
-    \newpage 
 
     \par W bibliotece LIBSVM są zaimplementowane następne funkcje jądrowe:
 
