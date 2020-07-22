@@ -24,6 +24,7 @@
 \usepackage{float}
 \usepackage{tabularx}
 \usepackage{csquotes}
+\newcommand{\myparagraph}[1]{\paragraph{#1}\mbox{}\\}
 
 
 \def \thesis {Aplikacja uczenia maszynowego metodą SVM}
@@ -46,7 +47,7 @@
 \setlength{\headheight}{14.06pt} % Customize the height of the header
 
 % bibliography
-\usepackage[style=alphabetic,sorting=nyt,sortcites=true,autopunct=true,babel=other,hyperref=true,abbreviate=false,backref=true,backend=biber,citestyle=numeric]{biblatex}
+\usepackage[style=alphabetic,sorting=nyt,sortcites=true,autopunct=true,babel=hyphen,hyperref=true,abbreviate=false,backref=true,backend=biber,citestyle=numeric]{biblatex}
 \addbibresource{ref.bib}
 \defbibenvironment{bibliography}
 {\list
@@ -129,8 +130,6 @@
 \usepackage{tocloft}
 \renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}}
 
-\newcommand{\myparagraph}[1]{\paragraph{#1}\mbox{}\\}
-
 \begin{document}
 
 \thispagestyle{empty}
@@ -161,7 +160,7 @@
         \end{minipage}
         \vspace{2cm}
         \begin{center}
-            Kraków 2019
+            Kraków 2020
         \end{center}
     \end{center}
 
@@ -240,38 +239,39 @@ i~kwalifikuje się do przedstawienia jej w postępowaniu o nadanie tytułu zawod
     programu jest oparta o bibliotekę LIBSVM\cite{CC01a}.
 
 \subsection{Zakres}
-    Program powinien móc ustawiać parametry dla wybranej metody oraz jądra\textit(ang. kernel),
-    generować wykresy podawanych zbiorów danych, interpretować różne formaty zbiorów danych,
-    wykonywać Sprawdzian krzyżowy (ang. Cross validation, CV), mieć metodę do optymalizacji
+    Program powinien móc ustawiać parametry dla wybranej metody oraz jądra\textit(ang. kernel), 
+    generować wykresy podawanych zbiorów danych, interpretować różne formaty zbiorów danych, 
+    wykonywać Sprawdzian krzyżowy (ang. Cross validation, CV), mieć metodę do optymalizacji 
     parametrów, pokazywać wyniki trenowania oraz testowania modeli.
 \newpage
 
+%new Section 2
+
 \section{Metoda klasyfikacji SVM} % SECTION
 \subsection{Opis}
-    \par Swój program napisałem w oparciu o bibliotekę LIBSVM\cite{CC01a}. Maszyna Wektorów
-    Wspierajacych - klasyfikator, nauka którego ma na celu wyznaczenie hiperpłaszczyzny
-    rozdzielającej dwie klasy z maksymalnym marginesem.  Zaletą takiego klasyfikatora jest to
-    że po uczeniu margines mówi jak dobrze są odseparowane klasy. LIBSVM implementuje pięć
-    typów Maszyny Wektorów Wspierajacych C-SVC, $\nu$-SVC, One class SVM, $\epsilon$-SVR,
-    $\nu$-SVR.
+    \par Maszyna Wektorów Wspierajacych (SVM, Support Vector Machine) to klasyfikator, którego celem jest wyznaczenie hiperpłaszczyzny
+    rozdzielającej dwie klasy z maksymalnym marginesem.  Zaletą takiego klasyfikatora jest nie tylko separacja klas, ale
+		także maksymalizacja marginesu separacji pomiędzy klasami. Rozważa się przynajmniej pięć
+    typów SVM: C-SVC, $\nu$-SVC, One class SVM, $\epsilon$-SVR, i $\nu$-SVR.
+		
 \subsection{Formalny opis problemu}
-\subsubsection{Przypadek liniowo separowalnych danych}
-    \par Jest dany trenujący zbiór:
+\subsubsection{Przypadek klas liniowo separowalnych}
+    \par Rozważmy zbiór trenujący:
 
     \begin{equation}
         (x_1,y_1),(x_2,y_2),...,(x_l,y_l)
     \end{equation}
 
     \par Gdzie $y\in\{-1,1\}$ jest etykietą wektora $x_i$ z przestrzeni wektorowej $V$(zwykle
-    $\pmb{R}^n$), a $l$ rozmiar zbioru trenującego.
-    \par Funkcję decyzyjna algorytmu
-    klasyfikującego można przedstawić tak:
+    $\pmb{R}^n$), a $l$ to rozmiar zbioru trenującego.
+    \par Funkcję decyzyjną algorytmu
+    klasyfikującego można przedstawić jako:
 
     \begin{equation}
         f(x): V \rightarrow \{-1,1\}
     \end{equation}
 
-    $f(x)=1$ jeśli klasyfikator przepisuję $x_i$ do pierwszej klasy, a $f(x)=-1$ jeśli
+    czyli $f(x)=1$, jeśli klasyfikator przepisuję $x_i$ do pierwszej klasy, a $f(x)=-1$ jeśli
     do drugiej.
 
 \myparagraph{Równianie hiperpłaszczyzny}
@@ -280,14 +280,15 @@ i~kwalifikuje się do przedstawienia jej w postępowaniu o nadanie tytułu zawod
         \langle \pmb{\omega}, \pmb{x} \rangle + b = 0
     \end{equation}
 
-    definiuje $(n-1)$-wymiarowy zbiór wektorów nazywany hiperpłaszczyzną. Gdzie 
+    definiuje $(n-1)$-wymiarową hiperpłaszczyznę. Gdzie 
     $\pmb{\omega} = (\omega_1,\omega_2,...,\omega_n) \in \pmb{R}^n$ niezerowy wektor, a $b \in
     \pmb{R}$ jest skalarem. Zbiór wszystkich wektorów $\pmb{x}=(x_1,x_2,...,x_n) \in \pmb{R}^n$
-    spełniających równanie \ref{eq:hyperplane} formuje hiperpłaszczyznę(rysunek
+    spełniających równanie \ref{eq:hyperplane} formuje hiperpłaszczyznę (rysunek
     \ref{fig:hiperplane_expl}a), dalej oznaczaną jako $\pi(\pmb{\omega}, b)$.
 
     \par Mówimy że hiperpłaszczyzna $\pi(\pmb{\omega},b)$ rozdziela dwa zbiory(klasy) $C_1$ i
-    $C_2$ jeżeli:
+    $C_2$ jeżeli\\
+		\cite{nefedov2016support}:
 
     \begin{equation} \label{eq:1}
     \begin{split}
@@ -303,9 +304,7 @@ i~kwalifikuje się do przedstawienia jej w postępowaniu o nadanie tytułu zawod
         $\langle \pmb{\omega}, \pmb{x} \rangle + b > 0, \forall \pmb{x} \in C_2$
     \end{center}
 
-    \par Dwa zbiory są liniowo separowalne jeżeli istnieje hiperpłaszczyzna
-    $\pi(\pmb{\omega},b)$ która ich rozdziela \cite{nefedov2016support}. Jeśli hiperpłaszczyzna
-    rozdziela zbiory według \ref{eq:1}, to funkcja decyzyjna jest taka:
+    \par Inaczej funkcję decyzyjną można przedstawić jako:
 
     \begin{align} \label{eq:2}
         f(x) = sign\{\langle \pmb{\omega}, \pmb{x} \rangle + b\} = 
@@ -315,26 +314,26 @@ i~kwalifikuje się do przedstawienia jej w postępowaniu o nadanie tytułu zawod
         \end{cases}
     \end{align}
 
-    Funkcja \ref{eq:2} potrafi poklasyfikować wszystkie wektory zbiorów $C_1$ i $C_2$.
+    Interpretacja graficzna funkcji \ref{eq:2} przedstawiona jest na Rysunku \ref{fig:hiperplane_expl}.
 
     \begin{figure}[H]
         \begin{center}
             \includegraphics[scale=0.4]{./img/hyperplane_expl.png}
-            \caption{(a) hiperpłaszczyzną w dwuwymiarowej przestrzeni jest linia, (b) dodatnia
-            i ujemna półprzestrzeni zdefiniowane hiperpłaszczyzną $\pi(\pmb{\omega},b)$ \cite{nefedov2016support}}
+            \caption{(a) Hiperpłaszczyzną w dwuwymiarowej przestrzeni jest linia, (b) dodatnia
+            i ujemna półprzestrzeń zdefiniowana hiperpłaszczyzną $\pi(\pmb{\omega},b)$ \cite{nefedov2016support}}
             \label{fig:hiperplane_expl}
         \end{center}
     \end{figure}
 
 \myparagraph{Margines}
-    \par Odległość pomiędzy wektorem a płaszczyzną można obliczyć za pomocą tego równania:
+    \par Odległość pomiędzy wektorem $x$ a płaszczyzną $\pi$ można obliczyć za pomocą równania:
     \begin{equation}
         \rho(x,\pi) = \frac{\langle \pmb{\omega}, \pmb{x} \rangle + b}{\norm{\pmb{\omega}}}
     \end{equation}
 
-    \par Oczywistym jest fakt, że dwa separowalnych zbiory separuje nieskończona liczba
-    hiperpłaszczyzn. SVM wybiera jedną z maksymalnym marginesem. Dla hiperpłaszczyzny $\pi$
-    rozdzielającą zbiory $C_1$ i $C_2$ marginesem $m(\pi, C_1, C_2)$ jest odległość pomiędzy
+    \par Dwa separowalne zbiory separuje nieskończona liczba
+    hiperpłaszczyzn, natomiast SVM wybiera hiperpłaszczyznę z maksymalnym marginesem separacji. Dla hiperpłaszczyzny $\pi$
+    rozdzielającej zbiory $C_1$ i $C_2$ marginesem $m(\pi, C_1, C_2)$ jest odległość pomiędzy
     $\pi$ i zbiorem $C_1$ plus odległość pomiędzy $\pi$ i zbiorem $C_2$.
 
     \begin{equation}
@@ -357,19 +356,20 @@ i~kwalifikuje się do przedstawienia jej w postępowaniu o nadanie tytułu zawod
         = \frac{2}{\norm{\pmb{\omega}}}
     \end{equation}
         
-    \par Z czego wynika, że margines jest maksymalny kiedy norma wektora
+    \par Wynika z tego, że margines jest maksymalny kiedy norma wektora
     $\pmb{\omega}$ jest minimalna.  
     \par Jeśli klasy są separowalne, zadanie rozdzielenia dwóch zbiorów hiperpłaszczyzną
     sprowadza się do znalezienia takich $\pmb{\omega}$ i $b$ przy których norma wektora
     $\pmb{\omega}$ jest minimalna.
 
+\newpage
 \myparagraph{Pierwotny problem optymalizacyjny}
     \par Parametry $\pmb{\omega}$ i $b$ dla hiperpłaszczyzny SVM są rozwiązaniem dla poniższego
     problemu:
     \begin{equation}
         \begin{tabular}{rl}
             & $\frac{1}{2}\norm{\pmb{\omega}}^2 \rightarrow \min\limits_{\pmb{\omega},b}$ \\
-            Z zastrzeżeniem że & $\langle \pmb{\omega}, \pmb{x} \rangle + b \geq 1, \forall \pmb{x} \in C_1$ \\
+            Z zastrzeżeniem, że & $\langle \pmb{\omega}, \pmb{x} \rangle + b \geq 1, \forall \pmb{x} \in C_1$ \\
                                & $\langle \pmb{\omega}, \pmb{x} \rangle + b \leq -1, \forall \pmb{x} \in C_2$
 
         \end{tabular}
@@ -388,8 +388,8 @@ i~kwalifikuje się do przedstawienia jej w postępowaniu o nadanie tytułu zawod
 
     gdzie $y_i=1$ jeśli $x_i \in C_1$ i $y_i=-1$ jeśli $x_i \in C_2$.
 \myparagraph{Problem dualny}
-    \par Większość implementacji SVM rozwiązują problem dualny, a nie pierwotny, przez to że
-    warunki graniczne są łatwiejsze do obliczeń i jest możliwość użycia funkcji jądrowych.
+    \par Większość implementacji SVM rozwiązuje problem dualny, a nie pierwotny, ponieważ
+    warunki graniczne są łatwiejsze do obliczenia oraz można wprowadzić funkcje jądrowe.
 
     \par Problem dualny dla \ref{eq:primal} wygląda następująco:
 
@@ -400,12 +400,12 @@ i~kwalifikuje się do przedstawienia jej w postępowaniu o nadanie tytułu zawod
         \end{tabular}
     \end{equation}
 
-    gdzie $\pmb{\alpha} = (\alpha_1,\alpha_2,...,\alpha_l)$, a $L_d(\pmb{\alpha})$ zdefiniowany jako:
+    gdzie $\pmb{\alpha} = (\alpha_1,\alpha_2,...,\alpha_l)$, a $L_d(\pmb{\alpha})$ zdefiniowano jako:
     \begin{equation}
         L_d(\pmb{\alpha}) = \min\limits_{\pmb{\omega},b}L(\pmb{\omega},b,\pmb{\alpha})
     \end{equation}
 
-    a $L(\pmb{\omega},b,\pmb{\alpha})$ - Lagrange'an zdefiniowany tak: 
+    $L(\pmb{\omega},b,\pmb{\alpha})$ to Lagrangian zdefiniowany przez: 
 
     \begin{equation} \label{eq:lagrange}
         L(\pmb{\omega},b,\pmb{\alpha}) = \frac{1}{2}\sum\limits_{k=1}^{n}\omega_{k}^2 -
@@ -413,7 +413,7 @@ i~kwalifikuje się do przedstawienia jej w postępowaniu o nadanie tytułu zawod
         +b \Bigg) -1 \Bigg).
     \end{equation}
 
-    \par W tym przypadku Lagrange'an ma formę wypukłą, a więc dla każdego $\pmb{\alpha}$ para
+    \par W tym przypadku funkcja Lagrange'a jest wypukła, a więc dla każdego $\pmb{\alpha}$ para
     $(\pmb{\omega^*},b^*)$ jest globalnym minimum dla $L(\pmb{\omega},b,\pmb{\alpha})$ wtedy i
     tylko wtedy gdy:
 
@@ -422,15 +422,15 @@ i~kwalifikuje się do przedstawienia jej w postępowaniu o nadanie tytułu zawod
     \end{equation}
 
     gdzie $\nabla_{\pmb{\omega},b} L$ jest gradientem funkcji $L$, a $\pmb{0}$ jest wektorem
-    zerowym. A zatem $L_d(\pmb{\alpha}) = L(\pmb{\omega}^*,b^*,\pmb{\alpha})$ jeśli warunek
-    \ref{eq:lag_minim} jest spełniony, a więc problem \ref{eq:dual} może być zapisany następująco
+    zerowym. Zatem $L_d(\pmb{\alpha}) = L(\pmb{\omega}^*,b^*,\pmb{\alpha})$ jeśli warunek
+    \ref{eq:lag_minim} jest spełniony, problem \ref{eq:dual} może być zapisany następująco
     \cite{nefedov2016support}:
 
     \begin{equation} \label{eq:dual_final}
         \begin{tabular}{rl}
             & $L(\pmb{\omega},b,\pmb{\alpha}) \rightarrow
             \max\limits_{\pmb{\omega},b,\pmb{\alpha}}$ \\
-            Z zastrzeżeniem że & $\nabla_{\pmb{\omega},b} L(\pmb{\omega}^*,b^*,\pmb{\alpha}) =
+            Z zastrzeżeniem, że & $\nabla_{\pmb{\omega},b} L(\pmb{\omega}^*,b^*,\pmb{\alpha}) =
             \pmb{0}$ \\
                                & $\alpha_i \geq 0, i=1,2,...,l$
         \end{tabular}
@@ -444,7 +444,7 @@ i~kwalifikuje się do przedstawienia jej w postępowaniu o nadanie tytułu zawod
         \end{split}
     \end{equation}
 
-    co jest równoważne do:
+    co jest równoważne:
 
     \begin{equation} \label{eq:dual_constraint}
         \begin{split}
@@ -461,18 +461,18 @@ i~kwalifikuje się do przedstawienia jej w postępowaniu o nadanie tytułu zawod
             & $\sum\limits_{i=1}^{l}\alpha_i -
             \frac{1}{2}\sum\limits_{i=1}^{l}\sum\limits_{j=1}^{l}\alpha_i\alpha_j y_i y_j
             \langle \pmb{x}_i,\pmb{x}_j \rangle \rightarrow \max\limits_{\pmb{\alpha}}$ \\
-            Z zastrzeżeniem że & $\sum\limits_{i=1}^{l} \alpha_i y_i = 0$ \\
+            przy warunku & $\sum\limits_{i=1}^{l} \alpha_i y_i = 0$ \\
                                & $\alpha_i \geq 0, i=1,2,...,l$
         \end{tabular}
     \end{equation}
 
 \myparagraph{Wektory wspierające}
-    \par Związkiem pomiędzy problemem pierwotnym a dualnym jest \ref{eq:dual_constraint}, z
-    czego wynika że wektor znormalizowany $\pmb{\omega}$ jest rozszerzany współczynnikami
-    $\alpha_i y_i$ na wektory trenujące $\pmb{x_i}$, gdzie $\alpha \geq 0$ i $y_i = 1$ jeśli
-    $x_i \in C_1$ i $y_i = -1$ jeśli $x_i \in C_2$. Wektory trenujące takie że $\alpha > 0$ są
-    nazywane \textit{wektorami wspierającymi}, i leżą one na marginesie hiperpłaszczyzny
-    rozdzielającej dwie klasy.
+    \par Z powyższych równań wynika interpretacja wektorów wspierających pokazana na poniższym rysunku.
+		Wektory wspierające leżą one na marginesie hiperpłaszczyzny rozdzielającej obie klasy.
+		%wektor znormalizowany $\pmb{\omega}$ jest rozszerzany współczynnikami
+    %$\alpha_i y_i$ na wektory trenujące $\pmb{x_i}$, gdzie $\alpha \geq 0$ i $y_i = 1$ jeśli
+    %$x_i \in C_1$ i $y_i = -1$ jeśli $x_i \in C_2$. Wektory trenujące takie że $\alpha > 0$ są
+    %nazywane \textit{wektorami wspierającymi}, i 
 
     \begin{figure}[H]
         \begin{center}
@@ -483,14 +483,13 @@ i~kwalifikuje się do przedstawienia jej w postępowaniu o nadanie tytułu zawod
     \end{figure}
 
 
-\subsubsection{Przypadek liniowo nieseparowalnych danych}
-    \par Najczęściej jest tak, że dane nie są liniowo separowalne, w takim przypadku wyżej
-    opisane równania nie mogą być rozwiązane, przez niemożliwość dotrzymania się warunkowi w
-    \ref{eq:primal}.
+\subsubsection{Przypadek klas liniowo nieseparowalnych}
+    \par W ogólności klasy nie są liniowo separowalne. W takim przypadku powyższe równania
+    są nieadekwatne, ponieważ warunek  \ref{eq:primal} nie może być dotrzymany.
 
 \myparagraph{Problem pierwotny}
-    \par Możemy rozluzować warunek w \ref{eq:primal} wprowadzając błąd $\varepsilon_i$ która 
-    jest nazywana luźną zmienną(\textit{ang. slack variable}) \cite{nefedov2016support}:
+    \par Możemy poluzować warunek w \ref{eq:primal} wprowadzając błąd $\varepsilon_i$, który 
+    jest nazywany luźną zmienną (\textit{ang. slack variable}) \cite{nefedov2016support}:
 
     \begin{equation}
         \begin{split}
@@ -507,9 +506,8 @@ i~kwalifikuje się do przedstawienia jej w postępowaniu o nadanie tytułu zawod
         \pmb{\varepsilon}}
     \end{equation}
 
-    \par wyjdzie że przez dowolność wyboru $\varepsilon_i$ każdy wektor $\pmb{\omega}$ może
-    pasować do równania. Żeby zrobić problem sensownym musimy też minimalizować błędy, co
-    zwykle jest robione przez dodanie ich sum
+    \par dowolność wyboru $\varepsilon_i$ sprawia, że dowolny wektor $\pmb{\omega}$ może
+    zadośćczynić równaniu. Dla minimalizacji błędów funkcja regularyzowana jest przez dodanie sumy:
 
     \begin{equation} \label{eq:softmargin_svm}
         \begin{tabular}{rl}
@@ -525,41 +523,39 @@ i~kwalifikuje się do przedstawienia jej w postępowaniu o nadanie tytułu zawod
     gdzie $C$ jest dodatnią stałą która służy dla: maksymalizacji marginesu i minimalizacji
     liczby błędów na danych trenujących.
     \par Problem \ref{eq:softmargin_svm} definiuje tak zwany SVM z miękkim
-    marginesem(\textit{ang. soft margin SVM}). Dla tego typu SVM chcemy znaleźć
+    marginesem (\textit{ang. soft margin SVM}). Dla tego typu SVM chcemy znaleźć
     hiperpłaszczyznę rozdzielającą klasy z maksymalnym marginesem, dopuszczając żeby wektory
     trenujące leżały wewnątrz marginesu albo były błędnie sklasyfikowane.
 
 \myparagraph{Parametr C}
-    \par Jak opisano wyżej, parametr C ma dwie cele: maksymalizować margines i minimalizować
-    liczbę błędów(punkty znajdujące się wewnątrz marginesu lub błędnie sklasyfikowane). Te dwie
-    cele konfliktują między sobą. Zmieniając parametr $C$ dążymy do jednego z celów i oddalamy
-    się od innego, a więc znalezienie optymalnego $C$ jest zadaniem znalezienia 'złotego
-    środka'. Na rysunku \ref{fig:param_c_change} jest pokazana zależność marginesu od parametru
-    $C$. Kiedy $C$ jest małe suma błędów staje się zbędnie mała i głównym celem staje
+    \par Jak opisano powyżej, parametr C ma dwa cele: maksymalizować margines i minimalizować
+    liczbę błędów (punkty znajdujące się wewnątrz marginesu lub błędnie sklasyfikowane). Te dwa
+    cele są ze sobą sprzeczne. Należy więc znaleźć optymalny parametr $C$. Na rysunku \ref{fig:param_c_change} pokazano zależność  marginesu od parametru $C$.
+		Kiedy $C$ jest małe suma błędów staje się dowolnie mała i głównym celem staje się
     maksymalizacja marginesu, co może powodować, że margines może zawierać wszystkie punkty ze
-    zbioru trenującego. W przeciwieństwie do tego, kiedy parametr $C$ jest duży: suma błędów
+    zbioru trenującego. Odwrotnie, kiedy parametr $C$ jest duży, suma błędów
     robi się duża i cel minimalizacji liczby błędów dominuje nad maksymalizacją marginesu. W
-    wyniku może powstać hiperpłaszczyzna margines której w ogóle nie zaeiwra punktów.
+    wyniku tego może powstać hiperpłaszczyzna, której margines w ogóle nie zawiera punktów danych.
 
     \begin{figure}[H] 
         \begin{center}
             \includegraphics[scale=0.8]{./img/param_c_change.png}
             \caption{Optymalne hiperpłaszczyzny separujące dane i ich marginesy dla tego samego
-            zbioru trenującego używając różnych parametrów \cite{nefedov2016support}}
+            zbioru trenującego przy różnych wartościach parametru C \cite{nefedov2016support}}
             \label{fig:param_c_change}
         \end{center}
     \end{figure}
 
 \myparagraph{Problem dualny}
     \par Wyprowadzenie problemu dualnego dla \ref{eq:softmargin_svm} jest podobne do
-    \ref{eq:primal}. Finalna forma wygląda następująco:
+    \ref{eq:primal}. Ostateczna forma wygląda następująco:
 
     \begin{equation}
         \begin{tabular}{rl}
             & $\sum\limits_{i=1}^{l} -
             \frac{1}{2}\sum\limits_{i=1}^{l}\sum\limits_{j=1}^{l}\alpha_i\alpha_j y_i y_j
             \langle \pmb{x}_i, \pmb{x}_j \rangle \rightarrow \max\limits_{\pmb{\alpha}}$ \\
-            Z zastrzeżeniem że
+            przy warunku
             & $\sum\limits_{i=1}^{l}\alpha_i y_i = 0$ \\
             & $ 0 \leq \alpha_i \leq C, i=1,2,...,l$.
         \end{tabular}
@@ -567,7 +563,7 @@ i~kwalifikuje się do przedstawienia jej w postępowaniu o nadanie tytułu zawod
 
 \myparagraph{Wektory wspierające}
     \par Analogicznie do przypadku z separowalnymi danymi, jeżeli $(\pmb{\omega},b)$ jest
-    rozwiązaniem pierwotnym, a $\pmb{\alpha}$ jest rozwiązaniem pierwotnym, to:
+    rozwiązaniem pierwotnym, to:
 
     \begin{equation} \label{eq:dual_constraint}
         \pmb{\omega}=\sum\limits_{i=1}^{l} \alpha_i y_i \pmb{x}_i \\
@@ -575,13 +571,14 @@ i~kwalifikuje się do przedstawienia jej w postępowaniu o nadanie tytułu zawod
 
     \par Wektory trenujące $\pmb{x_i}$ dla których $\alpha_i > 0$ są nazywane wektorami
     wspierającymi hiperpłaszczyzny rozdzielającej. Wektory trenujące w SVM z miękkim marginesem
-    mogą znajdować się wewnątrz marginesu, poza nim lub w po niepoprawnej stronie
+    mogą znajdować się wewnątrz marginesu, poza nim lub po niepoprawnej stronie
     hiperpłaszczyzny. Również liczba wektorów wspierających zależy od parametru $C$:
     zmniejszając $C$ margines rozszerza się i liczba wektorów wspierających może się zwiększyć
     \cite{nefedov2016support}.
 
 \newpage
 \subsection{Typy SVM}
+Poniżej zebrano wszystkie najczęściej stosowane typy SVM:
 \begin{enumerate}
     \item \textbf{C-SVC}
     \par C-Support Vector Classification - rodzaj klasyfikatora używający $C$ jako 
@@ -600,16 +597,15 @@ i~kwalifikuje się do przedstawienia jej w postępowaniu o nadanie tytułu zawod
 
     gdzie $\phi$ jest funkcją jądrową.
 
-    \par Dobry model dobrze separuję dane i razem z tym ma duży margines. Natomiast w
-    w rzeczywistości jedno wyłącza drugie: duży margines włącza punkty z dwóch klas, a
-    dobre separowanie może powodować przeuczanie(ang. Overfitting). Przeuczanie może 
-    skutkować tym że model jest dobry na danych treningowych ale jest zły na danych testowych.
+    \par Dobry model dobrze separuje dane i jednocześnie ma duży margines. W praktyce
+    duży margines włącza punkty z dwóch klas, a
+    dobre separowanie może powodować przeuczanie (ang. Overfitting). Przeuczanie może 
+    skutkować tym, że model jest dokładny na danych treningowych i myli się na danych testowych.
 
 \item \textbf{$\nu$-SVM}
     \par $\nu$-Support Vector Classification - rodzaj klasyfikatora używający $\nu$ jako
-    parametr regularyzacji. Jest bardzo podobny do C-SVM, z różnicą że $\nu\in[0,1]$.
-    Przyjemną właściwością $\nu$ jest to że on jest dolną granicą stosunku wektorów
-    wspierających i górną granicą stosunku błędu uczenia.
+    parametru regularyzacji. Jest podobny do C-SVM, z różnicą że $\nu\in[0,1]$.
+    $\nu$ jest dolną granicą stosunku wektorów wspierających i górną granicą stosunku błędów uczenia.
     \par Jeśli jest dany wektor $x_i \in R^n$, $i=1,...,l$ w dwóch klasach i wektor
     $y\in R^l$ taki że $y_i \in \{1, -1\}$ to pierwotny problem optymalizacji wygląda
     następująco:
@@ -625,9 +621,9 @@ i~kwalifikuje się do przedstawienia jej w postępowaniu o nadanie tytułu zawod
     \end{center}
 
 \item \textbf{One-class SVM}
-    \par One-class Support Vector Machine - rodzaj klasyfikatora uczenia
-    nienadzorowanego, które zakłada brak etykiet w danych uczących. Ma na celu
-    znalezienie niewiadomych wzorców/anomalii(klastrów) w danych wejściowych.  
+    \par One-class Support Vector Machine to rodzaj klasyfikatora do uczenia
+    nienadzorowanego, który zakłada brak etykiet klas. Ma to na celu
+    znalezienie wzorców/anomalii (klastrów) w danych wejściowych.  
 
     \begin{figure}[H]
         \begin{center}
@@ -651,11 +647,11 @@ i~kwalifikuje się do przedstawienia jej w postępowaniu o nadanie tytułu zawod
     \end{center}
 
 \item \textbf{$\epsilon$-SVR}
-    \par Jeśli wektor etykiet $y_i \in R$ to jest używana metoda regresji.
+    \par Jeśli etykiety $y_i \in R$ to mamy do czynienia z regresją.
     $\epsilon$-Support Vector Classification -  używa $C$ i $\epsilon$ jako
     parametrów regularyzacji. Celem jest znalezienie takiej funkcji $f(x)$
     że jej wartość odchyla się od $y_n$ na wartość nie większą od $\epsilon$
-    dla każdego punktu z zbioru treningowego.
+    dla każdego punktu ze zbioru treningowego.
     \par Jeśli jest dany zbiór danych treningowych $\{(x_1, x_1),...,
     (x_l, z_l)\}$, gdzie $x-I \in R^n$ jest wektorem cech, a $z_i \in R^1$
     jest wyjściem. Przy danych parametrach $C>0$ i $\epsilon > 0$, standardowa 
@@ -694,9 +690,9 @@ i~kwalifikuje się do przedstawienia jej w postępowaniu o nadanie tytułu zawod
 
 \newpage
 \subsection{Jądra}
-    \par W przypadku kiedy klasy nierozdzielne liniowo to jest używany trik z zastosowaniem
-    funkcji jądrowych(ang. Kernel Trick). Funkcję jądrowe pozwalają odwzorować zbiór danych
-    w przestrzeń z większą liczbą wymiarów, w której klasy danego zbioru będzie można rozdzielić
+    \par W przypadku kiedy klasy nie są rozdzielne liniowo, stosuje się tzw. trik funkcji jądrowych (ang. Kernel Trick).
+		Funkcję jądrowe pozwalają odwzorować zbiór danych
+    w przestrzeń o większej liczbie wymiarów, w której klasy danego zbioru będzie można rozdzielić
     hiperpłaszczyzną. 
 
     \begin{figure}[H]
@@ -719,11 +715,14 @@ i~kwalifikuje się do przedstawienia jej w postępowaniu o nadanie tytułu zawod
         \end{tabular}
     \end{center}
 
-    \par Autorzy biblioteki LIBSVM polecają \cite{hsu2003practical} że pierwsza funkcja jądrowa
-    którą warto spróbować to RBF.  Jak pokazują \cite{keerthi2003asymptotic} jeśli używać RBF z
-    optymalizacją hiperparametrów to nie ma potrzeby rozważać liniową funkcję jądrową. W sigmoidalnej
+    \par Autorzy biblioteki LIBSVM rekomendują \cite{hsu2003practical}, że pierwsza funkcja jądrowa,
+    której warto spróbować jest RBF. Jak pokazano w \cite{keerthi2003asymptotic}, jądro RBF z
+    optymalizacją hiperparametrów może zastąpić liniową funkcję jądrową. W sigmoidalnej
     funkcji jądrowej macierz jądrowa może nie być pozytywnie określona i generalnie dokładność modelu
-    nie jest lepsza od RBF \cite{lin2003study}. 
+    nie jest lepsza od RBF \cite{lin2003study}.
+		
+%end new Section 2
+
 
 \newpage
 \section{Wymagania} % SECTION
@@ -732,7 +731,7 @@ i~kwalifikuje się do przedstawienia jej w postępowaniu o nadanie tytułu zawod
     trenowanie i testowanie. Pod czas trenowania aplikacja ma generować model w postaci pliku.
     Na etapie testowania aplikacja ma mieć możliwość załadowania dowolnego pliku z modelem.
 
-\subsection{Sterowanie aplikacją \textbf{\textcolor{red}{LEPSZA NAZWA?}}} % TODO: remove
+\subsection{Kontrola aplikacji}
     \par Sterowanie aplikacją musi odbywać się wyłącznie przez Interfejs graficzny. Interfejs
     graficzny użytkownika ma być zorganizowany w sposób podkreślający to że nauczanie jest
     dwufazowe. Akcje które użytkownik nie może zrobić przez ich bezsensowność lub
@@ -949,14 +948,14 @@ i~kwalifikuje się do przedstawienia jej w postępowaniu o nadanie tytułu zawod
 \newpage 
 \section{Projekt} % SECTION
 \subsection{Model danych}
-    \par \textit{LIBSVM} domyślnie używa tak zwany "rzadki" format danych z etykietowanymi
+    \par \textit{LIBSVM} domyślnie używa tak zwany 'rzadki' format danych z etykietowanymi
     wektorami. Format danych do trenowania i testowania jest taki:
 
     \begin{verbatim}
     <label> <index1>:<value1> <index2>:<value2> ...
     .
     .
-    .
+   
     \end{verbatim}
 
     \par Każda linia jest osobną instancją i kończy się znakiem '\textbackslash n'.
@@ -1228,7 +1227,7 @@ connect(ui->kernel_comboBox, SIGNAL(currentIndexChanged(int)), availability_hand
     wybrać plik z danymi dla trenowania. Dla tego celu na ekranie głównym są odpowiednie
     kontrolki \ref{fig:file_handler} które pozwalają wybrać plik z danymi do trenowania lub
     testowania i wybrać katalog w którym należy zapisać plik z wygenerowanym modelem. Domyślnie
-    plik modelu ma nazwę [nazwa pliku z danymi do trenowania + .model]. Przycisk \textit{Gen
+    plik modelu ma nazwę [ nazwa pliku z danymi do trenowania + .model ]. Przycisk \textit{Gen
     Data} pozwala wygenerować plik z danymi samodzielnie, jego funkcjonalność będzie omówiona
     później.
 
@@ -1355,7 +1354,7 @@ connect(ui->kernel_comboBox, SIGNAL(currentIndexChanged(int)), availability_hand
     \par Po wciśnięciu przycisku \textit{Train Model} aplikacja, jak opisano wyżej,
     parsuje i sprawdza pola z parametrami i uruchamia proces trenowania dokładnie ten który
     oferuję program \textit{svm-train} z biblioteki \textit{LIBSVM}. Żeby ściślej powiązać
-    aplikację z biblioteką \textit{LIBSVM} przerobiłem biblioteczne plik źródłowe
+    aplikację z biblioteką \textit{LIBSVM} przerobiłem biblioteczne pliki źródłowe
     \textit{svm-train.c} i \textit{svm-predict.c} na klasę \textit{SVMController}, pozwoliło to
     zapobiec używaniu polecenia \textit{system()} które służy do uruchamiania programów
     zewnętrznych. Nie udało się jednak całkiem uniknąć tego - skrypty w języku Python używają
@@ -1724,13 +1723,12 @@ connect(ui->kernel_comboBox, SIGNAL(currentIndexChanged(int)), availability_hand
     skonfigurowana aplikacja \textit{gnuplot}. Również można wybrać krotność walidacji
     krzyżowej używanej dla testowania każdej pary parametrów. 
 
-\subsection{Shrinking \textbf{\textcolor{red}{Kurczenie się????}}}
+\subsection{Shrinking}
     \par W sekcji wyboru parametrów trenowania jest umieszczona kontrolka typu \textit{Check
-    Box} która pozwala włączyć kurczenie się(ang. shrinking) \textbf{\textcolor{red}{dobre
-    tłumaczenie na polski?}} dla algorytmu trenującego. Metoda polega na wyeliminowaniu
-    elementów ograniczonych(np. $\alpha_i = 0$ lub $C$) dla zmniejszenia rozwiązywanego
-    problemu \cite{CC01a}. 
-    \par Kurczenie się nie ma wpływu na dokładność ale pomaga zmniejszyć czas trenowania
+    Box} która pozwala włączyć tzw. \textit{Shrinking} dla algorytmu trenującego. Metoda polega na
+    wyeliminowaniu elementów ograniczonych(np.  $\alpha_i = 0$ lub $C$) dla uproszczenia
+    rozwiązywanego problemu \cite{CC01a}. 
+    \par \textit{Shrinking} nie ma wpływu na dokładność ale pomaga zmniejszyć czas trenowania
     modelu, efekt jest bardziej zauważalny przy dużej liczbie iteracji \cite{libsvm_faq}.
 
 \subsection{Estymacja prawdopodobieństwa}
@@ -2148,8 +2146,6 @@ connect(ui->kernel_comboBox, SIGNAL(currentIndexChanged(int)), availability_hand
 
 \newpage
 \nocite{*}
-\selectlanguage{polish}
 \printbibliography[title={Źródła}]
-
 
 \end{document}
